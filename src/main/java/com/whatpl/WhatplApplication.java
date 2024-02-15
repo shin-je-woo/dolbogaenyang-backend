@@ -1,13 +1,13 @@
-package site.dbgn;
+package com.whatpl;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DolbogaenyangApplication {
+public class WhatplApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DolbogaenyangApplication.class, args);
+		SpringApplication.run(WhatplApplication.class, args);
 	}
 
 }
