@@ -8,7 +8,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-    open-in-view: false
+    database: mysql
 
 decorator:
   datasource:

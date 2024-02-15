@@ -1,2 +1,2 @@
-# dolbogaenyang
-돌보개냥
+# Whatpl
+왓플 - 개발자 사이드 프로젝트 커뮤니티

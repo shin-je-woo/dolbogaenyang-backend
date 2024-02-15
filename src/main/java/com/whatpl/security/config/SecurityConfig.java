@@ -1,4 +1,4 @@
-package site.dbgn.security.config;
+package com.whatpl.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;

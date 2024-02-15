@@ -1,10 +1,10 @@
-package site.dbgn;
+package com.whatpl;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DolbogaenyangApplicationTests {
+class WhatplApplicationTests {
 
 	@Test
 	void contextLoads() {
