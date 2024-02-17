@@ -1,6 +1,7 @@
 package com.whatpl.security.config;
 
 import com.whatpl.account.AccountService;
+import com.whatpl.security.repository.CookieOAuth2AuthorizationRequestRepository;
 import com.whatpl.security.service.AccountOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -36,7 +37,9 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(new AccountOAuth2UserService(accountService))))
+                                .userService(new AccountOAuth2UserService(accountService)))
+                        .authorizationEndpoint(auth -> auth
+                                .authorizationRequestRepository(new CookieOAuth2AuthorizationRequestRepository())))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(AbstractHttpConfigurer::disable);
