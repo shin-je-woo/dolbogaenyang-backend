@@ -1,12 +1,17 @@
 package com.whatpl.security.jwt;
 
 import com.whatpl.security.domain.AccountPrincipal;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 
@@ -48,5 +53,34 @@ public class JwtService {
         String refreshToken = UUID.randomUUID().toString();
         // TODO 리프레쉬 토큰 저장
         return refreshToken;
+    }
+
+    /**
+     * 토큰을 Authentication 객체로 변환한다.
+     *
+     * @param jwt 서명된 jwt
+     * @return JWT Payload 값을 담은 Authentication 객체
+     */
+    public Authentication resolveToken(String jwt) {
+        Jws<Claims> claims = parseJwt(jwt);
+        AccountPrincipal accountPrincipal = getAccountPrincipal(claims);
+        return new UsernamePasswordAuthenticationToken(accountPrincipal, "");
+    }
+
+    private AccountPrincipal getAccountPrincipal(Jws<Claims> claims) {
+        long id = Long.parseLong(claims.getPayload().getSubject());
+        String name = claims.getPayload().get("name").toString();
+        return new AccountPrincipal(id, name, "", Collections.emptySet(), null);
+    }
+
+    private Jws<Claims> parseJwt(String jwt) {
+        Jws<Claims> claims;
+        try {
+            claims = Jwts.parser().verifyWith(jwtProperties.getSecretKey()).build().parseSignedClaims(jwt);
+        } catch (JwtException e) {
+            log.info("jwt 파싱 중 에러발생! {} {}", e.getClass(), e.getMessage());
+            throw e;
+        }
+        return claims;
     }
 }
