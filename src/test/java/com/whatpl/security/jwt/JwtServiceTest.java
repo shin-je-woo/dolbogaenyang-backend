@@ -1,5 +1,6 @@
 package com.whatpl.security.jwt;
 
+import com.whatpl.redis.RedisService;
 import com.whatpl.security.domain.AccountPrincipal;
 import com.whatpl.security.domain.OAuth2UserInfo;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -27,6 +28,9 @@ class JwtServiceTest {
 
     @Mock
     JwtProperties jwtProperties;
+
+    @Mock
+    RedisService redisService;
 
     @InjectMocks
     JwtService jwtService;
@@ -64,6 +68,10 @@ class JwtServiceTest {
     void createRefreshToken() {
         // given
         long id = 1L;
+        long refreshTokenExpirationTime = 60_000L;
+        String prefix = "refreshToken:";
+        Mockito.when(jwtProperties.getRefreshExpirationTime())
+                .thenReturn(refreshTokenExpirationTime);
 
         // when
         String refreshToken = jwtService.createRefreshToken(id);
@@ -71,6 +79,8 @@ class JwtServiceTest {
         // then
         long countHyphen = refreshToken.chars().filter(c -> c == '-').count();
         assertEquals(4, countHyphen);
+        Mockito.verify(redisService, Mockito.times(1))
+                .put(prefix + refreshToken, id, refreshTokenExpirationTime);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.whatpl.security.jwt;
 
+import com.whatpl.redis.RedisService;
 import com.whatpl.security.domain.AccountPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -21,6 +22,8 @@ import java.util.UUID;
 public class JwtService {
 
     private final JwtProperties jwtProperties;
+    private final RedisService redisService;
+    private final static String PREFIX_REFRESH_TOKEN = "refreshToken:";
 
     /**
      * accessToken 을 발급한다.
@@ -45,13 +48,14 @@ public class JwtService {
 
     /**
      * refreshToken 을 발급한다.
+     * refreshToken 은 Redis 에 저장한다.
      *
      * @param id Account ID
      * @return 발급된 refreshToken
      */
     public String createRefreshToken(final long id) {
         String refreshToken = UUID.randomUUID().toString();
-        // TODO 리프레쉬 토큰 저장
+        redisService.put(PREFIX_REFRESH_TOKEN + refreshToken, id, jwtProperties.getRefreshExpirationTime());
         return refreshToken;
     }
 
