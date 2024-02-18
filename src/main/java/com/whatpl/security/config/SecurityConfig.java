@@ -1,6 +1,9 @@
 package com.whatpl.security.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatpl.account.AccountService;
+import com.whatpl.security.handler.LoginSuccessHandler;
+import com.whatpl.security.jwt.JwtService;
 import com.whatpl.security.repository.CookieOAuth2AuthorizationRequestRepository;
 import com.whatpl.security.service.AccountOAuth2UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +34,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AccountService accountService) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AccountService accountService,
+                                                   ObjectMapper objectMapper, JwtService jwtService) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(WEB_SECURITY_WHITE_LIST).permitAll()
                         .anyRequest().authenticated())
@@ -39,7 +43,8 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(new AccountOAuth2UserService(accountService)))
                         .authorizationEndpoint(auth -> auth
-                                .authorizationRequestRepository(new CookieOAuth2AuthorizationRequestRepository())))
+                                .authorizationRequestRepository(new CookieOAuth2AuthorizationRequestRepository()))
+                        .successHandler(new LoginSuccessHandler(objectMapper, jwtService)))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(AbstractHttpConfigurer::disable);

@@ -31,6 +31,6 @@ public class AccountService {
                         oAuth2UserInfo.getProviderId())
                 .orElseGet(() -> createAccount(oAuth2UserInfo));
 
-        return new AccountPrincipal(account.getName(), "", Collections.emptySet(), oAuth2UserInfo);
+        return new AccountPrincipal(account.getId(), account.getName(), "", Collections.emptySet(), oAuth2UserInfo);
     }
 }

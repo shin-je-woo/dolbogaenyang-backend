@@ -2,6 +2,7 @@ package com.whatpl.oauth2;
 
 import com.whatpl.account.AccountService;
 import com.whatpl.security.config.SecurityConfig;
+import com.whatpl.security.jwt.JwtService;
 import com.whatpl.util.CookieUtils;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +35,9 @@ public class OAuth2ApiTest {
 
     @MockBean
     AccountService accountService;
+
+    @MockBean
+    JwtService jwtService;
 
     @Test
     @DisplayName("인가코드 요청 API 호출시 리다이렉트 되고, AuthorizationRequest 검증용 Cookie 가 발급된다.")

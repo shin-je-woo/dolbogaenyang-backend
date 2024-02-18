@@ -11,10 +11,12 @@ import java.util.Map;
 @Getter
 public class AccountPrincipal extends User implements OAuth2User {
 
+    private final long id;
     private final OAuth2UserInfo oAuth2UserInfo;
 
-    public AccountPrincipal(String username, String password, Collection<? extends GrantedAuthority> authorities, OAuth2UserInfo oAuth2UserInfo) {
+    public AccountPrincipal(long id, String username, String password, Collection<? extends GrantedAuthority> authorities, OAuth2UserInfo oAuth2UserInfo) {
         super(username, password, authorities);
+        this.id = id;
         this.oAuth2UserInfo = oAuth2UserInfo;
     }
 
