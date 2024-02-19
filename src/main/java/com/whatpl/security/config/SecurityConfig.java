@@ -2,7 +2,9 @@ package com.whatpl.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatpl.account.AccountService;
+import com.whatpl.security.filter.JwtAuthenticationFilter;
 import com.whatpl.security.handler.LoginSuccessHandler;
+import com.whatpl.security.jwt.JwtProperties;
 import com.whatpl.security.jwt.JwtService;
 import com.whatpl.security.repository.CookieOAuth2AuthorizationRequestRepository;
 import com.whatpl.security.service.AccountOAuth2UserService;
@@ -16,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.*;
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +38,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AccountService accountService,
-                                                   ObjectMapper objectMapper, JwtService jwtService) throws Exception {
+                                                   ObjectMapper objectMapper, JwtService jwtService,
+                                                   JwtProperties jwtProperties) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(WEB_SECURITY_WHITE_LIST).permitAll()
                         .anyRequest().authenticated())
@@ -45,10 +49,19 @@ public class SecurityConfig {
                         .authorizationEndpoint(auth -> auth
                                 .authorizationRequestRepository(new CookieOAuth2AuthorizationRequestRepository()))
                         .successHandler(new LoginSuccessHandler(objectMapper, jwtService)))
+                .addFilterBefore(new JwtAuthenticationFilter(objectMapper, jwtService, jwtProperties, securityContextRepository()),
+                        SecurityContextHolderFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(AbstractHttpConfigurer::disable);
 
         return http.getOrBuild();
+    }
+
+    private SecurityContextRepository securityContextRepository() {
+        var httpSessionSecurityContextRepository = new HttpSessionSecurityContextRepository();
+        var requestAttributeSecurityContextRepository = new RequestAttributeSecurityContextRepository();
+        return new DelegatingSecurityContextRepository(httpSessionSecurityContextRepository,
+                requestAttributeSecurityContextRepository);
     }
 }

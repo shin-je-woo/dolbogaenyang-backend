@@ -68,7 +68,7 @@ public class JwtService {
     public Authentication resolveToken(String jwt) {
         Jws<Claims> claims = parseJwt(jwt);
         AccountPrincipal accountPrincipal = getAccountPrincipal(claims);
-        return new UsernamePasswordAuthenticationToken(accountPrincipal, "");
+        return new UsernamePasswordAuthenticationToken(accountPrincipal, "", Collections.emptySet());
     }
 
     private AccountPrincipal getAccountPrincipal(Jws<Claims> claims) {

@@ -4,6 +4,7 @@ import com.whatpl.redis.RedisService;
 import com.whatpl.security.domain.AccountPrincipal;
 import com.whatpl.security.domain.OAuth2UserInfo;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -105,5 +106,17 @@ class JwtServiceTest {
 
         // expected
         assertThrows(SignatureException.class, () -> jwtService.resolveToken(jwt));
+    }
+
+    @Test
+    @DisplayName("잘못된 형식의 토큰은 MalformedJwtException 발생")
+    void malformedJwtException() {
+        // given
+        String jwt = "aaa";
+        Mockito.when(jwtProperties.getSecretKey())
+                .thenReturn(Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(MOCK_JWT_SECRET)));
+
+        // expected
+        assertThrows(MalformedJwtException.class, () -> jwtService.resolveToken(jwt));
     }
 }

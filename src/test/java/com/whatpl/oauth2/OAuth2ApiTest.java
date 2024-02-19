@@ -2,13 +2,13 @@ package com.whatpl.oauth2;
 
 import com.whatpl.account.AccountService;
 import com.whatpl.security.config.SecurityConfig;
+import com.whatpl.security.jwt.JwtProperties;
 import com.whatpl.security.jwt.JwtService;
 import com.whatpl.util.CookieUtils;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
 @WebMvcTest
 @Import(SecurityConfig.class)
 public class OAuth2ApiTest {
@@ -38,6 +37,9 @@ public class OAuth2ApiTest {
 
     @MockBean
     JwtService jwtService;
+
+    @MockBean
+    JwtProperties jwtProperties;
 
     @Test
     @DisplayName("인가코드 요청 API 호출시 리다이렉트 되고, AuthorizationRequest 검증용 Cookie 가 발급된다.")

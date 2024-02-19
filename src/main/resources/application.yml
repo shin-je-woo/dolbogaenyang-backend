@@ -64,6 +64,6 @@ decorator:
 jwt:
   secret: ${JWT_SECRET}
   header: Authorization
-  token-type: bearer
+  token-type: Bearer
   access-expiration-time: 1_800_000 # 30min
   refresh-expiration-time: 1_209_600_000 # 2weeks
