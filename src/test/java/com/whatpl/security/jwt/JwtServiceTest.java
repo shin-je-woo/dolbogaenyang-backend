@@ -1,5 +1,7 @@
 package com.whatpl.security.jwt;
 
+import com.whatpl.jwt.JwtProperties;
+import com.whatpl.jwt.JwtService;
 import com.whatpl.redis.RedisService;
 import com.whatpl.security.domain.AccountPrincipal;
 import com.whatpl.security.domain.OAuth2UserInfo;

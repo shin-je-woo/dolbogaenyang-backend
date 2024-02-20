@@ -1,4 +1,4 @@
-package com.whatpl.security.jwt;
+package com.whatpl.jwt;
 
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

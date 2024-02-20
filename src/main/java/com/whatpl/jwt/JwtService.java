@@ -1,4 +1,4 @@
-package com.whatpl.security.jwt;
+package com.whatpl.jwt;
 
 import com.whatpl.redis.RedisService;
 import com.whatpl.security.domain.AccountPrincipal;

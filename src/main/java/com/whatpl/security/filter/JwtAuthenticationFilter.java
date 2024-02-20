@@ -1,8 +1,8 @@
 package com.whatpl.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.whatpl.security.jwt.JwtProperties;
-import com.whatpl.security.jwt.JwtService;
+import com.whatpl.jwt.JwtProperties;
+import com.whatpl.jwt.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;

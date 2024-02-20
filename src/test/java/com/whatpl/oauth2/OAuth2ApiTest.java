@@ -2,8 +2,8 @@ package com.whatpl.oauth2;
 
 import com.whatpl.account.AccountService;
 import com.whatpl.security.config.SecurityConfig;
-import com.whatpl.security.jwt.JwtProperties;
-import com.whatpl.security.jwt.JwtService;
+import com.whatpl.jwt.JwtProperties;
+import com.whatpl.jwt.JwtService;
 import com.whatpl.util.CookieUtils;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;

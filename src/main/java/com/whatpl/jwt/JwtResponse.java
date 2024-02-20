@@ -1,4 +1,4 @@
-package com.whatpl.security.jwt;
+package com.whatpl.jwt;
 
 import lombok.AccessLevel;
 import lombok.Builder;
