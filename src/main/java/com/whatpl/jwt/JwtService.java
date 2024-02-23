@@ -1,5 +1,9 @@
 package com.whatpl.jwt;
 
+import com.whatpl.account.Account;
+import com.whatpl.account.AccountRepository;
+import com.whatpl.exception.BizException;
+import com.whatpl.exception.ErrorCode;
 import com.whatpl.redis.RedisService;
 import com.whatpl.security.domain.AccountPrincipal;
 import io.jsonwebtoken.Claims;
@@ -11,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.Date;
@@ -23,6 +28,7 @@ public class JwtService {
 
     private final JwtProperties jwtProperties;
     private final RedisService redisService;
+    private final AccountRepository accountRepository;
     private final static String PREFIX_REFRESH_TOKEN = "refreshToken:";
 
     /**
@@ -60,6 +66,37 @@ public class JwtService {
     }
 
     /**
+     * 새로운 accessToken, refreshToken 을 발급한다. (RTR 방식)
+     * 기존의 refreshToken 은 만료 처리한다.
+     *
+     * @param refreshToken 발급가능 여부를 판단할 refreshToken
+     * @return 새로운 토큰객체
+     * @throws BizException refreshToken 저장소(Redis)에 refreshToken 이 존재하지 않을 경우 발생
+     */
+    public JwtResponse reIssueToken(final String refreshToken) {
+        if (!StringUtils.hasText(refreshToken)) {
+            throw new BizException(ErrorCode.INVALID_TOKEN);
+        }
+        Long accountId = getAccountIdFromRedis(refreshToken);
+        UsernamePasswordAuthenticationToken authenticationToken = createAuthenticationToken(accountId);
+        String accessToken = createAccessToken(authenticationToken);
+        String reIssuedRefreshToken = createRefreshToken(accountId);
+        redisService.delete(PREFIX_REFRESH_TOKEN + refreshToken);
+
+        return JwtResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(reIssuedRefreshToken)
+                .build();
+    }
+
+    private UsernamePasswordAuthenticationToken createAuthenticationToken(Long accountId) {
+        Account account = accountRepository.findById(accountId)
+                        .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_ACCOUNT));
+        AccountPrincipal principal = AccountPrincipal.of(account);
+        return new UsernamePasswordAuthenticationToken(principal, "", Collections.emptySet());
+    }
+
+    /**
      * 토큰을 Authentication 객체로 변환한다.
      *
      * @param jwt 서명된 jwt
@@ -86,5 +123,11 @@ public class JwtService {
             throw e;
         }
         return claims;
+    }
+
+    private Long getAccountIdFromRedis(String refreshToken) {
+        if (!redisService.exists(PREFIX_REFRESH_TOKEN + refreshToken))
+            throw new BizException(ErrorCode.EXPIRED_TOKEN);
+        return Long.parseLong(redisService.get(PREFIX_REFRESH_TOKEN + refreshToken));
     }
 }

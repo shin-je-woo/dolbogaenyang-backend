@@ -26,7 +26,7 @@ import org.springframework.security.web.context.*;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String[] WEB_SECURITY_WHITE_LIST = {"/", "/login*", "oauth2*", "/error*"};
+    private static final String[] WEB_SECURITY_WHITE_LIST = {"/", "/login*", "oauth2*", "/error*", "/token"};
 
     /*
      * 일반적인 정적자원들의 보안설정 해제

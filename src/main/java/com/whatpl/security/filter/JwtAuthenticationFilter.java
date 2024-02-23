@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -78,10 +79,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /**
-     * 요청메시지의 Authorization 헤더에 token 값이 없을 경우 필터 적용 하지 않는다.
+     * 요청메시지의 Authorization 헤더에 token 값이 없을 경우, 토큰 재발급 요청일 경우 필터 적용 하지 않는다.
      */
     @Override
     protected boolean shouldNotFilter(@Nonnull HttpServletRequest request) throws ServletException {
-        return !StringUtils.hasText(extractToken(request));
+        return isReIssueTokenRequest(request) || !StringUtils.hasText(extractToken(request));
+    }
+
+    private boolean isReIssueTokenRequest(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        String method = request.getMethod();
+        return ("/token".equals(requestURI) &&
+                HttpMethod.POST.name().equals(method));
     }
 }

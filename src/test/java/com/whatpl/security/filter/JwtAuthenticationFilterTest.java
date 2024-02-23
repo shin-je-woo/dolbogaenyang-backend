@@ -2,16 +2,15 @@ package com.whatpl.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatpl.account.AccountService;
-import com.whatpl.security.config.SecurityConfig;
-import com.whatpl.security.domain.AccountPrincipal;
 import com.whatpl.jwt.JwtProperties;
 import com.whatpl.jwt.JwtService;
+import com.whatpl.security.config.SecurityConfig;
+import com.whatpl.security.domain.AccountPrincipal;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,6 +25,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -53,10 +54,10 @@ class JwtAuthenticationFilterTest {
         String validToken = "validToken";
         var principal = new AccountPrincipal(1L, "test", "", Collections.emptySet(), null);
         var authenticationToken = new UsernamePasswordAuthenticationToken(principal, "", Collections.emptySet());
-        Mockito.when(jwtProperties.getTokenType())
-                        .thenReturn(tokenType);
-        Mockito.when(jwtService.resolveToken(Mockito.any()))
-                        .thenReturn(authenticationToken);
+        when(jwtProperties.getTokenType())
+                .thenReturn(tokenType);
+        when(jwtService.resolveToken(any()))
+                .thenReturn(authenticationToken);
 
         // expected
         mockMvc.perform(get("/")
@@ -74,7 +75,25 @@ class JwtAuthenticationFilterTest {
                 jwtService, jwtProperties, null);
         MockHttpServletRequest request = new MockHttpServletRequest(HttpMethod.GET.name(), "/");
         request.addHeader(HttpHeaders.AUTHORIZATION, tokenType);
-        Mockito.when(jwtProperties.getTokenType())
+        when(jwtProperties.getTokenType())
+                .thenReturn("Bearer");
+
+        // when
+        boolean shouldNotFilter = jwtAuthenticationFilter.shouldNotFilter(request);
+
+        // then
+        assertTrue(shouldNotFilter);
+    }
+
+    @Test
+    @DisplayName("토큰 재발급 요청일 경우 다음 필터 수행")
+    void shouldNotFilter2() throws ServletException {
+        // given
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(new ObjectMapper(),
+                jwtService, jwtProperties, null);
+        MockHttpServletRequest request = new MockHttpServletRequest(HttpMethod.POST.name(), "/token");
+        request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer testToken");
+        when(jwtProperties.getTokenType())
                 .thenReturn("Bearer");
 
         // when
