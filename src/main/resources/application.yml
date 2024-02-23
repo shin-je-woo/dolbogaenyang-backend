@@ -10,6 +10,13 @@ spring:
       ddl-auto: create
     database: mysql
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      connect-timeout: 5000
+      password: ${REDIS_PASSWORD}
+
   # 아래 정보는 ClientRegistration 에 저장됨
   security:
     oauth2:
@@ -51,4 +58,12 @@ decorator:
   datasource:
     p6spy:
       enable-logging: true
+      logging: slf4j
       multiline: true
+
+jwt:
+  secret: ${JWT_SECRET}
+  header: Authorization
+  token-type: Bearer
+  access-expiration-time: 1_800_000 # 30min
+  refresh-expiration-time: 1_209_600_000 # 2weeks

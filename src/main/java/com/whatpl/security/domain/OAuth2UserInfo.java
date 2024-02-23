@@ -1,12 +1,11 @@
 package com.whatpl.security.domain;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
 @Getter
-@RequiredArgsConstructor
 public class OAuth2UserInfo {
 
     /** AuthorizationServer 에서 제공받은 정보 */
@@ -19,4 +18,13 @@ public class OAuth2UserInfo {
     private final String email;
     /** 사용자 이름 */
     private final String name;
+
+    @Builder
+    public OAuth2UserInfo(Map<String, Object> attributes, String registrationId, String providerId, String email, String name) {
+        this.attributes = attributes;
+        this.registrationId = registrationId;
+        this.providerId = providerId;
+        this.email = email;
+        this.name = name;
+    }
 }

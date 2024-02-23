@@ -1,6 +1,11 @@
 package com.whatpl.security.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatpl.account.AccountService;
+import com.whatpl.security.filter.JwtAuthenticationFilter;
+import com.whatpl.security.handler.LoginSuccessHandler;
+import com.whatpl.jwt.JwtProperties;
+import com.whatpl.jwt.JwtService;
 import com.whatpl.security.repository.CookieOAuth2AuthorizationRequestRepository;
 import com.whatpl.security.service.AccountOAuth2UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.*;
 
 @Configuration
 @EnableWebSecurity
@@ -20,7 +26,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String[] WEB_SECURITY_WHITE_LIST = {"/", "/login*", "oauth2*", "/error*"};
+    private static final String[] WEB_SECURITY_WHITE_LIST = {"/", "/login*", "oauth2*", "/error*", "/token"};
 
     /*
      * 일반적인 정적자원들의 보안설정 해제
@@ -31,7 +37,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AccountService accountService) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AccountService accountService,
+                                                   ObjectMapper objectMapper, JwtService jwtService,
+                                                   JwtProperties jwtProperties) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(WEB_SECURITY_WHITE_LIST).permitAll()
                         .anyRequest().authenticated())
@@ -39,11 +47,21 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(new AccountOAuth2UserService(accountService)))
                         .authorizationEndpoint(auth -> auth
-                                .authorizationRequestRepository(new CookieOAuth2AuthorizationRequestRepository())))
+                                .authorizationRequestRepository(new CookieOAuth2AuthorizationRequestRepository()))
+                        .successHandler(new LoginSuccessHandler(objectMapper, jwtService)))
+                .addFilterBefore(new JwtAuthenticationFilter(objectMapper, jwtService, jwtProperties, securityContextRepository()),
+                        SecurityContextHolderFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(AbstractHttpConfigurer::disable);
 
         return http.getOrBuild();
+    }
+
+    private SecurityContextRepository securityContextRepository() {
+        var httpSessionSecurityContextRepository = new HttpSessionSecurityContextRepository();
+        var requestAttributeSecurityContextRepository = new RequestAttributeSecurityContextRepository();
+        return new DelegatingSecurityContextRepository(httpSessionSecurityContextRepository,
+                requestAttributeSecurityContextRepository);
     }
 }

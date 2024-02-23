@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-
 @Service
 @RequiredArgsConstructor
 public class AccountService {
@@ -31,6 +29,6 @@ public class AccountService {
                         oAuth2UserInfo.getProviderId())
                 .orElseGet(() -> createAccount(oAuth2UserInfo));
 
-        return new AccountPrincipal(account.getName(), "", Collections.emptySet(), oAuth2UserInfo);
+        return AccountPrincipal.of(account);
     }
 }
