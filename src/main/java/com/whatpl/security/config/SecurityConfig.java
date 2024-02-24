@@ -3,9 +3,12 @@ package com.whatpl.security.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatpl.account.AccountService;
 import com.whatpl.security.filter.JwtAuthenticationFilter;
+import com.whatpl.security.handler.LoginFailureHandler;
 import com.whatpl.security.handler.LoginSuccessHandler;
 import com.whatpl.jwt.JwtProperties;
 import com.whatpl.jwt.JwtService;
+import com.whatpl.security.handler.NoAuthenticationHandler;
+import com.whatpl.security.handler.NoAuthorizationHandler;
 import com.whatpl.security.repository.CookieOAuth2AuthorizationRequestRepository;
 import com.whatpl.security.service.AccountOAuth2UserService;
 import lombok.RequiredArgsConstructor;
@@ -48,12 +51,16 @@ public class SecurityConfig {
                                 .userService(new AccountOAuth2UserService(accountService)))
                         .authorizationEndpoint(auth -> auth
                                 .authorizationRequestRepository(new CookieOAuth2AuthorizationRequestRepository()))
-                        .successHandler(new LoginSuccessHandler(objectMapper, jwtService)))
+                        .successHandler(new LoginSuccessHandler(objectMapper, jwtService))
+                        .failureHandler(new LoginFailureHandler(objectMapper)))
                 .addFilterBefore(new JwtAuthenticationFilter(objectMapper, jwtService, jwtProperties, securityContextRepository()),
                         SecurityContextHolderFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(AbstractHttpConfigurer::disable);
+                .sessionManagement(AbstractHttpConfigurer::disable)
+                .exceptionHandling(handler -> handler
+                        .authenticationEntryPoint(new NoAuthenticationHandler(objectMapper))
+                        .accessDeniedHandler(new NoAuthorizationHandler(objectMapper)));
 
         return http.getOrBuild();
     }
