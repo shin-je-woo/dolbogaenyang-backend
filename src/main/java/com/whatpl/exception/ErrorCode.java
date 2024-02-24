@@ -13,6 +13,9 @@ public enum ErrorCode {
 
     // ACCOUNT
     NOT_FOUND_ACCOUNT("ACC1", 400, "사용자를 찾을 수 없습니다."),
+    LOGIN_FAILED("ACC2", 401, "로그인에 실패했습니다."),
+    NO_AUTHENTICATION("ACC3", 401, "인증되지 않은 사용자입니다."),
+    NO_AUTHORIZATION("ACC4", 403, "접근권한이 없습니다."),
 
     // COMMON
     GLOBAL_EXCEPTION("CMM1", 500, "서버에서 에러가 발생하였습니다."),
