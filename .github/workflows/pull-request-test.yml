@@ -1,0 +1,39 @@
+name: Pull Request Test
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+permissions: write-all
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: zulu
+          cache: 'gradle'
+
+      # Gradle wrapper 파일 실행 권한주기
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Gradle build
+        run:
+          ./gradlew test --parallel
+
+      # 테스트 결과를 report
+      - name: Publish unit test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: build/test-results/test/TEST-*.xml
