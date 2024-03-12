@@ -1,5 +1,6 @@
 package com.whatpl.global.security.domain;
 
+import com.whatpl.member.domain.SocialType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +14,7 @@ public enum OAuth2UserAttributes {
 
     GOOGLE(attributes -> new OAuth2UserInfo(
             attributes,
-            "google",
+            SocialType.GOOGLE.name(),
             attributes.get("sub").toString(),
             attributes.get("email").toString(),
             attributes.get("name").toString()
@@ -24,7 +25,7 @@ public enum OAuth2UserAttributes {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
         return new OAuth2UserInfo(
                 response,
-                "naver",
+                SocialType.NAVER.name(),
                 response.get("id").toString(),
                 response.get("email").toString(),
                 response.get("name").toString()
@@ -38,7 +39,7 @@ public enum OAuth2UserAttributes {
         Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
         return new OAuth2UserInfo(
                 profile,
-                "kakao",
+                SocialType.KAKAO.name(),
                 attributes.get("id").toString(),
                 null,
                 profile.get("nickname").toString()

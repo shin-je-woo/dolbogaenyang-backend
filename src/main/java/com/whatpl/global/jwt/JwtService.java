@@ -1,11 +1,11 @@
 package com.whatpl.global.jwt;
 
-import com.whatpl.account.Account;
-import com.whatpl.account.AccountRepository;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.redis.RedisService;
-import com.whatpl.global.security.domain.AccountPrincipal;
+import com.whatpl.global.security.domain.MemberPrincipal;
+import com.whatpl.member.domain.Member;
+import com.whatpl.member.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -28,8 +28,8 @@ public class JwtService {
 
     private final JwtProperties jwtProperties;
     private final RedisService redisService;
-    private final AccountRepository accountRepository;
-    private final static String PREFIX_REFRESH_TOKEN = "refreshToken:";
+    private final MemberRepository memberRepository;
+    private final static String PREFIX_REFRESH_TOKEN = "refreshToken::";
 
     /**
      * accessToken 을 발급한다.
@@ -38,14 +38,14 @@ public class JwtService {
      * @return 서명된 jwt
      */
     public String createAccessToken(Authentication authentication) {
-        AccountPrincipal principal = (AccountPrincipal) authentication.getPrincipal();
+        MemberPrincipal principal = (MemberPrincipal) authentication.getPrincipal();
 
         return Jwts.builder()
                 .header()
                 .type("JWT")
                 .and()
                 .subject(String.valueOf(principal.getId()))
-                .claim("name", principal.getName())
+                .claim("name", principal.getUsername())
                 .issuer("jewoos.site")
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.getAccessExpirationTime()))
                 .signWith(jwtProperties.getSecretKey())
@@ -56,7 +56,7 @@ public class JwtService {
      * refreshToken 을 발급한다.
      * refreshToken 은 Redis 에 저장한다.
      *
-     * @param id Account ID
+     * @param id Member ID
      * @return 발급된 refreshToken
      */
     public String createRefreshToken(final long id) {
@@ -77,10 +77,10 @@ public class JwtService {
         if (!StringUtils.hasText(refreshToken)) {
             throw new BizException(ErrorCode.INVALID_TOKEN);
         }
-        Long accountId = getAccountIdFromRedis(refreshToken);
-        UsernamePasswordAuthenticationToken authenticationToken = createAuthenticationToken(accountId);
+        Long memberId = getMemberIdFromRedis(refreshToken);
+        UsernamePasswordAuthenticationToken authenticationToken = createAuthenticationToken(memberId);
         String accessToken = createAccessToken(authenticationToken);
-        String reIssuedRefreshToken = createRefreshToken(accountId);
+        String reIssuedRefreshToken = createRefreshToken(memberId);
         redisService.delete(PREFIX_REFRESH_TOKEN + refreshToken);
 
         return JwtResponse.builder()
@@ -89,10 +89,10 @@ public class JwtService {
                 .build();
     }
 
-    private UsernamePasswordAuthenticationToken createAuthenticationToken(Long accountId) {
-        Account account = accountRepository.findById(accountId)
-                        .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_ACCOUNT));
-        AccountPrincipal principal = AccountPrincipal.of(account);
+    private UsernamePasswordAuthenticationToken createAuthenticationToken(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                        .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
+        MemberPrincipal principal = MemberPrincipal.of(member);
         return new UsernamePasswordAuthenticationToken(principal, "", Collections.emptySet());
     }
 
@@ -104,14 +104,14 @@ public class JwtService {
      */
     public Authentication resolveToken(String jwt) {
         Jws<Claims> claims = parseJwt(jwt);
-        AccountPrincipal accountPrincipal = getAccountPrincipal(claims);
-        return new UsernamePasswordAuthenticationToken(accountPrincipal, "", Collections.emptySet());
+        MemberPrincipal memberPrincipal = getMemberPrincipal(claims);
+        return new UsernamePasswordAuthenticationToken(memberPrincipal, "", Collections.emptySet());
     }
 
-    private AccountPrincipal getAccountPrincipal(Jws<Claims> claims) {
+    private MemberPrincipal getMemberPrincipal(Jws<Claims> claims) {
         long id = Long.parseLong(claims.getPayload().getSubject());
         String name = claims.getPayload().get("name").toString();
-        return new AccountPrincipal(id, name, "", Collections.emptySet(), null);
+        return new MemberPrincipal(id, name, "", Collections.emptySet(), null);
     }
 
     private Jws<Claims> parseJwt(String jwt) {
@@ -125,7 +125,7 @@ public class JwtService {
         return claims;
     }
 
-    private Long getAccountIdFromRedis(String refreshToken) {
+    private Long getMemberIdFromRedis(String refreshToken) {
         if (!redisService.exists(PREFIX_REFRESH_TOKEN + refreshToken))
             throw new BizException(ErrorCode.EXPIRED_TOKEN);
         return Long.parseLong(redisService.get(PREFIX_REFRESH_TOKEN + refreshToken));

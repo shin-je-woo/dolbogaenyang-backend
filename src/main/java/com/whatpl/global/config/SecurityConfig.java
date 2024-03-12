@@ -1,16 +1,16 @@
 package com.whatpl.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.whatpl.account.AccountService;
+import com.whatpl.global.jwt.JwtProperties;
+import com.whatpl.global.jwt.JwtService;
 import com.whatpl.global.security.filter.JwtAuthenticationFilter;
 import com.whatpl.global.security.handler.LoginFailureHandler;
 import com.whatpl.global.security.handler.LoginSuccessHandler;
-import com.whatpl.global.jwt.JwtProperties;
-import com.whatpl.global.jwt.JwtService;
 import com.whatpl.global.security.handler.NoAuthenticationHandler;
 import com.whatpl.global.security.handler.NoAuthorizationHandler;
 import com.whatpl.global.security.repository.CookieOAuth2AuthorizationRequestRepository;
-import com.whatpl.global.security.service.AccountOAuth2UserService;
+import com.whatpl.global.security.service.MemberOAuth2UserService;
+import com.whatpl.member.service.MemberLoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -40,7 +40,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AccountService accountService,
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, MemberLoginService memberLoginService,
                                                    ObjectMapper objectMapper, JwtService jwtService,
                                                    JwtProperties jwtProperties) throws Exception {
         http.authorizeHttpRequests(auth -> auth
@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(new AccountOAuth2UserService(accountService)))
+                                .userService(new MemberOAuth2UserService(memberLoginService)))
                         .authorizationEndpoint(auth -> auth
                                 .authorizationRequestRepository(new CookieOAuth2AuthorizationRequestRepository()))
                         .successHandler(new LoginSuccessHandler(objectMapper, jwtService))

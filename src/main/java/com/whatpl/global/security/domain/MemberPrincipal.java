@@ -1,6 +1,6 @@
 package com.whatpl.global.security.domain;
 
-import com.whatpl.account.Account;
+import com.whatpl.member.domain.Member;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -11,20 +11,18 @@ import java.util.Collections;
 import java.util.Map;
 
 @Getter
-public class AccountPrincipal extends User implements OAuth2User {
+public class MemberPrincipal extends User implements OAuth2User {
 
     private final long id;
-    private final OAuth2UserInfo oAuth2UserInfo;
 
-    public AccountPrincipal(long id, String username, String password, Collection<? extends GrantedAuthority> authorities, OAuth2UserInfo oAuth2UserInfo) {
+    public MemberPrincipal(long id, String username, String password, Collection<? extends GrantedAuthority> authorities, OAuth2UserInfo oAuth2UserInfo) {
         super(username, password, authorities);
         this.id = id;
-        this.oAuth2UserInfo = oAuth2UserInfo;
     }
 
     @Override
     public Map<String, Object> getAttributes() {
-        return oAuth2UserInfo.getAttributes();
+        return Collections.emptyMap();
     }
 
     @Override
@@ -32,15 +30,14 @@ public class AccountPrincipal extends User implements OAuth2User {
         return super.getUsername();
     }
 
-    public static AccountPrincipal of(Account account) {
+    public static MemberPrincipal of(Member member) {
         OAuth2UserInfo userInfo = OAuth2UserInfo.builder()
                 .attributes(Collections.emptyMap())
-                .name(account.getName())
-                .email(account.getEmail())
-                .registrationId(account.getRegistrationId())
-                .providerId(account.getProviderId())
+                .name(member.getNickname())
+                .registrationId(member.getSocialType().name())
+                .providerId(member.getSocialId())
                 .build();
-        return new AccountPrincipal(account.getId(), account.getName(), "",
+        return new MemberPrincipal(member.getId(), member.getNickname(), "",
                 Collections.emptySet(), userInfo);
     }
 }

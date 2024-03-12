@@ -11,8 +11,8 @@ public enum ErrorCode {
     INVALID_TOKEN("TKN1", 401, "토큰정보가 유효하지 않습니다."),
     EXPIRED_TOKEN("TKN2", 401, "만료된 토큰입니다."),
 
-    // ACCOUNT
-    NOT_FOUND_ACCOUNT("ACC1", 400, "사용자를 찾을 수 없습니다."),
+    // MEMBER
+    NOT_FOUND_MEMBER("ACC1", 400, "사용자를 찾을 수 없습니다."),
     LOGIN_FAILED("ACC2", 401, "로그인에 실패했습니다."),
     NO_AUTHENTICATION("ACC3", 401, "인증되지 않은 사용자입니다."),
     NO_AUTHORIZATION("ACC4", 403, "접근권한이 없습니다."),

@@ -1,7 +1,7 @@
 package com.whatpl.global.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.whatpl.global.security.domain.AccountPrincipal;
+import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.global.jwt.JwtResponse;
 import com.whatpl.global.jwt.JwtService;
 import jakarta.servlet.ServletException;
@@ -24,7 +24,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        AccountPrincipal principal = (AccountPrincipal) authentication.getPrincipal();
+        MemberPrincipal principal = (MemberPrincipal) authentication.getPrincipal();
         String accessToken = jwtService.createAccessToken(authentication);
         String refreshToken = jwtService.createRefreshToken(principal.getId());
         JwtResponse tokenResponse = JwtResponse.builder()

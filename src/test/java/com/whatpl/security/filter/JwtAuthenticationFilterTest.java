@@ -1,10 +1,10 @@
 package com.whatpl.security.filter;
 
-import com.whatpl.account.AccountService;
 import com.whatpl.global.config.SecurityConfig;
 import com.whatpl.global.jwt.JwtProperties;
 import com.whatpl.global.jwt.JwtService;
-import com.whatpl.global.security.domain.AccountPrincipal;
+import com.whatpl.global.security.domain.MemberPrincipal;
+import com.whatpl.member.service.MemberLoginService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,7 +34,7 @@ class JwtAuthenticationFilterTest {
     MockMvc mockMvc;
 
     @MockBean
-    AccountService accountService;
+    MemberLoginService memberLoginService;
 
     @MockBean
     JwtService jwtService;
@@ -51,7 +51,7 @@ class JwtAuthenticationFilterTest {
         // given: 토큰이 유효한 경우로 세팅
         String tokenType = "Bearer";
         String validToken = "validToken";
-        var principal = new AccountPrincipal(1L, "test", "", Collections.emptySet(), null);
+        var principal = new MemberPrincipal(1L, "test", "", Collections.emptySet(), null);
         var authenticationToken = new UsernamePasswordAuthenticationToken(principal, "", Collections.emptySet());
         when(jwtProperties.getTokenType())
                 .thenReturn(tokenType);
