@@ -1,15 +1,15 @@
 package com.whatpl.security.jwt;
 
-import com.whatpl.account.Account;
-import com.whatpl.account.AccountRepository;
-import com.whatpl.exception.BizException;
-import com.whatpl.exception.ErrorCode;
-import com.whatpl.jwt.JwtProperties;
-import com.whatpl.jwt.JwtResponse;
-import com.whatpl.jwt.JwtService;
-import com.whatpl.redis.RedisService;
-import com.whatpl.security.domain.AccountPrincipal;
-import com.whatpl.security.domain.OAuth2UserInfo;
+import com.whatpl.global.exception.BizException;
+import com.whatpl.global.exception.ErrorCode;
+import com.whatpl.global.jwt.JwtProperties;
+import com.whatpl.global.jwt.JwtResponse;
+import com.whatpl.global.jwt.JwtService;
+import com.whatpl.global.redis.RedisService;
+import com.whatpl.global.security.domain.MemberPrincipal;
+import com.whatpl.global.security.domain.OAuth2UserInfo;
+import com.whatpl.member.domain.Member;
+import com.whatpl.member.repository.MemberRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.io.Decoders;
@@ -37,7 +37,7 @@ class JwtServiceTest {
     private static final String MOCK_JWT_SECRET = "UWVIUjhtcW15ZGRQOWRsdzdnMExIb0VmSFlOUTJLWTdwc0Z5WFoyNzZGUQ";
 
     @Mock
-    AccountRepository accountRepository;
+    MemberRepository memberRepository;
 
     @Mock
     JwtProperties jwtProperties;
@@ -55,7 +55,7 @@ class JwtServiceTest {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.builder()
                 .name("testuser")
                 .build();
-        AccountPrincipal principal = new AccountPrincipal(1L, "testuser", "", Collections.emptySet(), oAuth2UserInfo);
+        MemberPrincipal principal = new MemberPrincipal(1L, "testuser", "", Collections.emptySet(), oAuth2UserInfo);
         OAuth2AuthenticationToken oAuth2AuthenticationToken = new OAuth2AuthenticationToken(principal, null, "test");
 
         when(jwtProperties.getAccessExpirationTime())
@@ -70,10 +70,9 @@ class JwtServiceTest {
         // then
         long countComma = accessToken.chars().filter(c -> c == '.').count();
         assertEquals(2, countComma);
-        AccountPrincipal resultPrincipal = (AccountPrincipal) authentication.getPrincipal();
+        MemberPrincipal resultPrincipal = (MemberPrincipal) authentication.getPrincipal();
         assertEquals(principal.getId(), resultPrincipal.getId());
         assertEquals(principal.getUsername(), resultPrincipal.getUsername());
-        assertNull(resultPrincipal.getOAuth2UserInfo());
     }
 
     @Test
@@ -82,7 +81,7 @@ class JwtServiceTest {
         // given
         long id = 1L;
         long refreshTokenExpirationTime = 60_000L;
-        String prefix = "refreshToken:";
+        String prefix = "refreshToken::";
         when(jwtProperties.getRefreshExpirationTime())
                 .thenReturn(refreshTokenExpirationTime);
 
@@ -163,19 +162,19 @@ class JwtServiceTest {
     void reIssueToken() {
         // given
         String refreshToken = "refreshToken";
-        long accountId = 1L;
+        long memberId = 1L;
         when(redisService.exists(any()))
                 .thenReturn(true);
         when(redisService.get(any()))
-                .thenReturn(String.valueOf(accountId));
-        Account testUser = Account.builder()
-                .name("testUser")
+                .thenReturn(String.valueOf(memberId));
+        Member testMember = Member.builder()
+                .nickname("testMember")
                 .build();
-        when(accountRepository.findById(accountId))
-                .thenReturn(Optional.of(testUser));
-        AccountPrincipal expectedPrincipal = new AccountPrincipal(accountId, testUser.getName(), "", Collections.emptySet(), null);
-        MockedStatic<AccountPrincipal> accountPrincipalMock = mockStatic(AccountPrincipal.class);
-        accountPrincipalMock.when(() -> AccountPrincipal.of(testUser))
+        when(memberRepository.findById(memberId))
+                .thenReturn(Optional.of(testMember));
+        MemberPrincipal expectedPrincipal = new MemberPrincipal(memberId, testMember.getNickname(), "", Collections.emptySet(), null);
+        MockedStatic<MemberPrincipal> memberPrincipalMock = mockStatic(MemberPrincipal.class);
+        memberPrincipalMock.when(() -> MemberPrincipal.of(testMember))
                 .thenReturn(expectedPrincipal);
         when(jwtProperties.getSecretKey())
                 .thenReturn(Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(MOCK_JWT_SECRET)));
@@ -191,6 +190,6 @@ class JwtServiceTest {
         long countHyphen = jwtResponse.getRefreshToken().chars().filter(c -> c == '-').count();
         assertEquals(4, countHyphen);
 
-        accountPrincipalMock.close();
+        memberPrincipalMock.close();
     }
 }

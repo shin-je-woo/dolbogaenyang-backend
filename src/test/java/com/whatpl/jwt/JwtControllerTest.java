@@ -1,7 +1,10 @@
 package com.whatpl.jwt;
 
-import com.whatpl.account.AccountService;
-import com.whatpl.security.config.SecurityConfig;
+import com.whatpl.global.config.SecurityConfig;
+import com.whatpl.global.jwt.JwtProperties;
+import com.whatpl.global.jwt.JwtResponse;
+import com.whatpl.global.jwt.JwtService;
+import com.whatpl.member.service.MemberLoginService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +29,7 @@ class JwtControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    AccountService accountService;
+    MemberLoginService memberLoginService;
 
     @MockBean
     JwtService jwtService;
