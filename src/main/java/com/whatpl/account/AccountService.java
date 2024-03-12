@@ -1,7 +1,7 @@
 package com.whatpl.account;
 
-import com.whatpl.security.domain.AccountPrincipal;
-import com.whatpl.security.domain.OAuth2UserInfo;
+import com.whatpl.global.security.domain.AccountPrincipal;
+import com.whatpl.global.security.domain.OAuth2UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

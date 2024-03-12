@@ -1,12 +1,10 @@
 package com.whatpl.security.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatpl.account.AccountService;
-import com.whatpl.jwt.JwtProperties;
-import com.whatpl.jwt.JwtService;
-import com.whatpl.security.config.SecurityConfig;
-import com.whatpl.security.domain.AccountPrincipal;
-import jakarta.servlet.ServletException;
+import com.whatpl.global.config.SecurityConfig;
+import com.whatpl.global.jwt.JwtProperties;
+import com.whatpl.global.jwt.JwtService;
+import com.whatpl.global.security.domain.AccountPrincipal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,15 +14,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -46,6 +42,9 @@ class JwtAuthenticationFilterTest {
     @MockBean
     JwtProperties jwtProperties;
 
+    @MockBean
+    SecurityContextRepository securityContextRepository;
+
     @Test
     @DisplayName("Authorization 헤더의 토큰이 유효할 경우 사용자 인증")
     void doFilterInternal() throws Exception {
@@ -66,40 +65,18 @@ class JwtAuthenticationFilterTest {
                 .andDo(print());
     }
 
-    @DisplayName("Authorization 헤더에 값이 없거나 지정된 TokenType 으로 시작하지 않으면 다음 필터 수행")
+    @DisplayName("Authorization 헤더에 값이 없거나 지정된 TokenType 으로 시작하지 않으면 사용자 인증 X")
     @ParameterizedTest
     @ValueSource(strings = {"", "Bearer", "Basic", "Basic testToken"})
-    void shouldNotFilter(String tokenType) throws ServletException {
-        // given
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(new ObjectMapper(),
-                jwtService, jwtProperties, null);
-        MockHttpServletRequest request = new MockHttpServletRequest(HttpMethod.GET.name(), "/");
-        request.addHeader(HttpHeaders.AUTHORIZATION, tokenType);
+    void test(String tokenType) throws Exception {
+        String invalidToken = "invalidToken";
         when(jwtProperties.getTokenType())
-                .thenReturn("Bearer");
+                .thenReturn(tokenType);
 
-        // when
-        boolean shouldNotFilter = jwtAuthenticationFilter.shouldNotFilter(request);
-
-        // then
-        assertTrue(shouldNotFilter);
-    }
-
-    @Test
-    @DisplayName("토큰 재발급 요청일 경우 다음 필터 수행")
-    void shouldNotFilter2() throws ServletException {
-        // given
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(new ObjectMapper(),
-                jwtService, jwtProperties, null);
-        MockHttpServletRequest request = new MockHttpServletRequest(HttpMethod.POST.name(), "/token");
-        request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer testToken");
-        when(jwtProperties.getTokenType())
-                .thenReturn("Bearer");
-
-        // when
-        boolean shouldNotFilter = jwtAuthenticationFilter.shouldNotFilter(request);
-
-        // then
-        assertTrue(shouldNotFilter);
+        // expected
+        mockMvc.perform(get("/")
+                        .header(HttpHeaders.AUTHORIZATION, tokenType + invalidToken))
+                .andExpect(SecurityMockMvcResultMatchers.unauthenticated())
+                .andDo(print());
     }
 }

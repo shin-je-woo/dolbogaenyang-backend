@@ -1,10 +1,10 @@
 package com.whatpl.security.handler;
 
 import com.whatpl.account.AccountService;
-import com.whatpl.exception.ErrorCode;
-import com.whatpl.jwt.JwtProperties;
-import com.whatpl.jwt.JwtService;
-import com.whatpl.security.config.SecurityConfig;
+import com.whatpl.global.exception.ErrorCode;
+import com.whatpl.global.jwt.JwtProperties;
+import com.whatpl.global.jwt.JwtService;
+import com.whatpl.global.config.SecurityConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
