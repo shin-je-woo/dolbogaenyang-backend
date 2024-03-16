@@ -45,6 +45,7 @@ public class SecurityConfig {
                                                    JwtProperties jwtProperties) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(WEB_SECURITY_WHITE_LIST).permitAll()
+                        .requestMatchers("/docs/*").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo

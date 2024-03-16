@@ -1,7 +1,17 @@
+import org.hidetake.gradle.swagger.generator.GenerateSwaggerUI
+
+buildscript {
+    ext {
+        restdocsApiSpecVersion = '0.18.4'
+    }
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.8'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id 'com.epages.restdocs-api-spec' version "${restdocsApiSpecVersion}"
+    id 'org.hidetake.swagger.generator' version '2.18.2'
 }
 
 group = 'com.whatpl'
@@ -19,6 +29,12 @@ configurations {
 
 repositories {
 	mavenCentral()
+}
+
+swaggerSources {
+  sample {
+      setInputFile(file("${project.buildDir}/api-spec/openapi3.yml"))
+  }
 }
 
 dependencies {
@@ -49,6 +65,14 @@ dependencies {
 
 	// P6Spy 추가
 	implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0"
+	
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // restdocs mockmvc
+	testImplementation 'com.epages:restdocs-api-spec-mockmvc:'+restdocsApiSpecVersion // restdocs
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+	
+	// SwaggerUI
+	swaggerUI 'org.webjars:swagger-ui:4.11.1'
+
 }
 
 tasks.named('bootBuildImage') {
@@ -57,4 +81,41 @@ tasks.named('bootBuildImage') {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// openAPI 문서 형식
+openapi3 {
+	servers = [
+			{ url = 'http://localhost:8080' },
+			{ url = 'http://whaple.com' }
+	]
+	title = 'Whatpl Service API'
+	description = 'Whatpl Service API description'
+	version = '1.0.0'
+	format = 'yml'
+}
+
+// doFrist를 통한 Header 설정
+tasks.withType(GenerateSwaggerUI) {
+    dependsOn 'openapi3'
+    doFirst {
+        def swaggerUIFile = file("${openapi3.outputDirectory}/openapi3.yml")
+
+        def securitySchemesContent =  "  securitySchemes:\n" +  \
+                                      "    APIKey:\n" +  \
+                                      "      type: apiKey\n" +  \
+                                      "      name: Authorization\n" +  \
+                                      "      in: header\n" + \
+                                      "security:\n" +
+                                      "  - APIKey: []  # Apply the security scheme here"
+
+        swaggerUIFile.append securitySchemesContent
+    }
+}
+
+bootJar {
+    dependsOn generateSwaggerUISample
+    from("${generateSwaggerUISample.outputDir}") {
+        into 'static/docs'
+    }
 }
