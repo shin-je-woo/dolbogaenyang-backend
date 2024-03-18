@@ -6,6 +6,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -36,6 +37,13 @@ public class ExceptionControllerAdvice {
     public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
         log.error("handleMaxUploadSizeExceededException", e);
         ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.FILE_SIZE_EXCEED);
+        return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException e) {
+        log.error("handleNoHandlerFoundException", e);
+        ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.NOT_FOUND_API);
         return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
     }
 }
