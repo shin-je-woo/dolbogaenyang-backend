@@ -25,18 +25,17 @@ public class S3Uploader {
     private String bucket;
 
     public String upload(MultipartFile multipartFile) {
-        String result;
+        String storedName = UUID.randomUUID().toString();
         try (InputStream is = multipartFile.getInputStream()) {
-            S3Resource resource = s3Template.upload(bucket, UUID.randomUUID().toString(), is,
+            s3Template.upload(bucket, storedName, is,
                     ObjectMetadata.builder().contentType(multipartFile.getContentType()).build());
-            result = resource.getURL().toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return result;
+        return storedName;
     }
 
-    public Resource download(String key)  {
+    public Resource download(String key) {
         S3Resource resource = s3Template.download(bucket, key);
         if (!resource.exists()) {
             throw new BizException(ErrorCode.NOT_FOUND_FILE);

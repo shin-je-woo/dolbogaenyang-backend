@@ -68,6 +68,9 @@ dependencies {
 
 	// AWS S3 추가
 	implementation("io.awspring.cloud:spring-cloud-aws-starter-s3:3.0.0")
+
+	// Apache Tika Core 추가 (파일 MIME타입 검증)
+	implementation group: 'org.apache.tika', name: 'tika-core', version: '2.9.1'
 	
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // restdocs mockmvc
 	testImplementation 'com.epages:restdocs-api-spec-mockmvc:'+restdocsApiSpecVersion // restdocs

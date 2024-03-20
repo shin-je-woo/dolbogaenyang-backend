@@ -1,0 +1,44 @@
+package com.whatpl.attachment.service;
+
+import com.whatpl.attachment.domain.Attachment;
+import com.whatpl.attachment.dto.ResourceDto;
+import com.whatpl.attachment.repository.AttachmentRepository;
+import com.whatpl.global.exception.BizException;
+import com.whatpl.global.exception.ErrorCode;
+import com.whatpl.global.upload.S3Uploader;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+@Service
+@RequiredArgsConstructor
+public class AttachmentService {
+
+    private final AttachmentRepository attachmentRepository;
+    private final S3Uploader s3Uploader;
+
+    @Transactional
+    public Long upload(MultipartFile multipartFile) {
+        String storedName = s3Uploader.upload(multipartFile);
+        Attachment attachment = Attachment.builder()
+                .fileName(multipartFile.getOriginalFilename())
+                .storedName(storedName)
+                .mimeType(multipartFile.getContentType())
+                .build();
+        Attachment savedAttachment = attachmentRepository.save(attachment);
+        return savedAttachment.getId();
+    }
+
+    public ResourceDto download(Long id) {
+        Attachment attachment = attachmentRepository.findById(id)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_FILE));
+        Resource resource = s3Uploader.download(attachment.getStoredName());
+        return ResourceDto.builder()
+                .fileName(attachment.getFileName())
+                .resource(resource)
+                .mimeType(attachment.getMimeType())
+                .build();
+    }
+}
