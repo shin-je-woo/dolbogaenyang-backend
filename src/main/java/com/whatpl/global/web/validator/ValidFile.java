@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = MultipartFileValidator.class)
 public @interface ValidFile {
 
-    String message() default "요청한 파일이 유효하지 않습니다.";
+    String message() default "허용된 확장자가 아닙니다. [jpg, jpeg, png, gif, pdf]";
 
     Class<?>[] groups() default { };
 

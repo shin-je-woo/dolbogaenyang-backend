@@ -19,10 +19,10 @@ public class MultipartFileValidator implements ConstraintValidator<ValidFile, Mu
 
     @Override
     public boolean isValid(MultipartFile multipartFile, ConstraintValidatorContext context) {
-        return isValidExtension(multipartFile) && isAllowedType(multipartFile);
+        return hasExtension(multipartFile) && isAllowedType(multipartFile);
     }
 
-    private boolean isValidExtension(MultipartFile multipartFile) {
+    private boolean hasExtension(MultipartFile multipartFile) {
         return StringUtils.hasText(StringUtils.getFilenameExtension(multipartFile.getOriginalFilename()));
     }
 

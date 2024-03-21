@@ -5,10 +5,7 @@ import com.whatpl.attachment.service.AttachmentService;
 import com.whatpl.global.web.validator.ValidFile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +26,7 @@ public class AttachmentController {
     @PostMapping("/attachments")
     public ResponseEntity<Long> upload(@ValidFile @RequestParam("file") MultipartFile multipartFile) {
         Long attachmentId = attachmentService.upload(multipartFile);
-        return ResponseEntity.ok(attachmentId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(attachmentId);
     }
 
     @GetMapping("/attachments/{id}")
