@@ -1,4 +1,4 @@
-package com.whatpl.security.jwt;
+package com.whatpl.global.security.jwt;
 
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;

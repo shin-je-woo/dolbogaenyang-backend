@@ -1,23 +1,14 @@
-package com.whatpl.security.filter;
+package com.whatpl.global.security.filter;
 
-import com.whatpl.global.config.SecurityConfig;
-import com.whatpl.global.jwt.JwtProperties;
-import com.whatpl.global.jwt.JwtService;
+import com.whatpl.BaseSecurityWebMvcTest;
 import com.whatpl.global.security.domain.MemberPrincipal;
-import com.whatpl.member.service.MemberLoginService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers;
-import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 
@@ -26,24 +17,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-@WebMvcTest
-@Import(SecurityConfig.class)
-class JwtAuthenticationFilterTest {
-
-    @Autowired
-    MockMvc mockMvc;
-
-    @MockBean
-    MemberLoginService memberLoginService;
-
-    @MockBean
-    JwtService jwtService;
-
-    @MockBean
-    JwtProperties jwtProperties;
-
-    @MockBean
-    SecurityContextRepository securityContextRepository;
+class JwtAuthenticationFilterTest extends BaseSecurityWebMvcTest {
 
     @Test
     @DisplayName("Authorization 헤더의 토큰이 유효할 경우 사용자 인증")

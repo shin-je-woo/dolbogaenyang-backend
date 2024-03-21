@@ -1,19 +1,11 @@
-package com.whatpl.oauth2;
+package com.whatpl.global.oauth2;
 
-import com.whatpl.global.config.SecurityConfig;
-import com.whatpl.global.jwt.JwtProperties;
-import com.whatpl.global.jwt.JwtService;
+import com.whatpl.BaseSecurityWebMvcTest;
 import com.whatpl.global.util.CookieUtils;
-import com.whatpl.member.service.MemberLoginService;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -23,23 +15,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
-@Import(SecurityConfig.class)
-public class OAuth2ApiTest {
+public class OAuth2ApiTest extends BaseSecurityWebMvcTest {
 
     private static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "OAUTH2_AUTH_REQUEST";
-
-    @Autowired
-    MockMvc mockMvc;
-
-    @MockBean
-    MemberLoginService memberLoginService;
-
-    @MockBean
-    JwtService jwtService;
-
-    @MockBean
-    JwtProperties jwtProperties;
 
     @Test
     @DisplayName("인가코드 요청 API 호출시 리다이렉트 되고, AuthorizationRequest 검증용 Cookie 가 발급된다.")
