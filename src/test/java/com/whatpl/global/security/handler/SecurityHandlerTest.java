@@ -1,38 +1,16 @@
-package com.whatpl.security.handler;
+package com.whatpl.global.security.handler;
 
+import com.whatpl.BaseSecurityWebMvcTest;
 import com.whatpl.global.exception.ErrorCode;
-import com.whatpl.global.jwt.JwtProperties;
-import com.whatpl.global.jwt.JwtService;
-import com.whatpl.global.config.SecurityConfig;
-import com.whatpl.member.service.MemberLoginService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
-@Import(SecurityConfig.class)
-public class SecurityHandlerTest {
-
-    @Autowired
-    MockMvc mockMvc;
-
-    @MockBean
-    MemberLoginService memberLoginService;
-
-    @MockBean
-    JwtService jwtService;
-
-    @MockBean
-    JwtProperties jwtProperties;
+public class SecurityHandlerTest extends BaseSecurityWebMvcTest {
 
     @Test
     @DisplayName("인증되지 않은 사용자가 인증이 필요한 uri 로 요청하면 에러 응답")
