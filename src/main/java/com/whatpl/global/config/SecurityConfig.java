@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,7 +30,7 @@ import org.springframework.security.web.context.*;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String[] WEB_SECURITY_WHITE_LIST = {"/", "/login*", "oauth2*", "/error*", "/token"};
+    private static final String[] WEB_SECURITY_WHITE_LIST = {"/", "/login/**", "/oauth2/**", "/error/**", "/token/**", "/docs/**"};
 
     /*
      * 일반적인 정적자원들의 보안설정 해제
@@ -45,7 +46,7 @@ public class SecurityConfig {
                                                    JwtProperties jwtProperties) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(WEB_SECURITY_WHITE_LIST).permitAll()
-                        .requestMatchers("/docs/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/attachments/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo

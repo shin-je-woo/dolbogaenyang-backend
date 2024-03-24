@@ -55,10 +55,12 @@ class AttachmentControllerTest extends BaseSecurityWebMvcTest {
         mockMvc.perform(multipart("/attachments")
                         .file(multipartFile))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("CONSTRAINT"))
-                .andExpect(jsonPath("$.message").value("허용된 확장자가 아닙니다. [jpg, jpeg, png, gif, pdf]"))
-                .andExpect(jsonPath("$.status").value(HttpStatus.valueOf(400).name()));
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.code").value("CONSTRAINT"),
+                        jsonPath("$.message").value("허용된 확장자가 아닙니다. [jpg, jpeg, png, gif, pdf]"),
+                        jsonPath("$.status").value(HttpStatus.valueOf(400).name())
+                );
     }
 
     @ParameterizedTest
@@ -78,13 +80,14 @@ class AttachmentControllerTest extends BaseSecurityWebMvcTest {
         // expected
         mockMvc.perform(get("/attachments/{id}", attachmentId))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_OCTET_STREAM))
-                .andExpect(header().string(CONTENT_DISPOSITION, AllOf.allOf(
-                        StringContains.containsString("attachment;"),
-                        StringContains.containsString("filename="),
-                        StringContains.containsString(filename)
-                )));
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(APPLICATION_OCTET_STREAM),
+                        header().string(CONTENT_DISPOSITION, AllOf.allOf(
+                                StringContains.containsString("attachment;"),
+                                StringContains.containsString("filename="),
+                                StringContains.containsString(filename)
+                        )));
     }
 
     @ParameterizedTest
@@ -104,14 +107,15 @@ class AttachmentControllerTest extends BaseSecurityWebMvcTest {
         // expected
         mockMvc.perform(get("/attachments/{id}/images", attachmentId))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(mimeType));
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(mimeType));
     }
 
     private MockMultipartFile createMockMultipartFile(String filename, String mimeType) throws IOException {
         String path = requireNonNull(getClass().getClassLoader().getResource("files/" + filename)).getPath();
         InputStream inputStream = new FileInputStream(path);
-        return new MockMultipartFile("file", "filename.test", mimeType, inputStream);
+        return new MockMultipartFile("file", filename, mimeType, inputStream);
     }
 
     static Stream<Arguments> successParameters() {
