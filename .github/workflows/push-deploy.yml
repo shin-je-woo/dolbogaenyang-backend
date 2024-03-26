@@ -21,8 +21,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle (without Test)
-        run: ./gradlew clean build -x test --stacktrace
+      - name: Build with Gradle
+        run: ./gradlew clean build --stacktrace
 
       - name: Docker Hub build & push
         run: |
