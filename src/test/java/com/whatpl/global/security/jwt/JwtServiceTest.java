@@ -7,7 +7,6 @@ import com.whatpl.global.jwt.JwtResponse;
 import com.whatpl.global.jwt.JwtService;
 import com.whatpl.global.redis.RedisService;
 import com.whatpl.global.security.domain.MemberPrincipal;
-import com.whatpl.global.security.domain.OAuth2UserInfo;
 import com.whatpl.member.domain.Member;
 import com.whatpl.member.repository.MemberRepository;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -52,10 +51,7 @@ class JwtServiceTest {
     @DisplayName("accessToken 을 발급한다.")
     void createAccessToken() {
         // given
-        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.builder()
-                .name("testuser")
-                .build();
-        MemberPrincipal principal = new MemberPrincipal(1L, "testuser", "", Collections.emptySet(), oAuth2UserInfo);
+        MemberPrincipal principal = new MemberPrincipal(1L, "testuser", "", Collections.emptySet());
         OAuth2AuthenticationToken oAuth2AuthenticationToken = new OAuth2AuthenticationToken(principal, null, "test");
 
         when(jwtProperties.getAccessExpirationTime())
@@ -172,9 +168,9 @@ class JwtServiceTest {
                 .build();
         when(memberRepository.findById(memberId))
                 .thenReturn(Optional.of(testMember));
-        MemberPrincipal expectedPrincipal = new MemberPrincipal(memberId, testMember.getNickname(), "", Collections.emptySet(), null);
+        MemberPrincipal expectedPrincipal = new MemberPrincipal(memberId, testMember.getNickname(), "", Collections.emptySet());
         MockedStatic<MemberPrincipal> memberPrincipalMock = mockStatic(MemberPrincipal.class);
-        memberPrincipalMock.when(() -> MemberPrincipal.of(testMember))
+        memberPrincipalMock.when(() -> MemberPrincipal.from(testMember))
                 .thenReturn(expectedPrincipal);
         when(jwtProperties.getSecretKey())
                 .thenReturn(Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(MOCK_JWT_SECRET)));

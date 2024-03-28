@@ -15,7 +15,7 @@ public class MemberPrincipal extends User implements OAuth2User {
 
     private final long id;
 
-    public MemberPrincipal(long id, String username, String password, Collection<? extends GrantedAuthority> authorities, OAuth2UserInfo oAuth2UserInfo) {
+    public MemberPrincipal(long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.id = id;
     }
@@ -30,14 +30,8 @@ public class MemberPrincipal extends User implements OAuth2User {
         return super.getUsername();
     }
 
-    public static MemberPrincipal of(Member member) {
-        OAuth2UserInfo userInfo = OAuth2UserInfo.builder()
-                .attributes(Collections.emptyMap())
-                .name(member.getNickname())
-                .registrationId(member.getSocialType().name())
-                .providerId(member.getSocialId())
-                .build();
+    public static MemberPrincipal from(Member member) {
         return new MemberPrincipal(member.getId(), member.getNickname(), "",
-                Collections.emptySet(), userInfo);
+                Collections.emptyList());
     }
 }

@@ -92,7 +92,7 @@ public class JwtService {
     private UsernamePasswordAuthenticationToken createAuthenticationToken(Long memberId) {
         Member member = memberRepository.findById(memberId)
                         .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
-        MemberPrincipal principal = MemberPrincipal.of(member);
+        MemberPrincipal principal = MemberPrincipal.from(member);
         return new UsernamePasswordAuthenticationToken(principal, "", Collections.emptySet());
     }
 
@@ -111,7 +111,7 @@ public class JwtService {
     private MemberPrincipal getMemberPrincipal(Jws<Claims> claims) {
         long id = Long.parseLong(claims.getPayload().getSubject());
         String name = claims.getPayload().get("name").toString();
-        return new MemberPrincipal(id, name, "", Collections.emptySet(), null);
+        return new MemberPrincipal(id, name, "", Collections.emptySet());
     }
 
     private Jws<Claims> parseJwt(String jwt) {

@@ -25,7 +25,7 @@ class JwtAuthenticationFilterTest extends BaseSecurityWebMvcTest {
         // given: 토큰이 유효한 경우로 세팅
         String tokenType = "Bearer";
         String validToken = "validToken";
-        var principal = new MemberPrincipal(1L, "test", "", Collections.emptySet(), null);
+        var principal = new MemberPrincipal(1L, "test", "", Collections.emptySet());
         var authenticationToken = new UsernamePasswordAuthenticationToken(principal, "", Collections.emptySet());
         when(jwtProperties.getTokenType())
                 .thenReturn(tokenType);

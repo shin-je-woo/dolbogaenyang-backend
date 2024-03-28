@@ -18,6 +18,7 @@ public class MemberLoginService {
 
     private Member createMember(OAuth2UserInfo oAuth2UserInfo) {
         Member member = Member.builder()
+                .nickname(oAuth2UserInfo.getName())
                 .socialType(SocialType.valueOf(oAuth2UserInfo.getRegistrationId().toUpperCase()))
                 .socialId(oAuth2UserInfo.getProviderId())
                 .status(MemberStatus.ACTIVE)
@@ -32,6 +33,6 @@ public class MemberLoginService {
                         oAuth2UserInfo.getProviderId())
                 .orElseGet(() -> createMember(oAuth2UserInfo));
 
-        return MemberPrincipal.of(member);
+        return MemberPrincipal.from(member);
     }
 }
