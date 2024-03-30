@@ -5,6 +5,7 @@ import com.whatpl.global.config.SecurityConfig;
 import com.whatpl.global.jwt.JwtProperties;
 import com.whatpl.global.jwt.JwtService;
 import com.whatpl.member.service.MemberLoginService;
+import com.whatpl.member.service.MemberProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -29,4 +30,7 @@ public class BaseSecurityWebMvcTest {
 
     @MockBean
     protected AttachmentService attachmentService;
+
+    @MockBean
+    protected MemberProfileService memberProfileService;
 }
