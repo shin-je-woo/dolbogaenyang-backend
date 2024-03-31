@@ -28,7 +28,9 @@ public enum ErrorCode {
     MISSING_PARAMETER("CMM3", 400, "필수 파라미터가 존재하지 않습니다."),
     NOT_FOUND_API("CMM4", 404, "요청하신 API를 찾을 수 없습니다."),
     REQUEST_VALUE_INVALID("CMM5", 400, "입력값이 올바르지 않습니다."),
-    SKILL_NOT_VALID("CMM6", 400, "기술스택에 유효하지 않은 값이 존재합니다.");
+    SKILL_NOT_VALID("CMM6", 400, "기술스택에 유효하지 않은 값이 존재합니다."),
+    JOB_NOT_VALID("CMM7", 400, "직무에 유효하지 않은 값이 존재합니다."),
+    CAREER_NOT_VALID("CMM7", 400, "경력에 유효하지 않은 값이 존재합니다.");
 
     private final String code;
     private final int status;

@@ -11,24 +11,24 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
-public enum Skill {
+public enum Career {
 
-    TYPE_SCRIPT("TypeScript"),
-    JAVA("Java"),
-    KOTLIN("Kotlin"),
-    PYTHON("Python"),
-    FIGMA("Figma"),
-    JAVA_SCRIPT("JavaScript"),
-    SQL("SQL");
+    NONE("취업 준비중"),
+    ONE("1년차"),
+    TWO("2년차"),
+    THREE("3년차"),
+    FOUR("4년차"),
+    FIVE("5년차"),
+    SIX("6년차");
 
     @JsonValue
     private final String value;
 
     @JsonCreator
-    public static Skill from(String value) {
-        return Arrays.stream(Skill.values())
-                .filter(skill -> skill.getValue().equals(value))
+    public static Career from(String value) {
+        return Arrays.stream(Career.values())
+                .filter(career -> career.getValue().equals(value))
                 .findFirst()
-                .orElseThrow(() -> new BizException(ErrorCode.SKILL_NOT_VALID));
+                .orElseThrow(() -> new BizException(ErrorCode.CAREER_NOT_VALID));
     }
 }
