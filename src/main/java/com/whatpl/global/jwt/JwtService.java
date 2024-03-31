@@ -29,7 +29,7 @@ public class JwtService {
     private final JwtProperties jwtProperties;
     private final RedisService redisService;
     private final MemberRepository memberRepository;
-    private final static String PREFIX_REFRESH_TOKEN = "refreshToken::";
+    private static final String PREFIX_REFRESH_TOKEN = "refreshToken:";
 
     /**
      * accessToken 을 발급한다.
@@ -45,7 +45,7 @@ public class JwtService {
                 .type("JWT")
                 .and()
                 .subject(String.valueOf(principal.getId()))
-                .claim("name", principal.getUsername())
+                .claim(WhatplClaim.NICKNAME.getKey(), principal.getUsername())
                 .issuer("jewoos.site")
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.getAccessExpirationTime()))
                 .signWith(jwtProperties.getSecretKey())
@@ -93,7 +93,7 @@ public class JwtService {
         Member member = memberRepository.findById(memberId)
                         .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
         MemberPrincipal principal = MemberPrincipal.from(member);
-        return new UsernamePasswordAuthenticationToken(principal, "", Collections.emptySet());
+        return new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), Collections.emptySet());
     }
 
     /**
@@ -110,7 +110,7 @@ public class JwtService {
 
     private MemberPrincipal getMemberPrincipal(Jws<Claims> claims) {
         long id = Long.parseLong(claims.getPayload().getSubject());
-        String name = claims.getPayload().get("name").toString();
+        String name = claims.getPayload().get(WhatplClaim.NICKNAME.getKey()).toString();
         return new MemberPrincipal(id, name, "", Collections.emptySet());
     }
 

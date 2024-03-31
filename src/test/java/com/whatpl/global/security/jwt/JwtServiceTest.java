@@ -77,7 +77,7 @@ class JwtServiceTest {
         // given
         long id = 1L;
         long refreshTokenExpirationTime = 60_000L;
-        String prefix = "refreshToken::";
+        String prefix = "refreshToken:";
         when(jwtProperties.getRefreshExpirationTime())
                 .thenReturn(refreshTokenExpirationTime);
 

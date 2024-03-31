@@ -1,4 +1,4 @@
-package com.whatpl;
+package com.whatpl.global.security.model;
 
 import com.whatpl.global.security.domain.MemberPrincipal;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -42,12 +42,15 @@ public class Member extends BaseTimeEntity {
     private Set<MemberSkill> memberSkills = new HashSet<>();
 
     @Builder
-    public Member(SocialType socialType, String socialId, String nickname, MemberStatus status, Job job) {
+    public Member(SocialType socialType, String socialId, String nickname, MemberStatus status,
+                  Job job, Career career, Boolean profileOpen) {
         this.socialType = socialType;
         this.socialId = socialId;
         this.nickname = nickname;
         this.status = status;
         this.job = job;
+        this.career = career;
+        this.profileOpen = profileOpen;
     }
 
     //==연관관계 메서드==//

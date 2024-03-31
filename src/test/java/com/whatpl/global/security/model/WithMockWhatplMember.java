@@ -1,4 +1,4 @@
-package com.whatpl;
+package com.whatpl.global.security.model;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.security.test.context.support.WithSecurityContext;

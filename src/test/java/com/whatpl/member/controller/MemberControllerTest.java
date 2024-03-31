@@ -3,7 +3,7 @@ package com.whatpl.member.controller;
 import com.whatpl.ApiDocTag;
 import com.whatpl.ApiDocUtils;
 import com.whatpl.BaseSecurityWebMvcTest;
-import com.whatpl.WithMockWhatplMember;
+import com.whatpl.global.security.model.WithMockWhatplMember;
 import com.whatpl.member.domain.Career;
 import com.whatpl.member.domain.Job;
 import com.whatpl.member.domain.Skill;

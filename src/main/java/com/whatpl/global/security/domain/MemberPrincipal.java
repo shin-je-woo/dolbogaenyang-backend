@@ -31,7 +31,6 @@ public class MemberPrincipal extends User implements OAuth2User {
     }
 
     public static MemberPrincipal from(Member member) {
-        return new MemberPrincipal(member.getId(), member.getNickname(), "",
-                Collections.emptyList());
+        return new MemberPrincipal(member.getId(), member.getNickname(), "", Collections.emptySet());
     }
 }
