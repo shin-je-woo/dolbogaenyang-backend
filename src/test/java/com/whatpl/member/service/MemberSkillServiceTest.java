@@ -13,10 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,7 +36,7 @@ class MemberSkillServiceTest {
     @DisplayName("MemberSkill을 입력한다.")
     void updateMemberSkills() {
         // given
-        Set<Skill> skills = new HashSet<>(Arrays.asList(Skill.JAVA, Skill.PYTHON));
+        Set<Skill> skills = new LinkedHashSet<>(Arrays.asList(Skill.JAVA, Skill.PYTHON));
         Member member = mock(Member.class);
         long memberId = 1L;
         when(member.getId())
@@ -58,7 +55,7 @@ class MemberSkillServiceTest {
         Set<MemberSkill> memberSkills = memberSkillDto.getMemberSkills();
         Set<Skill> resultSkills = memberSkills.stream()
                 .map(MemberSkill::getSkill)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(LinkedHashSet::new));
         assertIterableEquals(skills, resultSkills);
         assertEquals(member, memberSkillDto.getMember());
     }

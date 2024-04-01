@@ -6,8 +6,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.CollectionUtils;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
@@ -39,7 +40,7 @@ public class Member extends BaseTimeEntity {
     private Boolean profileOpen;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MemberSkill> memberSkills = new HashSet<>();
+    private Set<MemberSkill> memberSkills = new LinkedHashSet<>();
 
     @Builder
     public Member(SocialType socialType, String socialId, String nickname, MemberStatus status,
@@ -73,5 +74,17 @@ public class Member extends BaseTimeEntity {
         this.career = career;
         this.profileOpen = profileOpen;
         memberSkills.forEach(this::addMemberSkill);
+    }
+
+    /**
+     * 프로필 작성 여부
+     * 필수 정보만 입력하면 작성한 것으로 판단
+     */
+    public boolean hasProfile() {
+        return (!CollectionUtils.isEmpty(memberSkills) &&
+                getJob() != null &&
+                getCareer() != null &&
+                getNickname() != null &&
+                getProfileOpen() != null);
     }
 }

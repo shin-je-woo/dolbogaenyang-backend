@@ -2,6 +2,7 @@ package com.whatpl.attachment.docs;
 
 import com.whatpl.BaseSecurityWebMvcTest;
 import com.whatpl.attachment.dto.ResourceDto;
+import com.whatpl.global.security.model.WithMockWhatplMember;
 import org.hamcrest.core.AllOf;
 import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.DisplayName;
@@ -39,13 +40,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AttachmentDocsTest extends BaseSecurityWebMvcTest {
 
     @Test
-    @WithMockUser
+    @WithMockWhatplMember
     @DisplayName("첨부파일 업로드 API Docs")
     void upload() throws Exception {
         // given
         String filename = "cat.jpg";
         MockMultipartFile multipartFile = createMockMultipartFile(filename, IMAGE_JPEG_VALUE);
-        when(jwtProperties.getTokenType()).thenReturn("Bearer");
 
         // expected
         mockMvc.perform(multipart("/attachments")
@@ -87,7 +87,6 @@ public class AttachmentDocsTest extends BaseSecurityWebMvcTest {
     void upload_fail() throws Exception {
         // given
         MockMultipartFile multipartFile = createMockMultipartFile("fail.docx", "application/docx");
-        when(jwtProperties.getTokenType()).thenReturn("Bearer");
 
         // expected
         mockMvc.perform(multipart("/attachments")

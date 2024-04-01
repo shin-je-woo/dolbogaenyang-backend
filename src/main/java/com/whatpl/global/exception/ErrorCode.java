@@ -10,12 +10,15 @@ public enum ErrorCode {
     // TOKEN
     INVALID_TOKEN("TKN1", 401, "토큰정보가 유효하지 않습니다."),
     EXPIRED_TOKEN("TKN2", 401, "만료된 토큰입니다."),
+    MALFORMED_TOKEN("TKN3", 401, "잘못된 형식의 토큰입니다."),
+    INVALID_SIGNATURE("TKN4", 401, "변조된 토큰입니다."),
 
     // MEMBER
     NOT_FOUND_MEMBER("MBR1", 404, "사용자를 찾을 수 없습니다."),
     LOGIN_FAILED("MBR2", 401, "로그인에 실패했습니다."),
     NO_AUTHENTICATION("MBR3", 401, "인증되지 않은 사용자입니다."),
     NO_AUTHORIZATION("MBR4", 403, "접근권한이 없습니다."),
+    HAS_NO_PROFILE("MBR5", 401, "프로필이 작성되지 않은 사용자입니다."),
 
     // FILE
     NOT_FOUND_FILE("FILE1", 404, "파일을 찾을 수 없습니다."),
@@ -30,7 +33,7 @@ public enum ErrorCode {
     REQUEST_VALUE_INVALID("CMM5", 400, "입력값이 올바르지 않습니다."),
     SKILL_NOT_VALID("CMM6", 400, "기술스택에 유효하지 않은 값이 존재합니다."),
     JOB_NOT_VALID("CMM7", 400, "직무에 유효하지 않은 값이 존재합니다."),
-    CAREER_NOT_VALID("CMM7", 400, "경력에 유효하지 않은 값이 존재합니다.");
+    CAREER_NOT_VALID("CMM8", 400, "경력에 유효하지 않은 값이 존재합니다.");
 
     private final String code;
     private final int status;

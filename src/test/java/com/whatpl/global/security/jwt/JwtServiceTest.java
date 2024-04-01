@@ -51,7 +51,7 @@ class JwtServiceTest {
     @DisplayName("accessToken 을 발급한다.")
     void createAccessToken() {
         // given
-        MemberPrincipal principal = new MemberPrincipal(1L, "testuser", "", Collections.emptySet());
+        MemberPrincipal principal = new MemberPrincipal(1L, false, "testuser", "", Collections.emptySet());
         OAuth2AuthenticationToken oAuth2AuthenticationToken = new OAuth2AuthenticationToken(principal, null, "test");
 
         when(jwtProperties.getAccessExpirationTime())
@@ -166,9 +166,9 @@ class JwtServiceTest {
         Member testMember = Member.builder()
                 .nickname("testMember")
                 .build();
-        when(memberRepository.findById(memberId))
+        when(memberRepository.findMemberWithAllById(memberId))
                 .thenReturn(Optional.of(testMember));
-        MemberPrincipal expectedPrincipal = new MemberPrincipal(memberId, testMember.getNickname(), "", Collections.emptySet());
+        MemberPrincipal expectedPrincipal = new MemberPrincipal(memberId, false, testMember.getNickname(), "", Collections.emptySet());
         MockedStatic<MemberPrincipal> memberPrincipalMock = mockStatic(MemberPrincipal.class);
         memberPrincipalMock.when(() -> MemberPrincipal.from(testMember))
                 .thenReturn(expectedPrincipal);

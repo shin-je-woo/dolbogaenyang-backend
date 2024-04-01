@@ -10,14 +10,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-@Getter
 public class MemberPrincipal extends User implements OAuth2User {
 
+    @Getter
     private final long id;
+    private final boolean hasProfile;
 
-    public MemberPrincipal(long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public MemberPrincipal(long id, boolean hasProfile, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.id = id;
+        this.hasProfile = hasProfile;
     }
 
     @Override
@@ -30,7 +32,11 @@ public class MemberPrincipal extends User implements OAuth2User {
         return super.getUsername();
     }
 
+    public boolean getHasProfile() {
+        return hasProfile;
+    }
+
     public static MemberPrincipal from(Member member) {
-        return new MemberPrincipal(member.getId(), member.getNickname(), "", Collections.emptySet());
+        return new MemberPrincipal(member.getId(), member.hasProfile(), member.getNickname(), "", Collections.emptySet());
     }
 }

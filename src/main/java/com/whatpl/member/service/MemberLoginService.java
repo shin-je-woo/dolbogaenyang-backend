@@ -28,7 +28,7 @@ public class MemberLoginService {
 
     @Transactional
     public MemberPrincipal getOrCreateMember(OAuth2UserInfo oAuth2UserInfo) {
-        Member member = memberRepository.findBySocialTypeAndSocialId(
+        Member member = memberRepository.findMemberWithAllBySocialTypeId(
                         SocialType.valueOf(oAuth2UserInfo.getRegistrationId().toUpperCase()),
                         oAuth2UserInfo.getProviderId())
                 .orElseGet(() -> createMember(oAuth2UserInfo));

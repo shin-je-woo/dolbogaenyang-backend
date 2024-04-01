@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public class MemberSkillService {
 
         Set<MemberSkill> memberSkills = skills.stream()
                 .map(skill -> new MemberSkill(skill, member))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(LinkedHashSet::new));
 
         // memberSkills 전체 저장한다.
         memberSkillRepository.saveAll(memberSkills);

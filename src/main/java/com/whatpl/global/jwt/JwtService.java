@@ -46,6 +46,7 @@ public class JwtService {
                 .and()
                 .subject(String.valueOf(principal.getId()))
                 .claim(WhatplClaim.NICKNAME.getKey(), principal.getUsername())
+                .claim(WhatplClaim.HAS_PROFILE.getKey(), principal.getHasProfile())
                 .issuer("jewoos.site")
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.getAccessExpirationTime()))
                 .signWith(jwtProperties.getSecretKey())
@@ -90,7 +91,7 @@ public class JwtService {
     }
 
     private UsernamePasswordAuthenticationToken createAuthenticationToken(Long memberId) {
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findMemberWithAllById(memberId)
                         .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
         MemberPrincipal principal = MemberPrincipal.from(member);
         return new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), Collections.emptySet());
@@ -110,8 +111,9 @@ public class JwtService {
 
     private MemberPrincipal getMemberPrincipal(Jws<Claims> claims) {
         long id = Long.parseLong(claims.getPayload().getSubject());
-        String name = claims.getPayload().get(WhatplClaim.NICKNAME.getKey()).toString();
-        return new MemberPrincipal(id, name, "", Collections.emptySet());
+        String nickname = claims.getPayload().get(WhatplClaim.NICKNAME.getKey()).toString();
+        boolean hasProfile = Boolean.getBoolean(claims.getPayload().get(WhatplClaim.HAS_PROFILE.getKey()).toString());
+        return new MemberPrincipal(id, hasProfile, nickname, "", Collections.emptySet());
     }
 
     private Jws<Claims> parseJwt(String jwt) {

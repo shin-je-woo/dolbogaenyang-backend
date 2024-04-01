@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum WhatplClaim {
 
-    NICKNAME("nick");
+    NICKNAME("nick"),
+    HAS_PROFILE("hpf");
 
     private final String key;
 }
