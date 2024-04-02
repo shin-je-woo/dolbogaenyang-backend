@@ -6,6 +6,7 @@ import com.whatpl.attachment.repository.AttachmentRepository;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.upload.S3Uploader;
+import com.whatpl.global.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,11 @@ public class AttachmentService {
     @Transactional
     public Long upload(MultipartFile multipartFile) {
         String storedName = s3Uploader.upload(multipartFile);
+        String mimeType = FileUtils.extractMimeType(multipartFile);
         Attachment attachment = Attachment.builder()
                 .fileName(multipartFile.getOriginalFilename())
                 .storedName(storedName)
-                .mimeType(multipartFile.getContentType())
+                .mimeType(mimeType)
                 .build();
         Attachment savedAttachment = attachmentRepository.save(attachment);
         return savedAttachment.getId();
@@ -40,5 +42,10 @@ public class AttachmentService {
                 .resource(resource)
                 .mimeType(attachment.getMimeType())
                 .build();
+    }
+
+    public Attachment findById(long id) {
+        return attachmentRepository.findById(id)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_FILE));
     }
 }

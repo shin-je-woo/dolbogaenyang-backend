@@ -1,13 +1,11 @@
 package com.whatpl.global.web.validator;
 
+import com.whatpl.global.util.FileUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.apache.tika.Tika;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Set;
 
 import static org.springframework.http.MediaType.*;
@@ -27,16 +25,8 @@ public class MultipartFileValidator implements ConstraintValidator<ValidFile, Mu
     }
 
     private boolean isAllowedType(MultipartFile multipartFile) {
-        boolean result;
-        try {
-            InputStream inputStream = multipartFile.getInputStream();
-            Tika tika = new Tika();
-            String mimeType = tika.detect(inputStream);
-            result = allowedTypes.stream()
-                    .anyMatch(type -> type.equals(mimeType));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return result;
+        String mimeType = FileUtils.extractMimeType(multipartFile);
+        return allowedTypes.stream()
+                .anyMatch(type -> type.equals(mimeType));
     }
 }
