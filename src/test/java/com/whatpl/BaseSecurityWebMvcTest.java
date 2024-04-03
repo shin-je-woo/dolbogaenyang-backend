@@ -12,13 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import static java.util.Objects.requireNonNull;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest
 @Import(SecurityConfig.class)
-public class BaseSecurityWebMvcTest {
+public abstract class BaseSecurityWebMvcTest {
 
     @Autowired
     protected MockMvc mockMvc;
@@ -44,5 +50,11 @@ public class BaseSecurityWebMvcTest {
     @BeforeEach
     protected void init() {
         when(jwtProperties.getTokenType()).thenReturn("Bearer");
+    }
+
+    protected MockMultipartFile createMockMultipartFile(String key, String filename, String mimeType) throws IOException {
+        String path = requireNonNull(getClass().getClassLoader().getResource("files/" + filename)).getPath();
+        InputStream inputStream = new FileInputStream(path);
+        return new MockMultipartFile(key, filename, mimeType, inputStream);
     }
 }
