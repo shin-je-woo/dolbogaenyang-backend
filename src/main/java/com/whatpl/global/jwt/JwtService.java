@@ -112,7 +112,7 @@ public class JwtService {
     private MemberPrincipal getMemberPrincipal(Jws<Claims> claims) {
         long id = Long.parseLong(claims.getPayload().getSubject());
         String nickname = claims.getPayload().get(WhatplClaim.NICKNAME.getKey()).toString();
-        boolean hasProfile = Boolean.getBoolean(claims.getPayload().get(WhatplClaim.HAS_PROFILE.getKey()).toString());
+        boolean hasProfile = Boolean.parseBoolean(claims.getPayload().get(WhatplClaim.HAS_PROFILE.getKey()).toString());
         return new MemberPrincipal(id, hasProfile, nickname, "", Collections.emptySet());
     }
 
