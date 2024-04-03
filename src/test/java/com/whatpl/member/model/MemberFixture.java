@@ -31,4 +31,20 @@ public class MemberFixture {
         member.addMemberPortfolio(new MemberPortfolio(attachment));
         return member;
     }
+
+    public static Member onlyRequired() {
+        Member member = Member.builder()
+                .socialType(SocialType.NAVER)
+                .socialId("왓플테스트유저")
+                .nickname("왓플테스트유저")
+                .status(MemberStatus.ACTIVE)
+                .job(Job.BACKEND_DEVELOPER)
+                .career(Career.NONE)
+                .workTime(WorkTime.LESS_THAN_TEN)
+                .profileOpen(true)
+                .build();
+
+        member.addMemberSkill(new MemberSkill(Skill.JAVA));
+        return member;
+    }
 }

@@ -1,18 +1,24 @@
 package com.whatpl.member.controller;
 
 import com.whatpl.global.security.domain.MemberPrincipal;
+import com.whatpl.global.web.validator.ValidFileList;
 import com.whatpl.member.dto.NicknameDuplRequest;
 import com.whatpl.member.dto.NicknameDuplResponse;
+import com.whatpl.member.dto.ProfileOptionalRequest;
 import com.whatpl.member.dto.ProfileRequiredRequest;
 import com.whatpl.member.service.MemberProfileService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-@Slf4j
+import java.util.List;
+
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
@@ -28,8 +34,18 @@ public class MemberController {
 
     @PostMapping("/required")
     public ResponseEntity<Void> required(@Valid @RequestBody ProfileRequiredRequest request,
-                                      @AuthenticationPrincipal MemberPrincipal principal) {
+                                         @AuthenticationPrincipal MemberPrincipal principal) {
         memberProfileService.updateRequiredProfile(request, principal.getId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/optional")
+    public ResponseEntity<Void> optional(@Valid @RequestPart ProfileOptionalRequest info,
+                                         @Size(max = 5, message = "포트폴리오는 최대 5개 첨부 가능합니다.")
+                                         @ValidFileList(message = "포트폴리오에 허용된 확장자가 아닙니다. [jpg, jpeg, png, gif, pdf]")
+                                         @RequestPart(required = false) List<MultipartFile> portfolios,
+                                         @AuthenticationPrincipal MemberPrincipal principal) {
+        memberProfileService.updateOptionalProfile(info, portfolios, principal.getId());
         return ResponseEntity.noContent().build();
     }
 }

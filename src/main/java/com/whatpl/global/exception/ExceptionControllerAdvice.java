@@ -11,6 +11,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.List;
@@ -87,5 +88,16 @@ public class ExceptionControllerAdvice {
             return handleException(e);
         }
         return handleBizException(bizException);
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<ErrorResponse> handleMissingServletRequestPartException(MissingServletRequestPartException e) {
+        ErrorCode requiredParameterMissing = ErrorCode.REQUIRED_PARAMETER_MISSING;
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code(requiredParameterMissing.getCode())
+                .message(String.format("%s {%s}", requiredParameterMissing.getMessage(), e.getRequestPartName()))
+                .status(requiredParameterMissing.getStatus())
+                .build();
+        return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
     }
 }
