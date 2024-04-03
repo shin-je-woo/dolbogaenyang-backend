@@ -10,6 +10,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -68,12 +69,11 @@ public class Member extends BaseTimeEntity {
     /**
      * 필수 정보 입력
      */
-    public void modifyRequiredInfo(String nickname, Job job, Career career, boolean profileOpen, Set<MemberSkill> memberSkills) {
+    public void modifyRequiredInfo(String nickname, Job job, Career career, boolean profileOpen) {
         this.nickname = nickname;
         this.job = job;
         this.career = career;
         this.profileOpen = profileOpen;
-        memberSkills.forEach(this::addMemberSkill);
     }
 
     /**
@@ -86,5 +86,30 @@ public class Member extends BaseTimeEntity {
                 getCareer() != null &&
                 getNickname() != null &&
                 getProfileOpen() != null);
+    }
+
+    /**
+     * memberSkills를 추가/삭제한다.
+     */
+    public void modifyMemberSkills(Set<Skill> skills) {
+        // skills 비어있을 경우 -> 전부 삭제
+        if (CollectionUtils.isEmpty(skills)) {
+            memberSkills.clear();
+            return;
+        }
+
+        // member에 있던 skill이 skills에 존재하지 않는 경우 -> 삭제
+        memberSkills.stream()
+                .filter(memberSkill -> !skills.contains(memberSkill.getSkill()))
+                .forEach(removeSkill -> memberSkills.remove(removeSkill));
+
+        // member에 없던 skill이 skills에 존재하는 경우 -> 추가
+        Set<Skill> exSkills = memberSkills.stream()
+                .map(MemberSkill::getSkill)
+                .collect(Collectors.toSet());
+        skills.stream()
+                .filter(skill -> !exSkills.contains(skill))
+                .map(MemberSkill::new)
+                .forEach(this::addMemberSkill);
     }
 }

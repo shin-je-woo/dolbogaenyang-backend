@@ -22,9 +22,7 @@ public class MemberSkill extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Builder
-    public MemberSkill(Skill skill, Member member) {
+    public MemberSkill(Skill skill) {
         this.skill = skill;
-        this.member = member;
     }
 }
