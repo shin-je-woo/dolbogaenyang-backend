@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "attachments")
+@Table(name = "attachment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Attachment extends BaseTimeEntity {
 
