@@ -25,16 +25,14 @@ class JwtAuthenticationFilterTest extends BaseSecurityWebMvcTest {
         // given: 토큰이 유효한 경우로 세팅
         String tokenType = "Bearer";
         String validToken = "validToken";
-        var principal = new MemberPrincipal(1L, "test", "", Collections.emptySet(), null);
+        var principal = new MemberPrincipal(1L, true, "test", "", Collections.emptySet());
         var authenticationToken = new UsernamePasswordAuthenticationToken(principal, "", Collections.emptySet());
-        when(jwtProperties.getTokenType())
-                .thenReturn(tokenType);
         when(jwtService.resolveToken(any()))
                 .thenReturn(authenticationToken);
 
         // expected
         mockMvc.perform(get("/")
-                        .header(HttpHeaders.AUTHORIZATION, tokenType + validToken))
+                        .header(HttpHeaders.AUTHORIZATION, tokenType + " " + validToken))
                 .andExpect(SecurityMockMvcResultMatchers.authenticated())
                 .andDo(print());
     }
@@ -44,12 +42,10 @@ class JwtAuthenticationFilterTest extends BaseSecurityWebMvcTest {
     @ValueSource(strings = {"", "Bearer", "Basic", "Basic testToken"})
     void test(String tokenType) throws Exception {
         String invalidToken = "invalidToken";
-        when(jwtProperties.getTokenType())
-                .thenReturn(tokenType);
 
         // expected
         mockMvc.perform(get("/")
-                        .header(HttpHeaders.AUTHORIZATION, tokenType + invalidToken))
+                        .header(HttpHeaders.AUTHORIZATION, tokenType + " " + invalidToken))
                 .andExpect(SecurityMockMvcResultMatchers.unauthenticated())
                 .andDo(print());
     }
