@@ -59,9 +59,9 @@ public class AttachmentDocsTest extends BaseSecurityWebMvcTest {
 
                                         아래 형식을 참고하여 요청하면 됩니다.
 
-                                        | Content-Disposition   | name   | filename  |Content-Type                 |
-                                        |-----------------------|--------|-----------|-----------------------------|
-                                        | form-data             | file   | 파일명     | MimeType   (ex. image/png)  |
+                                        | name   | filename  |Content-Type                 |
+                                        |--------|-----------|-----------------------------|
+                                        | file   | 파일명     | MimeType   (ex. image/png)  |
                                         """),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION).description("AccessToken"),

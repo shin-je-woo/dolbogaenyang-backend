@@ -8,7 +8,9 @@ import com.whatpl.member.domain.Career;
 import com.whatpl.member.domain.Job;
 import com.whatpl.member.domain.Skill;
 import com.whatpl.member.dto.NicknameDuplResponse;
+import com.whatpl.member.dto.ProfileOptionalRequest;
 import com.whatpl.member.dto.ProfileRequiredRequest;
+import com.whatpl.member.model.ProfileOptionalRequestFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,24 +20,27 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -149,6 +154,69 @@ class MemberControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("skills").type(JsonFieldType.ARRAY).description("기술스택"),
                                 fieldWithPath("profileOpen").type(JsonFieldType.BOOLEAN).description("프로필 공개 여부 [기본값=false]").optional()
                         )
+                ));
+    }
+
+    @Test
+    @WithMockWhatplMember(1L)
+    @DisplayName("프로필 기본 정보 입력 API Docs")
+    void optional() throws Exception {
+        // given
+        ProfileOptionalRequest info = ProfileOptionalRequestFixture.create();
+        String infoJson = objectMapper.writeValueAsString(info);
+        MockMultipartFile infoRequest = new MockMultipartFile("info", "", MediaType.APPLICATION_JSON_VALUE, infoJson.getBytes(StandardCharsets.UTF_8));
+        MockMultipartFile mockMultipartFile1 = createMockMultipartFile("portfolios", "cat.jpg", MediaType.IMAGE_JPEG_VALUE);
+        MockMultipartFile mockMultipartFile2 = createMockMultipartFile("portfolios", "dummy.pdf", MediaType.IMAGE_PNG_VALUE);
+        doNothing().when(memberProfileService).updateOptionalProfile(any(ProfileOptionalRequest.class), anyList(), any(Long.class));
+
+        // expected
+        mockMvc.perform(multipart("/members/optional")
+                        .file(infoRequest)
+                        .file(mockMultipartFile1)
+                        .file(mockMultipartFile2)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer {AccessToken}"))
+                .andExpect(status().isNoContent())
+                .andDo(print())
+                .andDo(document("optional",
+                        resourceDetails()
+                                .tag(ApiDocTag.MEMBER.getTag())
+                                .summary("프로필 선택 정보 입력")
+                                .description("""
+                                        프로필 선택 정보 입력
+                                                                                
+                                        현재 사용 플러그인(ePages/restdocs-api-spec)이 multipart/form-data 문서화가 지원되지 않습니다. (try it out 불가능)
+
+                                        아래 형식을 참고하여 요청하면 됩니다.
+                                        
+                                        <h2> JSON Part </h2>
+                                        | name   | Content-Type           | Description          |
+                                        |--------|------------------------| ---------------------|
+                                        | info   | application/json       | Member 프로필 정보     |
+                                                                                
+                                        <h2> JSON Field Part - info </h2>
+                                        | key         | Type       | Description          |
+                                        |-------------|------------| ---------------------|
+                                        | subjects    | List       | 관심주제               |
+                                        | references  | List       | 참고링크               |
+                                        | workTime    | String     | 작업시간               |
+                                                                                
+                                        <h2> File Part </h2>
+                                        | name         | filename  |Content-Type                 | Description            |
+                                        |--------------|-----------|-----------------------------| -----------------------|
+                                        | portfolios   | 파일명     | multipart/form-data         | 포트폴리오 첨부파일        |
+                                        """),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("AccessToken"),
+                                headerWithName(CONTENT_TYPE).description(MULTIPART_FORM_DATA_VALUE)
+                        ), requestParts(
+                                partWithName("info").description("선택정보"),
+                                partWithName("portfolios").description("포트폴리오")
+                        ),
+                        requestPartFields("info",
+                                fieldWithPath("subjects").description("관심주제"),
+                                fieldWithPath("references").description("참고링크"),
+                                fieldWithPath("workTime").description("작업시간"))
+
                 ));
     }
 }
