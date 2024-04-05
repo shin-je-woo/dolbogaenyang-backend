@@ -55,6 +55,7 @@ public class ProjectCreateRequest {
     private WorkTime wishWorkTime;
 
     @Getter
+    @AllArgsConstructor
     public static class RecruitJobField {
         @NotNull(message = "직무는 필수 입력 항목입니다.")
         private Job job;

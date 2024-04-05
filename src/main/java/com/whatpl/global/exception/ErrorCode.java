@@ -27,6 +27,7 @@ public enum ErrorCode {
     NOT_FOUND_FILE("FILE1", 404, "파일을 찾을 수 없습니다."),
     FILE_SIZE_EXCEED("FILE2", 400, "파일 사이즈를 초과하였습니다."),
     FILE_TYPE_NOT_ALLOWED("FILE3", 400, "허용되지 않은 파일 타입입니다."),
+    NOT_IMAGE_FILE("FILE4", 400, "이미지 파일이 아닙니다."),
 
     // COMMON
     GLOBAL_EXCEPTION("CMM1", 500, "서버에서 에러가 발생하였습니다."),
