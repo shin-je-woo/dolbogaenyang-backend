@@ -82,10 +82,15 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>(new DetailErrorResponse(errorResponse, detailErrors), errorResponse.getStatus());
     }
 
+    /**
+     * HttpMessageConverter 에서 컨버팅 실패하면 발생
+     * Thrown by HttpMessageConverter implementations when the HttpMessageConverter.read(java.lang.Class<? extends T>, org.springframework.http.HttpInputMessage) method fails.
+     */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleInvalidFormatException(HttpMessageNotReadableException e) {
         if (!(e.getRootCause() instanceof BizException bizException)) {
-            return handleException(e);
+            ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.HTTP_MESSAGE_NOT_READABLE);
+            return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
         }
         return handleBizException(bizException);
     }
