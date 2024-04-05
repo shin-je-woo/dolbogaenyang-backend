@@ -14,10 +14,10 @@ import java.lang.annotation.Target;
 public @interface WithMockWhatplMember {
 
     @AliasFor("value")
-    long id() default 0L;
+    long id() default 1L;
 
     boolean hasProfile() default true;
 
     @AliasFor("id")
-    long value() default 0L;
+    long value() default 1L;
 }

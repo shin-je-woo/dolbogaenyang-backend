@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ApiDocTag {
 
-    MEMBER("Members");
+    MEMBER("Members"),
+    PROJECT("Projects");
 
     private final String tag;
 }
