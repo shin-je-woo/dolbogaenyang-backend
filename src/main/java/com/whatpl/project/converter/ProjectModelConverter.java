@@ -4,7 +4,7 @@ import com.whatpl.attachment.domain.Attachment;
 import com.whatpl.member.domain.Member;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.domain.ProjectSkill;
-import com.whatpl.project.domain.ProjectStatus;
+import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.domain.RecruitJob;
 import com.whatpl.project.dto.ProjectCreateRequest;
 

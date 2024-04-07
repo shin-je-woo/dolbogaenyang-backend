@@ -4,9 +4,9 @@ import com.whatpl.ApiDocTag;
 import com.whatpl.ApiDocUtils;
 import com.whatpl.BaseSecurityWebMvcTest;
 import com.whatpl.global.security.model.WithMockWhatplMember;
-import com.whatpl.member.domain.Career;
-import com.whatpl.member.domain.Job;
-import com.whatpl.member.domain.Skill;
+import com.whatpl.global.common.domain.enums.Career;
+import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.domain.enums.Skill;
 import com.whatpl.member.dto.NicknameDuplResponse;
 import com.whatpl.member.dto.ProfileOptionalRequest;
 import com.whatpl.member.dto.ProfileRequiredRequest;
@@ -158,7 +158,7 @@ class MemberControllerTest extends BaseSecurityWebMvcTest {
     }
 
     @Test
-    @WithMockWhatplMember(1L)
+    @WithMockWhatplMember
     @DisplayName("프로필 기본 정보 입력 API Docs")
     void optional() throws Exception {
         // given

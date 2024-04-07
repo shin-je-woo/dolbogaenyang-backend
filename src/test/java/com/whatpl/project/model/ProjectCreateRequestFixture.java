@@ -1,8 +1,8 @@
 package com.whatpl.project.model;
 
-import com.whatpl.member.domain.*;
-import com.whatpl.project.domain.MeetingType;
-import com.whatpl.project.domain.UpDown;
+import com.whatpl.global.common.domain.enums.*;
+import com.whatpl.project.domain.enums.MeetingType;
+import com.whatpl.project.domain.enums.UpDown;
 import com.whatpl.project.dto.ProjectCreateRequest;
 
 import java.time.LocalDate;

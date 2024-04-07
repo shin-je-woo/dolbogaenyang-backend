@@ -1,6 +1,7 @@
 package com.whatpl.member.domain;
 
 import com.whatpl.global.common.BaseTimeEntity;
+import com.whatpl.global.common.domain.enums.Subject;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

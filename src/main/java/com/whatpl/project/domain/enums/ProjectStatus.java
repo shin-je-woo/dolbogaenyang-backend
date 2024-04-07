@@ -1,4 +1,4 @@
-package com.whatpl.project.domain;
+package com.whatpl.project.domain.enums;
 
 public enum ProjectStatus {
     RECRUITING,

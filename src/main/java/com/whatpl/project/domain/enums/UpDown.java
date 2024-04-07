@@ -1,4 +1,4 @@
-package com.whatpl.project.domain;
+package com.whatpl.project.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -11,20 +11,19 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
-public enum MeetingType {
+public enum UpDown {
 
-    ONLINE("online"),
-    OFFLINE("offline"),
-    ANY("any");
+    UP("up"),
+    DOWN("down");
 
     @JsonValue
     private final String value;
 
     @JsonCreator
-    public static MeetingType from(String value) {
-        return Arrays.stream(MeetingType.values())
-                .filter(meetingType -> meetingType.getValue().equals(value))
+    public static UpDown from(String value) {
+        return Arrays.stream(UpDown.values())
+                .filter(upDown -> upDown.getValue().equals(value))
                 .findFirst()
-                .orElseThrow(() -> new BizException(ErrorCode.MEETING_TYPE_NOT_VALID));
+                .orElseThrow(() -> new BizException(ErrorCode.UP_DOWN_NOT_VALID));
     }
 }

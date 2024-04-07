@@ -1,7 +1,7 @@
 package com.whatpl.member.dto;
 
-import com.whatpl.member.domain.Subject;
-import com.whatpl.member.domain.WorkTime;
+import com.whatpl.global.common.domain.enums.Subject;
+import com.whatpl.global.common.domain.enums.WorkTime;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

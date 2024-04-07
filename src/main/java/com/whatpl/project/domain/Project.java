@@ -1,10 +1,13 @@
 package com.whatpl.project.domain;
 
 import com.whatpl.attachment.domain.Attachment;
-import com.whatpl.member.domain.Career;
+import com.whatpl.global.common.domain.enums.Career;
 import com.whatpl.member.domain.Member;
-import com.whatpl.member.domain.Subject;
-import com.whatpl.member.domain.WorkTime;
+import com.whatpl.global.common.domain.enums.Subject;
+import com.whatpl.global.common.domain.enums.WorkTime;
+import com.whatpl.project.domain.enums.MeetingType;
+import com.whatpl.project.domain.enums.ProjectStatus;
+import com.whatpl.project.domain.enums.UpDown;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

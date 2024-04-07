@@ -1,6 +1,11 @@
 package com.whatpl.global.listener;
 
+import com.whatpl.global.common.domain.enums.Career;
+import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.domain.enums.Skill;
+import com.whatpl.global.common.domain.enums.WorkTime;
 import com.whatpl.member.domain.*;
+import com.whatpl.member.domain.enums.SocialType;
 import com.whatpl.member.repository.MemberRepository;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;

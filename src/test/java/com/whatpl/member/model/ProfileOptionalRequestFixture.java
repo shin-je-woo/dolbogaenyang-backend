@@ -1,7 +1,7 @@
 package com.whatpl.member.model;
 
-import com.whatpl.member.domain.Subject;
-import com.whatpl.member.domain.WorkTime;
+import com.whatpl.global.common.domain.enums.Subject;
+import com.whatpl.global.common.domain.enums.WorkTime;
 import com.whatpl.member.dto.ProfileOptionalRequest;
 
 import java.util.Set;
