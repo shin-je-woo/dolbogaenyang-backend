@@ -1,6 +1,9 @@
 package com.whatpl.member.service;
 
 import com.whatpl.attachment.domain.Attachment;
+import com.whatpl.global.common.domain.enums.Career;
+import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.domain.enums.Skill;
 import com.whatpl.member.domain.*;
 import com.whatpl.member.dto.NicknameDuplResponse;
 import com.whatpl.member.dto.ProfileOptionalRequest;

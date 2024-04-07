@@ -1,7 +1,7 @@
 package com.whatpl.member.repository;
 
 import com.whatpl.member.domain.Member;
-import com.whatpl.member.domain.SocialType;
+import com.whatpl.member.domain.enums.SocialType;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.Lock;
 

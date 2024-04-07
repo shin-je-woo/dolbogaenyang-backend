@@ -1,6 +1,6 @@
 package com.whatpl.project.domain;
 
-import com.whatpl.member.domain.Skill;
+import com.whatpl.global.common.domain.enums.Skill;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

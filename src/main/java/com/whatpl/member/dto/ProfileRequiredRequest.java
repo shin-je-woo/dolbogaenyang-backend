@@ -1,8 +1,8 @@
 package com.whatpl.member.dto;
 
-import com.whatpl.member.domain.Career;
-import com.whatpl.member.domain.Job;
-import com.whatpl.member.domain.Skill;
+import com.whatpl.global.common.domain.enums.Career;
+import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.domain.enums.Skill;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

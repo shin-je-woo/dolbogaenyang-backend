@@ -1,6 +1,6 @@
 package com.whatpl.project.domain;
 
-import com.whatpl.member.domain.Job;
+import com.whatpl.global.common.domain.enums.Job;
 import jakarta.persistence.*;
 import lombok.*;
 

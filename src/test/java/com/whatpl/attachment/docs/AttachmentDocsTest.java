@@ -1,5 +1,6 @@
 package com.whatpl.attachment.docs;
 
+import com.whatpl.ApiDocTag;
 import com.whatpl.BaseSecurityWebMvcTest;
 import com.whatpl.attachment.dto.ResourceDto;
 import com.whatpl.global.security.model.WithMockWhatplMember;
@@ -50,7 +51,7 @@ public class AttachmentDocsTest extends BaseSecurityWebMvcTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andDo(document("create-attachments",
-                        resourceDetails().tag("Attachments")
+                        resourceDetails().tag(ApiDocTag.ATTACHMENT.getTag())
                                 .summary("첨부파일 업로드")
                                 .description("""
                                         첨부파일 업로드
@@ -96,7 +97,7 @@ public class AttachmentDocsTest extends BaseSecurityWebMvcTest {
                 )
                 .andDo(print())
                 .andDo(document("create-attachments-fail",
-                        resourceDetails().tag("Attachments"),
+                        resourceDetails().tag(ApiDocTag.ATTACHMENT.getTag()),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION).description("AccessToken"),
                                 headerWithName(CONTENT_TYPE).description(MULTIPART_FORM_DATA_VALUE)
@@ -139,7 +140,7 @@ public class AttachmentDocsTest extends BaseSecurityWebMvcTest {
                                 StringContains.containsString(filename)
                         )))
                 .andDo(document("download-attachments",
-                        resourceDetails().tag("Attachments")
+                        resourceDetails().tag(ApiDocTag.ATTACHMENT.getTag())
                                 .summary("첨부파일 다운로드"),
                         pathParameters(
                                 parameterWithName("id").description("첨부파일 id")
@@ -169,7 +170,7 @@ public class AttachmentDocsTest extends BaseSecurityWebMvcTest {
                         status().isOk(),
                         content().contentType(mimeType))
                 .andDo(document("preview-attachments",
-                        resourceDetails().tag("Attachments")
+                        resourceDetails().tag(ApiDocTag.ATTACHMENT.getTag())
                                 .summary("첨부파일 미리보기 (이미지, pdf)"),
                         pathParameters(
                                 parameterWithName("id").description("첨부파일 id")
