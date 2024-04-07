@@ -1,15 +1,13 @@
 package com.whatpl.member.domain;
 
 import com.whatpl.global.common.BaseTimeEntity;
+import com.whatpl.global.exception.BizException;
+import com.whatpl.global.exception.ErrorCode;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.util.CollectionUtils;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -38,20 +36,34 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Career career;
 
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private WorkTime workTime;
+
     private Boolean profileOpen;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MemberSkill> memberSkills = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MemberSubject> memberSubjects = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MemberReference> memberReferences = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberPortfolio> memberPortfolios = new LinkedList<>();
+
     @Builder
     public Member(SocialType socialType, String socialId, String nickname, MemberStatus status,
-                  Job job, Career career, Boolean profileOpen) {
+                  Job job, Career career, WorkTime workTime, Boolean profileOpen) {
         this.socialType = socialType;
         this.socialId = socialId;
         this.nickname = nickname;
         this.status = status;
         this.job = job;
         this.career = career;
+        this.workTime = workTime;
         this.profileOpen = profileOpen;
     }
 
@@ -64,6 +76,38 @@ public class Member extends BaseTimeEntity {
         memberSkill.setMember(this);
     }
 
+    public void addMemberSubject(MemberSubject memberSubject) {
+        if (memberSubject == null) {
+            return;
+        }
+        if (memberReferences.size() >= 5) {
+            throw new BizException(ErrorCode.MAX_SUBJECT_SIZE_EXCEED);
+        }
+        this.memberSubjects.add(memberSubject);
+        memberSubject.setMember(this);
+    }
+
+    public void addMemberReference(MemberReference memberReference) {
+        if (memberReference == null) {
+            return;
+        }
+        if (memberReferences.size() >= 3) {
+            throw new BizException(ErrorCode.MAX_REFERENCE_SIZE_EXCEED);
+        }
+        this.memberReferences.add(memberReference);
+        memberReference.setMember(this);
+    }
+
+    public void addMemberPortfolio(MemberPortfolio memberPortfolio) {
+        if (memberPortfolio == null) {
+            return;
+        }
+        if (memberPortfolios.size() >= 5) {
+            throw new BizException(ErrorCode.MAX_PORTFOLIO_SIZE_EXCEED);
+        }
+        this.memberPortfolios.add(memberPortfolio);
+        memberPortfolio.setMember(this);
+    }
 
     //==비즈니스 로직==//
     /**
@@ -111,5 +155,55 @@ public class Member extends BaseTimeEntity {
                 .filter(skill -> !exSkills.contains(skill))
                 .map(MemberSkill::new)
                 .forEach(this::addMemberSkill);
+    }
+
+    /**
+     * memberSubjects를 추가/삭제한다.
+     */
+    public void modifyMemberSubject(Set<Subject> subjects) {
+        // subjects가 비어있을 경우 -> 전부 삭제
+        if (CollectionUtils.isEmpty(subjects)) {
+            memberSubjects.clear();
+            return;
+        }
+
+        // member에 있던 subject가 subjects에 존재하지 않는 경우 -> 삭제
+        memberSubjects.stream()
+                .filter(memberSubject -> !subjects.contains(memberSubject.getSubject()))
+                .forEach(removeSubject -> memberSubjects.remove(removeSubject));
+
+        // member에 없던 subject가 subjects에 존재하는 경우 -> 추가
+        Set<Subject> exSubjects = memberSubjects.stream()
+                .map(MemberSubject::getSubject)
+                .collect(Collectors.toSet());
+        subjects.stream()
+                .filter(subject -> !exSubjects.contains(subject))
+                .map(MemberSubject::new)
+                .forEach(this::addMemberSubject);
+    }
+
+    /**
+     * memberReferences를 추가/삭제한다.
+     */
+    public void modifyMemberReference(Set<String> references) {
+        // references 비어있을 경우 -> 전부 삭제
+        if (CollectionUtils.isEmpty(references)) {
+            memberReferences.clear();
+            return;
+        }
+
+        // member에 있던 reference가 references에 존재하지 않는 경우 -> 삭제
+        memberReferences.stream()
+                .filter(memberReference -> !references.contains(memberReference.getReference()))
+                .forEach(removeReference -> memberReferences.remove(removeReference));
+
+        // member에 없던 reference가 references에 존재하는 경우 -> 추가
+        Set<String> exReferences = memberReferences.stream()
+                .map(MemberReference::getReference)
+                .collect(Collectors.toSet());
+        references.stream()
+                .filter(reference -> !exReferences.contains(reference))
+                .map(MemberReference::new)
+                .forEach(this::addMemberReference);
     }
 }

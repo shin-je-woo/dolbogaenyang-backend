@@ -13,12 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.stream.Stream;
 
-import static java.util.Objects.requireNonNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.MediaType.*;
@@ -35,7 +31,7 @@ class AttachmentControllerTest extends BaseSecurityWebMvcTest {
     @DisplayName("첨부파일 업로드 시 Tika 라이브러리를 이용한 파일 검증이 성공하면 201 응답")
     void upload(String filename, String mimeType) throws Exception {
         // given
-        MockMultipartFile multipartFile = createMockMultipartFile(filename, mimeType);
+        MockMultipartFile multipartFile = createMockMultipartFile("file", filename, mimeType);
 
         // expected
         mockMvc.perform(multipart("/attachments")
@@ -49,7 +45,7 @@ class AttachmentControllerTest extends BaseSecurityWebMvcTest {
     @DisplayName("첨부파일 업로드 시 Tika 라이브러리를 이용한 파일 검증이 실패하면 400 응답")
     void upload_fail(String filename, String mimeType) throws Exception {
         // given
-        MockMultipartFile multipartFile = createMockMultipartFile(filename, mimeType);
+        MockMultipartFile multipartFile = createMockMultipartFile("file", filename, mimeType);
 
         // expected
         mockMvc.perform(multipart("/attachments")
@@ -69,7 +65,7 @@ class AttachmentControllerTest extends BaseSecurityWebMvcTest {
     void download(String filename, String mimeType) throws Exception {
         // given
         long attachmentId = 1L;
-        InputStreamResource resource = new InputStreamResource(createMockMultipartFile(filename, mimeType).getInputStream());
+        InputStreamResource resource = new InputStreamResource(createMockMultipartFile("file", filename, mimeType).getInputStream());
         ResourceDto resourceDto = ResourceDto.builder()
                 .mimeType(mimeType)
                 .resource(resource)
@@ -96,7 +92,7 @@ class AttachmentControllerTest extends BaseSecurityWebMvcTest {
     void preview(String filename, String mimeType) throws Exception {
         // given
         long attachmentId = 1L;
-        InputStreamResource resource = new InputStreamResource(createMockMultipartFile(filename, mimeType).getInputStream());
+        InputStreamResource resource = new InputStreamResource(createMockMultipartFile("file", filename, mimeType).getInputStream());
         ResourceDto resourceDto = ResourceDto.builder()
                 .mimeType(mimeType)
                 .resource(resource)
@@ -110,12 +106,6 @@ class AttachmentControllerTest extends BaseSecurityWebMvcTest {
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(mimeType));
-    }
-
-    private MockMultipartFile createMockMultipartFile(String filename, String mimeType) throws IOException {
-        String path = requireNonNull(getClass().getClassLoader().getResource("files/" + filename)).getPath();
-        InputStream inputStream = new FileInputStream(path);
-        return new MockMultipartFile("file", filename, mimeType, inputStream);
     }
 
     static Stream<Arguments> successParameters() {

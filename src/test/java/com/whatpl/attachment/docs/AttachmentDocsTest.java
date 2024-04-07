@@ -15,13 +15,8 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
-import static java.util.Objects.requireNonNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.*;
 import static org.springframework.http.MediaType.*;
@@ -45,7 +40,7 @@ public class AttachmentDocsTest extends BaseSecurityWebMvcTest {
     void upload() throws Exception {
         // given
         String filename = "cat.jpg";
-        MockMultipartFile multipartFile = createMockMultipartFile(filename, IMAGE_JPEG_VALUE);
+        MockMultipartFile multipartFile = createMockMultipartFile("file", filename, IMAGE_JPEG_VALUE);
 
         // expected
         mockMvc.perform(multipart("/attachments")
@@ -64,9 +59,9 @@ public class AttachmentDocsTest extends BaseSecurityWebMvcTest {
 
                                         아래 형식을 참고하여 요청하면 됩니다.
 
-                                        | Content-Disposition   | name   | filename  |Content-Type                 |
-                                        |-----------------------|--------|-----------|-----------------------------|
-                                        | form-data             | file   | 파일명     | MimeType   (ex. image/png)  |
+                                        | name   | filename  |Content-Type                 |
+                                        |--------|-----------|-----------------------------|
+                                        | file   | 파일명     | MimeType   (ex. image/png)  |
                                         """),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION).description("AccessToken"),
@@ -86,7 +81,7 @@ public class AttachmentDocsTest extends BaseSecurityWebMvcTest {
     @DisplayName("첨부파일 업로드 API Docs - 허용된 확장자 X")
     void upload_fail() throws Exception {
         // given
-        MockMultipartFile multipartFile = createMockMultipartFile("fail.docx", "application/docx");
+        MockMultipartFile multipartFile = createMockMultipartFile("file", "fail.docx", "application/docx");
 
         // expected
         mockMvc.perform(multipart("/attachments")
@@ -124,7 +119,7 @@ public class AttachmentDocsTest extends BaseSecurityWebMvcTest {
         long attachmentId = 1L;
         String filename = "cat.jpg";
         String mimeType = IMAGE_JPEG_VALUE;
-        InputStreamResource resource = new InputStreamResource(createMockMultipartFile(filename, mimeType).getInputStream());
+        InputStreamResource resource = new InputStreamResource(createMockMultipartFile("file", filename, mimeType).getInputStream());
         ResourceDto resourceDto = ResourceDto.builder()
                 .mimeType(mimeType)
                 .resource(resource)
@@ -159,7 +154,7 @@ public class AttachmentDocsTest extends BaseSecurityWebMvcTest {
         long attachmentId = 1L;
         String filename = "cat.jpg";
         String mimeType = IMAGE_JPEG_VALUE;
-        InputStreamResource resource = new InputStreamResource(createMockMultipartFile(filename, mimeType).getInputStream());
+        InputStreamResource resource = new InputStreamResource(createMockMultipartFile("file", filename, mimeType).getInputStream());
         ResourceDto resourceDto = ResourceDto.builder()
                 .mimeType(mimeType)
                 .resource(resource)
@@ -179,11 +174,5 @@ public class AttachmentDocsTest extends BaseSecurityWebMvcTest {
                         pathParameters(
                                 parameterWithName("id").description("첨부파일 id")
                         )));
-    }
-
-    private MockMultipartFile createMockMultipartFile(String filename, String mimeType) throws IOException {
-        String path = requireNonNull(getClass().getClassLoader().getResource("files/" + filename)).getPath();
-        InputStream inputStream = new FileInputStream(path);
-        return new MockMultipartFile("file", filename, mimeType, inputStream);
     }
 }
