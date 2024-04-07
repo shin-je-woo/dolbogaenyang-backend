@@ -27,6 +27,7 @@ public enum ErrorCode {
     NOT_FOUND_FILE("FILE1", 404, "파일을 찾을 수 없습니다."),
     FILE_SIZE_EXCEED("FILE2", 400, "파일 사이즈를 초과하였습니다."),
     FILE_TYPE_NOT_ALLOWED("FILE3", 400, "허용되지 않은 파일 타입입니다."),
+    NOT_IMAGE_FILE("FILE4", 400, "이미지 파일이 아닙니다."),
 
     // COMMON
     GLOBAL_EXCEPTION("CMM1", 500, "서버에서 에러가 발생하였습니다."),
@@ -34,12 +35,17 @@ public enum ErrorCode {
     MISSING_PARAMETER("CMM3", 400, "필수 파라미터가 존재하지 않습니다."),
     NOT_FOUND_API("CMM4", 404, "요청하신 API를 찾을 수 없습니다."),
     REQUEST_VALUE_INVALID("CMM5", 400, "입력값이 올바르지 않습니다."),
-    SKILL_NOT_VALID("CMM6", 400, "기술스택에 유효하지 않은 값이 존재합니다."),
-    JOB_NOT_VALID("CMM7", 400, "직무에 유효하지 않은 값이 존재합니다."),
-    CAREER_NOT_VALID("CMM8", 400, "경력에 유효하지 않은 값이 존재합니다."),
-    SUBJECT_NOT_VALID("CMM9", 400, "주제에 유효하지 않은 값이 존재합니다."),
-    WORK_TIME_NOT_VALID("CMM10", 400, "작업시간에 유효하지 않은 값이 존재합니다."),
-    REQUIRED_PARAMETER_MISSING("CMM11", 400, "필수 파라미터가 존재하지 않습니다.");
+    REQUIRED_PARAMETER_MISSING("CMM6", 400, "필수 파라미터가 존재하지 않습니다."),
+    HTTP_MESSAGE_NOT_READABLE("CMM7", 400, "요청 메시지를 읽을 수 없습니다. 요청 형식을 확인해 주세요."),
+
+    // DOMAIN
+    SKILL_NOT_VALID("DMN1", 400, "기술스택에 유효하지 않은 값이 존재합니다."),
+    JOB_NOT_VALID("DMN2", 400, "직무에 유효하지 않은 값이 존재합니다."),
+    CAREER_NOT_VALID("DMN3", 400, "경력에 유효하지 않은 값이 존재합니다."),
+    SUBJECT_NOT_VALID("DMN4", 400, "주제에 유효하지 않은 값이 존재합니다."),
+    WORK_TIME_NOT_VALID("DMN5", 400, "작업시간에 유효하지 않은 값이 존재합니다."),
+    UP_DOWN_NOT_VALID("DMN6", 400, "이상/이하에 유효하지 않은 값이 존재합니다."),
+    MEETING_TYPE_NOT_VALID("DMN7", 400, "모임 방식에 유효하지 않은 값이 존재합니다.");
 
     private final String code;
     private final int status;
