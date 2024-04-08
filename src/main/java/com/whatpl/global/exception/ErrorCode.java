@@ -32,6 +32,9 @@ public enum ErrorCode {
     COMPLETED_RECRUITMENT("PRJ6", 400, "모집완료된 프로젝트입니다."),
     DELETED_PROJECT("PRJ7", 400, "삭제된 프로젝트입니다."),
 
+    // APPLY
+    NOT_FOUND_APPLY("APL1", 404, "지원서를 찾을 수 없습니다."),
+
     // FILE
     NOT_FOUND_FILE("FILE1", 404, "파일을 찾을 수 없습니다."),
     FILE_SIZE_EXCEED("FILE2", 400, "파일 사이즈를 초과하였습니다."),
@@ -46,6 +49,7 @@ public enum ErrorCode {
     REQUEST_VALUE_INVALID("CMM5", 400, "입력값이 올바르지 않습니다."),
     REQUIRED_PARAMETER_MISSING("CMM6", 400, "필수 파라미터가 존재하지 않습니다."),
     HTTP_MESSAGE_NOT_READABLE("CMM7", 400, "요청 메시지를 읽을 수 없습니다. 요청 형식을 확인해 주세요."),
+    ACCESS_DENIED("CMM8", 403, "해당 요청에 대한 접근 권한이 없습니다."),
 
     // DOMAIN
     SKILL_NOT_VALID("DMN1", 400, "기술스택에 유효하지 않은 값이 존재합니다."),
