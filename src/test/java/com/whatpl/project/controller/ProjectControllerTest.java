@@ -2,7 +2,9 @@ package com.whatpl.project.controller;
 
 import com.whatpl.ApiDocTag;
 import com.whatpl.BaseSecurityWebMvcTest;
+import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.security.model.WithMockWhatplMember;
+import com.whatpl.project.dto.ProjectApplyRequest;
 import com.whatpl.project.dto.ProjectCreateRequest;
 import com.whatpl.project.model.ProjectCreateRequestFixture;
 import org.junit.jupiter.api.DisplayName;
@@ -24,8 +26,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureRestDocs
 @ExtendWith(RestDocumentationExtension.class)
@@ -46,8 +47,8 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
         mockMvc.perform(post("/projects")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer {AccessToken}")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(requestJson)
-                ).andExpectAll(
+                        .content(requestJson))
+                .andExpectAll(
                         status().isCreated(),
                         header().exists(HttpHeaders.LOCATION),
                         header().string(HttpHeaders.LOCATION, String.format("/projects/%d", createdProjectId))
@@ -78,6 +79,46 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("wishCareer").type(JsonFieldType.STRING).description("희망 연차").optional(),
                                 fieldWithPath("wishCareerUpDown").type(JsonFieldType.STRING).description("희망 연차 이상/이하").optional(),
                                 fieldWithPath("wishWorkTime").type(JsonFieldType.STRING).description("희망 주당 작업 시간").optional()
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockWhatplMember
+    @DisplayName("프로젝트 지원 API Docs")
+    void apply() throws Exception {
+        // given
+        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "<p>테스트 콘텐츠 HTML<p>");
+        String requestJson = objectMapper.writeValueAsString(request);
+        Long projectId = 1L;
+        Long applyId = 1L;
+        when(projectApplyService.apply(any(ProjectApplyRequest.class), anyLong(), anyLong()))
+                .thenReturn(applyId);
+
+        // expected
+        mockMvc.perform(post("/projects/{projectId}/applications", projectId)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer {AccessToken}")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestJson)
+                )
+                .andExpectAll(
+                        status().isCreated(),
+                        header().exists(HttpHeaders.LOCATION),
+                        header().string(HttpHeaders.LOCATION, String.format("/projects/%d/applications/%d", projectId, applyId))
+                )
+                .andDo(print())
+                .andDo(document("create-project-apply",
+                        resourceDetails().tag(ApiDocTag.PROJECT.getTag())
+                                .summary("프로젝트 지원"),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("AccessToken")
+                        ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.LOCATION).description("등록한 프로젝트 지원서의 URI 경로")
+                        ),
+                        requestFields(
+                                fieldWithPath("applyJob").type(JsonFieldType.STRING).description("지원 직무"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("지원 글")
                         )
                 ));
     }

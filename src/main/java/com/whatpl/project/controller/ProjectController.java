@@ -33,13 +33,13 @@ public class ProjectController {
         return ResponseEntity.created(URI.create(createdResourceUri)).build();
     }
 
-    @PostMapping("/projects/{projectId}/apply")
+    @PostMapping("/projects/{projectId}/applications")
     public ResponseEntity<Void> apply(@PathVariable Long projectId,
                                       @Valid @RequestBody ProjectApplyRequest request,
                                       @AuthenticationPrincipal MemberPrincipal principal) {
 
         Long applyId = projectApplyService.apply(request, projectId, principal.getId());
-        String createdResourceUri = String.format("/projects/%d/apply", applyId);
+        String createdResourceUri = String.format("/projects/%d/applications/%d", projectId, applyId);
 
         return ResponseEntity.created(URI.create(createdResourceUri)).build();
     }
