@@ -7,6 +7,7 @@ import com.whatpl.global.jwt.JwtProperties;
 import com.whatpl.global.jwt.JwtService;
 import com.whatpl.member.service.MemberLoginService;
 import com.whatpl.member.service.MemberProfileService;
+import com.whatpl.project.service.ProjectApplyService;
 import com.whatpl.project.service.ProjectWriteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,9 @@ public abstract class BaseSecurityWebMvcTest {
 
     @MockBean
     protected ProjectWriteService projectWriteService;
+
+    @MockBean
+    protected ProjectApplyService projectApplyService;
 
     @BeforeEach
     protected void init() {

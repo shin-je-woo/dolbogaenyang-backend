@@ -23,6 +23,15 @@ public enum ErrorCode {
     MAX_REFERENCE_SIZE_EXCEED("MBR7", 400, "참고링크는 최대 3개 첨부 가능합니다."),
     MAX_SUBJECT_SIZE_EXCEED("MBR8", 400, "관심주제는 최대 5개 입력 가능합니다."),
 
+    // PROJECT
+    NOT_FOUND_PROJECT("PRJ1", 404, "프로젝트를 찾을 수 없습니다."),
+    WRITER_NOT_APPLY("PRJ2", 400, "프로젝트 등록자는 본인이 등록한 프로젝트에 지원할 수 없습니다."),
+    NOT_MATCH_APPLY_JOB_WITH_PROJECT("PRJ3", 400, "지원한 직무가 프로젝트 모집직군에 등록되어 있지 않습니다."),
+    RECRUIT_COMPLETED_APPLY_JOB("PRJ4", 400, "지원한 직무는 모집이 완료된 직무입니다."),
+    DUPLICATED_APPLY("PRJ5", 400, "이미 지원한 프로젝트입니다."),
+    COMPLETED_RECRUITMENT("PRJ6", 400, "모집완료된 프로젝트입니다."),
+    DELETED_PROJECT("PRJ7", 400, "삭제된 프로젝트입니다."),
+
     // FILE
     NOT_FOUND_FILE("FILE1", 404, "파일을 찾을 수 없습니다."),
     FILE_SIZE_EXCEED("FILE2", 400, "파일 사이즈를 초과하였습니다."),

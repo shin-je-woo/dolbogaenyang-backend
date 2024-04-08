@@ -45,8 +45,8 @@ public final class ProjectModelConverter {
                 .orElseGet(Collections::emptySet).stream()
                 .map(recruitJobField -> RecruitJob.builder()
                         .job(recruitJobField.getJob())
-                        .totalCount(recruitJobField.getTotalCount())
-                        .currentCount(0)
+                        .totalAmount(recruitJobField.getTotalCount())
+                        .currentAmount(0)
                         .build())
                 .forEach(project::addRecruitJob);
 
