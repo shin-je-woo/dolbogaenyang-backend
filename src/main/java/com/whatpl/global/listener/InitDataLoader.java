@@ -37,6 +37,7 @@ public class InitDataLoader implements ApplicationListener<ApplicationReadyEvent
     private void setupInitMembers() {
         createMemberIfNotFound(Set.of(Skill.JAVA, Skill.SQL));
         createMemberIfNotFound(Set.of(Skill.FIGMA, Skill.KOTLIN));
+        createMemberIfNotFound(Set.of(Skill.PYTHON, Skill.TYPE_SCRIPT));
     }
 
     /**

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -103,6 +104,12 @@ public class ExceptionControllerAdvice {
                 .message(String.format("%s {%s}", requiredParameterMissing.getMessage(), e.getRequestPartName()))
                 .status(requiredParameterMissing.getStatus())
                 .build();
+        return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
+        ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.ACCESS_DENIED);
         return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
     }
 }

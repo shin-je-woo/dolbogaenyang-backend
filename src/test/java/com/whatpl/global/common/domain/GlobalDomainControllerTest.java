@@ -44,7 +44,8 @@ class GlobalDomainControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("careers").type(JsonFieldType.ARRAY).description("경력"),
                                 fieldWithPath("skills").type(JsonFieldType.ARRAY).description("기술 스택"),
                                 fieldWithPath("subjects").type(JsonFieldType.ARRAY).description("관심주제(도메인)"),
-                                fieldWithPath("workTimes").type(JsonFieldType.ARRAY).description("작업 가능 시간")
+                                fieldWithPath("workTimes").type(JsonFieldType.ARRAY).description("작업 가능 시간"),
+                                fieldWithPath("applyStatuses").type(JsonFieldType.ARRAY).description("프로젝트 지원 상태")
                         )
                 ));
     }

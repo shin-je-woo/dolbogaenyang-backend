@@ -2,17 +2,14 @@ package com.whatpl.project.domain;
 
 import com.whatpl.attachment.domain.Attachment;
 import com.whatpl.global.common.domain.enums.Career;
-import com.whatpl.member.domain.Member;
 import com.whatpl.global.common.domain.enums.Subject;
 import com.whatpl.global.common.domain.enums.WorkTime;
+import com.whatpl.member.domain.Member;
 import com.whatpl.project.domain.enums.MeetingType;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.domain.enums.UpDown;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -36,6 +33,7 @@ public class Project {
 
     private LocalDate endDate;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
