@@ -68,7 +68,7 @@ public class ProjectApplyService {
         // 모집자가 지원서를 읽을 경우 조회한 시간 update
         MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal.getId() == project.getWriter().getId() && apply.getRecruiterReadAt() == null) {
-            apply.setRecruiterReadAt(LocalDateTime.now());
+            apply.setRecruiterReadAt(LocalDateTime.now().withNano(0));
         }
 
         return ApplyModelConverter.convert(apply);
