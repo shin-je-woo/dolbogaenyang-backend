@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
@@ -148,7 +149,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
         // given
         long projectId = 1L;
         long applyId = 1L;
-        LocalDateTime recruiterReadAt = LocalDateTime.now();
+        LocalDateTime recruiterReadAt = LocalDateTime.now(Clock.systemDefaultZone());
         ProjectApplyReadResponse response = ProjectApplyReadResponse.builder()
                 .projectId(projectId)
                 .applyId(applyId)
@@ -176,7 +177,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.job").value(response.getJob().getValue()),
                         jsonPath("$.status").value(response.getStatus().getValue()),
                         jsonPath("$.content").value(response.getContent()),
-                        jsonPath("$.recruiterReadAt").value(recruiterReadAt.toString().substring(0, recruiterReadAt.toString().length() - 2))
+                        jsonPath("$.recruiterReadAt").value(response.getRecruiterReadAt().toString())
                 )
                 .andDo(print())
                 .andDo(document("read-project-apply",
