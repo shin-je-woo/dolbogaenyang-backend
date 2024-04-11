@@ -33,7 +33,7 @@ public class ProjectApplyService {
 
     @Transactional
     public Long apply(final ProjectApplyRequest request, final long projectId, final long applicantId) {
-        Project project = projectRepository.findByIdWithRecruitJobs(projectId)
+        Project project = projectRepository.findWithRecruitJobsById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
         Member applicant = memberRepository.findById(applicantId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
@@ -58,7 +58,7 @@ public class ProjectApplyService {
     public ProjectApplyReadResponse read(final long projectId, final long applyId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
-        Apply apply = applyRepository.findByIdWithProjectAndApplicant(applyId)
+        Apply apply = applyRepository.findWithProjectAndApplicantById(applyId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_APPLY));
 
         if (!project.getId().equals(apply.getProject().getId())) {
@@ -76,9 +76,9 @@ public class ProjectApplyService {
 
     @Transactional
     public void status(final long projectId, final long applyId, final ApplyStatus applyStatus) {
-        Project project = projectRepository.findByIdWithRecruitJobs(projectId)
+        Project project = projectRepository.findWithRecruitJobsById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
-        Apply apply = applyRepository.findByIdWithProjectAndApplicant(applyId)
+        Apply apply = applyRepository.findWithProjectAndApplicantById(applyId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_APPLY));
 
         if (!project.getId().equals(apply.getProject().getId())) {

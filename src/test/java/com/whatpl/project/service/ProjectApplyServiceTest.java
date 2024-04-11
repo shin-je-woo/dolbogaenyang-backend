@@ -56,7 +56,7 @@ class ProjectApplyServiceTest {
         Member writer = MemberFixture.onlyRequired();
         project.setStatus(ProjectStatus.DELETED);
         ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content");
-        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+        when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
                 .thenReturn(Optional.of(writer));
@@ -75,7 +75,7 @@ class ProjectApplyServiceTest {
         Member writer = MemberFixture.onlyRequired();
         project.setStatus(ProjectStatus.COMPLETED);
         ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content");
-        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+        when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
                 .thenReturn(Optional.of(writer));
@@ -94,7 +94,7 @@ class ProjectApplyServiceTest {
         project.addRepresentImageAndWriter(null, writer);
         project.setStatus(ProjectStatus.RECRUITING);
         ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content");
-        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+        when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
                 .thenReturn(Optional.of(writer));
@@ -115,7 +115,7 @@ class ProjectApplyServiceTest {
         project.addRecruitJob(new RecruitJob(Job.DESIGNER, 5, 0));
 
         ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content");
-        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+        when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
                 .thenReturn(Optional.of(MemberFixture.withAll()));
@@ -136,7 +136,7 @@ class ProjectApplyServiceTest {
         project.addRecruitJob(new RecruitJob(Job.BACKEND_DEVELOPER, 5, 5));
 
         ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content");
-        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+        when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
                 .thenReturn(Optional.of(MemberFixture.withAll()));
@@ -157,7 +157,7 @@ class ProjectApplyServiceTest {
         project.addRecruitJob(new RecruitJob(Job.BACKEND_DEVELOPER, 5, 0));
 
         ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content");
-        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+        when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
                 .thenReturn(Optional.of(MemberFixture.withAll()));
@@ -181,9 +181,9 @@ class ProjectApplyServiceTest {
         when(project.getId()).thenReturn(1L);
         Apply apply = Mockito.spy(ApplyFixture.waiting(Job.BACKEND_DEVELOPER, applicant, project)); // 현재상태 WAITING
         when(apply.getId()).thenReturn(1L);
-        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+        when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
-        when(applyRepository.findByIdWithProjectAndApplicant(anyLong()))
+        when(applyRepository.findWithProjectAndApplicantById(anyLong()))
                 .thenReturn(Optional.of(apply));
 
         // when
@@ -204,9 +204,9 @@ class ProjectApplyServiceTest {
         when(project.getId()).thenReturn(1L);
         Apply apply = Mockito.spy(ApplyFixture.waiting(Job.BACKEND_DEVELOPER, applicant, project)); // 현재상태 WAITING
         when(apply.getId()).thenReturn(1L);
-        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+        when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
-        when(applyRepository.findByIdWithProjectAndApplicant(anyLong()))
+        when(applyRepository.findWithProjectAndApplicantById(anyLong()))
                 .thenReturn(Optional.of(apply));
 
         // when & then
@@ -225,9 +225,9 @@ class ProjectApplyServiceTest {
         when(project.getId()).thenReturn(1L);
         Apply apply = Mockito.spy(ApplyFixture.waiting(Job.BACKEND_DEVELOPER, applicant, project));
         when(apply.getId()).thenReturn(1L);
-        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+        when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
-        when(applyRepository.findByIdWithProjectAndApplicant(anyLong()))
+        when(applyRepository.findWithProjectAndApplicantById(anyLong()))
                 .thenReturn(Optional.of(apply));
 
         // when
@@ -247,9 +247,9 @@ class ProjectApplyServiceTest {
         when(project.getId()).thenReturn(1L);
         Apply apply = Mockito.spy(ApplyFixture.accepted(Job.BACKEND_DEVELOPER, applicant, project));
         when(apply.getId()).thenReturn(1L);
-        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+        when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
-        when(applyRepository.findByIdWithProjectAndApplicant(anyLong()))
+        when(applyRepository.findWithProjectAndApplicantById(anyLong()))
                 .thenReturn(Optional.of(apply));
 
         // when & then

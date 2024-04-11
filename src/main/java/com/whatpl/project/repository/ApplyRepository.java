@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface ApplyRepository extends JpaRepository<Apply, Long> {
+public interface ApplyRepository extends JpaRepository<Apply, Long>, ApplyQueryRepository {
 
     Optional<Apply> findByProjectAndApplicant(Project project, Member applicant);
 
     @Query("select a from Apply a left join fetch a.project left join fetch a.applicant where a.id = :id")
-    Optional<Apply> findByIdWithProjectAndApplicant(Long id);
+    Optional<Apply> findWithProjectAndApplicantById(Long id);
 }

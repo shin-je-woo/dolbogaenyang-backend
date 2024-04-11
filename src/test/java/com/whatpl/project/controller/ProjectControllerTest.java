@@ -20,7 +20,9 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
@@ -149,7 +151,10 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
         // given
         long projectId = 1L;
         long applyId = 1L;
-        LocalDateTime recruiterReadAt = LocalDateTime.now(Clock.systemDefaultZone());
+        LocalDateTime recruiterReadAt = LocalDateTime.now(Clock.fixed(
+                Instant.parse("2024-04-12T12:35:43.00Z"),
+                ZoneId.of("Asia/Seoul"))
+        );
         ProjectApplyReadResponse response = ProjectApplyReadResponse.builder()
                 .projectId(projectId)
                 .applyId(applyId)
