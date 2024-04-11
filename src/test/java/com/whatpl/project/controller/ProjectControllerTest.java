@@ -4,6 +4,8 @@ import com.whatpl.ApiDocTag;
 import com.whatpl.BaseSecurityWebMvcTest;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.security.model.WithMockWhatplMember;
+import com.whatpl.project.domain.enums.ApplyStatus;
+import com.whatpl.project.dto.ProjectApplyReadResponse;
 import com.whatpl.project.dto.ProjectApplyRequest;
 import com.whatpl.project.dto.ProjectCreateRequest;
 import com.whatpl.project.model.ProjectCreateRequestFixture;
@@ -22,9 +24,11 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -119,6 +123,63 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         requestFields(
                                 fieldWithPath("applyJob").type(JsonFieldType.STRING).description("지원 직무"),
                                 fieldWithPath("content").type(JsonFieldType.STRING).description("지원 글")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockWhatplMember
+    @DisplayName("프로젝트 지원서 조회 API Docs")
+    void applyRead() throws Exception {
+        // given
+        long projectId = 1L;
+        long applyId = 1L;
+        ProjectApplyReadResponse response = ProjectApplyReadResponse.builder()
+                .projectId(projectId)
+                .applyId(applyId)
+                .applicantId(1L)
+                .applicantNickname("왓플테스트유저1")
+                .status(ApplyStatus.WAITING)
+                .job(Job.BACKEND_DEVELOPER)
+                .content("지원서 내용")
+                .build();
+        when(projectApplyService.read(projectId, applyId))
+                .thenReturn(response);
+
+        // expected
+        mockMvc.perform(get("/projects/{projectId}/applications/{applyId}", projectId, applyId)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer {AccessToken}")
+                )
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        jsonPath("$.projectId").value(response.getProjectId()),
+                        jsonPath("$.applyId").value(response.getApplyId()),
+                        jsonPath("$.applicantId").value(response.getApplicantId()),
+                        jsonPath("$.applicantNickname").value(response.getApplicantNickname()),
+                        jsonPath("$.job").value(response.getJob().getValue()),
+                        jsonPath("$.status").value(response.getStatus().getValue()),
+                        jsonPath("$.content").value(response.getContent())
+                )
+                .andDo(print())
+                .andDo(document("read-project-apply",
+                        resourceDetails().tag(ApiDocTag.PROJECT.getTag())
+                                .summary("프로젝트 지원서 조회"),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("AccessToken")
+                        ),
+                        pathParameters(
+                                parameterWithName("projectId").description("프로젝트 ID"),
+                                parameterWithName("applyId").description("지원서 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("projectId").type(JsonFieldType.NUMBER).description("프로젝트 ID"),
+                                fieldWithPath("applyId").type(JsonFieldType.NUMBER).description("지원서 ID"),
+                                fieldWithPath("applicantId").type(JsonFieldType.NUMBER).description("지원자 ID"),
+                                fieldWithPath("applicantNickname").type(JsonFieldType.STRING).description("지원자 닉네임"),
+                                fieldWithPath("job").type(JsonFieldType.STRING).description("지원 직무"),
+                                fieldWithPath("status").type(JsonFieldType.STRING).description("지원 상태"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("지원 내용")
                         )
                 ));
     }

@@ -5,16 +5,18 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.member.domain.Member;
 import com.whatpl.member.repository.MemberRepository;
+import com.whatpl.project.converter.ApplyModelConverter;
 import com.whatpl.project.domain.Apply;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.domain.RecruitJob;
 import com.whatpl.project.domain.enums.ProjectStatus;
+import com.whatpl.project.dto.ProjectApplyReadResponse;
 import com.whatpl.project.dto.ProjectApplyRequest;
 import com.whatpl.project.repository.ApplyRepository;
 import com.whatpl.project.repository.ProjectRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +47,20 @@ public class ProjectApplyService {
         Apply apply = Apply.of(request.getApplyJob(), request.getContent(), applicant, project);
         Apply savedApply = applyRepository.save(apply);
         return savedApply.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public ProjectApplyReadResponse read(final long projectId, final long applyId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
+        Apply apply = applyRepository.findByIdWithProjectAndApplicant(applyId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_APPLY));
+
+        if (!project.getId().equals(apply.getProject().getId())) {
+            throw new BizException(ErrorCode.NOT_MATCH_PROJECT_APPLY);
+        }
+
+        return ApplyModelConverter.convert(apply);
     }
 
     private void validateDeletedProject(Project project) {

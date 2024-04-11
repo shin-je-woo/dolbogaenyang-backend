@@ -7,14 +7,14 @@ import com.whatpl.project.domain.ProjectSkill;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.domain.RecruitJob;
 import com.whatpl.project.dto.ProjectCreateRequest;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.Collections;
 import java.util.Optional;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProjectModelConverter {
-
-    private ProjectModelConverter() {
-    }
 
     public static Project convert(final ProjectCreateRequest request, final Member writer, final Attachment representImage) {
         if(request == null || writer == null || representImage == null) {

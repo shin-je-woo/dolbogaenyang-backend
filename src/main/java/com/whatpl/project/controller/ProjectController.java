@@ -1,6 +1,7 @@
 package com.whatpl.project.controller;
 
 import com.whatpl.global.security.domain.MemberPrincipal;
+import com.whatpl.project.dto.ProjectApplyReadResponse;
 import com.whatpl.project.dto.ProjectApplyRequest;
 import com.whatpl.project.dto.ProjectCreateRequest;
 import com.whatpl.project.service.ProjectApplyService;
@@ -8,11 +9,9 @@ import com.whatpl.project.service.ProjectWriteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -42,5 +41,15 @@ public class ProjectController {
         String createdResourceUri = String.format("/projects/%d/applications/%d", projectId, applyId);
 
         return ResponseEntity.created(URI.create(createdResourceUri)).build();
+    }
+
+    @PreAuthorize("hasPermission(#applyId, 'APPLY', 'READ')")
+    @GetMapping("/projects/{projectId}/applications/{applyId}")
+    public ResponseEntity<ProjectApplyReadResponse> applyRead(@PathVariable Long projectId,
+                                          @PathVariable Long applyId) {
+
+        ProjectApplyReadResponse applyReadResponse = projectApplyService.read(projectId, applyId);
+
+        return ResponseEntity.ok(applyReadResponse);
     }
 }
