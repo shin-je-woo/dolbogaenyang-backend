@@ -17,6 +17,7 @@ public final class ApplyModelConverter {
                 .status(apply.getStatus())
                 .job(apply.getJob())
                 .content(apply.getContent())
+                .recruiterReadAt(apply.getRecruiterReadAt())
                 .build();
     }
 }

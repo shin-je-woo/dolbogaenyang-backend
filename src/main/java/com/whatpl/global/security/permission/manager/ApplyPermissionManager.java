@@ -18,10 +18,11 @@ public class ApplyPermissionManager implements WhatplPermissionManager {
     @Override
     @Transactional(readOnly = true)
     public boolean hasPrivilege(MemberPrincipal memberPrincipal, Long targetId, String permission) {
-        if (permission.equals("READ")) {
-            return hasReadPrivilege(memberPrincipal, targetId);
-        }
-        return false;
+        return switch (permission) {
+            case "READ" -> hasReadPrivilege(memberPrincipal, targetId);
+            case "STATUS" -> hasStatusPrivilege(memberPrincipal, targetId);
+            default -> false;
+        };
     }
 
     /**
@@ -36,5 +37,16 @@ public class ApplyPermissionManager implements WhatplPermissionManager {
         boolean isProjectWriter = apply.getProject().getWriter().getId().equals(memberPrincipal.getId());
 
         return isApplicant || isProjectWriter;
+    }
+
+    /**
+     * 프로젝트 지원서 상태 변경 권한 (지원서 수락/거절 use-case)
+     * 프로젝트 등록자
+     */
+    private boolean hasStatusPrivilege(MemberPrincipal memberPrincipal, Long applyId) {
+        Apply apply = applyRepository.findByIdWithProjectAndApplicant(applyId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_APPLY));
+
+        return apply.getProject().getWriter().getId().equals(memberPrincipal.getId());
     }
 }

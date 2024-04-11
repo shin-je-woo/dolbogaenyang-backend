@@ -2,9 +2,9 @@ package com.whatpl.project.domain;
 
 import com.whatpl.attachment.domain.Attachment;
 import com.whatpl.global.common.domain.enums.Career;
-import com.whatpl.member.domain.Member;
 import com.whatpl.global.common.domain.enums.Subject;
 import com.whatpl.global.common.domain.enums.WorkTime;
+import com.whatpl.member.domain.Member;
 import com.whatpl.project.domain.enums.MeetingType;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.domain.enums.UpDown;

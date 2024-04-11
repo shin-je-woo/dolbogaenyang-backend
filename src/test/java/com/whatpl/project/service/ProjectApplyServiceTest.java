@@ -12,7 +12,9 @@ import com.whatpl.project.domain.RecruitJob;
 import com.whatpl.project.domain.enums.ApplyStatus;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.dto.ProjectApplyRequest;
+import com.whatpl.project.model.ApplyFixture;
 import com.whatpl.project.model.ProjectFixture;
+import com.whatpl.project.model.RecruitJobFixture;
 import com.whatpl.project.repository.ApplyRepository;
 import com.whatpl.project.repository.ProjectRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -166,5 +169,92 @@ class ProjectApplyServiceTest {
         BizException bizException = assertThrows(BizException.class, () ->
                 projectApplyService.apply(request, 0L, 0L));
         assertEquals(ErrorCode.DUPLICATED_APPLY, bizException.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("프로젝트 지원서 승인할 경우 모집직군의 현재인원이 증가되고, 승인 완료상태로 변경된다.")
+    void status_accept() {
+        // given
+        Member applicant = MemberFixture.onlyRequired();
+        RecruitJob recruitJob = RecruitJobFixture.notFull(Job.BACKEND_DEVELOPER); // 현재인원 0명
+        Project project = Mockito.spy(ProjectFixture.withRecruitJobs(recruitJob));
+        when(project.getId()).thenReturn(1L);
+        Apply apply = Mockito.spy(ApplyFixture.waiting(Job.BACKEND_DEVELOPER, applicant, project)); // 현재상태 WAITING
+        when(apply.getId()).thenReturn(1L);
+        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+                .thenReturn(Optional.of(project));
+        when(applyRepository.findByIdWithProjectAndApplicant(anyLong()))
+                .thenReturn(Optional.of(apply));
+
+        // when
+        projectApplyService.status(project.getId(), apply.getId(), ApplyStatus.ACCEPTED);
+
+        // then
+        assertEquals(1, recruitJob.getCurrentAmount());
+        assertEquals(ApplyStatus.ACCEPTED, apply.getStatus());
+    }
+
+    @Test
+    @DisplayName("프로젝트 지원서 승인 시 모집인원을 초과할 경우 승인 실패")
+    void status_accept_full() {
+        // given
+        Member applicant = MemberFixture.onlyRequired();
+        RecruitJob recruitJob = RecruitJobFixture.full(Job.BACKEND_DEVELOPER); // 현재인원 10명 (MAX)
+        Project project = Mockito.spy(ProjectFixture.withRecruitJobs(recruitJob));
+        when(project.getId()).thenReturn(1L);
+        Apply apply = Mockito.spy(ApplyFixture.waiting(Job.BACKEND_DEVELOPER, applicant, project)); // 현재상태 WAITING
+        when(apply.getId()).thenReturn(1L);
+        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+                .thenReturn(Optional.of(project));
+        when(applyRepository.findByIdWithProjectAndApplicant(anyLong()))
+                .thenReturn(Optional.of(apply));
+
+        // when & then
+        BizException bizException = assertThrows(BizException.class, () ->
+                projectApplyService.status(project.getId(), apply.getId(), ApplyStatus.ACCEPTED));
+        assertEquals(bizException.getErrorCode(), ErrorCode.RECRUIT_COMPLETED_APPLY_JOB);
+    }
+
+    @Test
+    @DisplayName("프로젝트 지원서 거절할 경우 승인 거절상태로 변경된다.")
+    void status_reject() {
+        // given
+        Member applicant = MemberFixture.onlyRequired();
+        RecruitJob recruitJob = RecruitJobFixture.notFull(Job.BACKEND_DEVELOPER);
+        Project project = Mockito.spy(ProjectFixture.withRecruitJobs(recruitJob));
+        when(project.getId()).thenReturn(1L);
+        Apply apply = Mockito.spy(ApplyFixture.waiting(Job.BACKEND_DEVELOPER, applicant, project));
+        when(apply.getId()).thenReturn(1L);
+        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+                .thenReturn(Optional.of(project));
+        when(applyRepository.findByIdWithProjectAndApplicant(anyLong()))
+                .thenReturn(Optional.of(apply));
+
+        // when
+        projectApplyService.status(project.getId(), apply.getId(), ApplyStatus.REJECTED);
+
+        // then
+        assertEquals(ApplyStatus.REJECTED, apply.getStatus());
+    }
+
+    @Test
+    @DisplayName("이미 처리된 프로젝트 지원서는 승인/거절 불가")
+    void status_already_processed() {
+        // given
+        Member applicant = MemberFixture.onlyRequired();
+        RecruitJob recruitJob = RecruitJobFixture.notFull(Job.BACKEND_DEVELOPER);
+        Project project = Mockito.spy(ProjectFixture.withRecruitJobs(recruitJob));
+        when(project.getId()).thenReturn(1L);
+        Apply apply = Mockito.spy(ApplyFixture.accepted(Job.BACKEND_DEVELOPER, applicant, project));
+        when(apply.getId()).thenReturn(1L);
+        when(projectRepository.findByIdWithRecruitJobs(anyLong()))
+                .thenReturn(Optional.of(project));
+        when(applyRepository.findByIdWithProjectAndApplicant(anyLong()))
+                .thenReturn(Optional.of(apply));
+
+        // when & then
+        BizException bizException = assertThrows(BizException.class, () ->
+                projectApplyService.status(project.getId(), apply.getId(), ApplyStatus.REJECTED));
+        assertEquals(ErrorCode.ALREADY_PROCESSED_APPLY, bizException.getErrorCode());
     }
 }

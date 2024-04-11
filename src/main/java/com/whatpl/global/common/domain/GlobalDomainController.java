@@ -1,6 +1,7 @@
 package com.whatpl.global.common.domain;
 
 import com.whatpl.global.common.domain.enums.*;
+import com.whatpl.project.domain.enums.ApplyStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,12 +29,16 @@ public class GlobalDomainController {
         List<String> workTimes = Arrays.stream(WorkTime.values())
                 .map(WorkTime::getValue)
                 .toList();
+        List<String> applyStatuses = Arrays.stream(ApplyStatus.values())
+                .map(ApplyStatus::getValue)
+                .toList();
         return ResponseEntity.ok(GlobalDomainResponse.builder()
                 .careers(careers)
                 .jobs(jobs)
                 .skills(skills)
                 .subjects(subjects)
                 .workTimes(workTimes)
+                .applyStatuses(applyStatuses)
                 .build());
     }
 }

@@ -1,8 +1,12 @@
 package com.whatpl.project.controller;
 
+import com.whatpl.global.exception.BizException;
+import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.security.domain.MemberPrincipal;
+import com.whatpl.project.domain.enums.ApplyStatus;
 import com.whatpl.project.dto.ProjectApplyReadResponse;
 import com.whatpl.project.dto.ProjectApplyRequest;
+import com.whatpl.project.dto.ProjectApplyStatusRequest;
 import com.whatpl.project.dto.ProjectCreateRequest;
 import com.whatpl.project.service.ProjectApplyService;
 import com.whatpl.project.service.ProjectWriteService;
@@ -46,10 +50,24 @@ public class ProjectController {
     @PreAuthorize("hasPermission(#applyId, 'APPLY', 'READ')")
     @GetMapping("/projects/{projectId}/applications/{applyId}")
     public ResponseEntity<ProjectApplyReadResponse> applyRead(@PathVariable Long projectId,
-                                          @PathVariable Long applyId) {
+                                                              @PathVariable Long applyId) {
 
         ProjectApplyReadResponse applyReadResponse = projectApplyService.read(projectId, applyId);
 
         return ResponseEntity.ok(applyReadResponse);
+    }
+
+    @PreAuthorize("hasPermission(#applyId, 'APPLY', 'STATUS')")
+    @PatchMapping("/projects/{projectId}/applications/{applyId}/status")
+    public ResponseEntity<ProjectApplyReadResponse> applyStatus(@PathVariable Long projectId,
+                                                                @PathVariable Long applyId,
+                                                                @Valid @RequestBody ProjectApplyStatusRequest request) {
+
+        if (ApplyStatus.WAITING.equals(request.getApplyStatus())) {
+            throw new BizException(ErrorCode.CANT_PROCESS_WAITING);
+        }
+        projectApplyService.status(projectId, applyId, request.getApplyStatus());
+
+        return ResponseEntity.noContent().build();
     }
 }

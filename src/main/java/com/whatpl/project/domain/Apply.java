@@ -1,19 +1,21 @@
 package com.whatpl.project.domain;
 
+import com.whatpl.global.common.BaseTimeEntity;
 import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.exception.BizException;
+import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.member.domain.Member;
 import com.whatpl.project.domain.enums.ApplyStatus;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @Table(name = "apply")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Apply {
+public class Apply extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +28,9 @@ public class Apply {
 
     @Enumerated(EnumType.STRING)
     private ApplyStatus status;
+
+    @Setter
+    private LocalDateTime recruiterReadAt;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applicant_id")
@@ -52,5 +57,14 @@ public class Apply {
                 .applicant(applicant)
                 .project(project)
                 .build();
+    }
+
+    //==비즈니스 로직==//
+    public void changeStatus(ApplyStatus status) {
+        if (!ApplyStatus.WAITING.equals(getStatus())) {
+            // 이미 처리된 지원서는 수정 불가
+            throw new BizException(ErrorCode.ALREADY_PROCESSED_APPLY);
+        }
+        this.status = status;
     }
 }

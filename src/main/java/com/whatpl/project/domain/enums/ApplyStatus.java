@@ -15,8 +15,7 @@ public enum ApplyStatus {
 
     WAITING("승인 대기"),
     ACCEPTED("승인 완료"),
-    REJECTED("승인 거절"),
-    DELETED("삭제");
+    REJECTED("승인 거절");
 
     @JsonValue
     private final String value;

@@ -15,4 +15,5 @@ public class GlobalDomainResponse {
     private final List<String> skills;
     private final List<String> subjects;
     private final List<String> workTimes;
+    private final List<String> applyStatuses;
 }

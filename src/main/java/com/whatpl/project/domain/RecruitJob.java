@@ -1,6 +1,8 @@
 package com.whatpl.project.domain;
 
 import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.exception.BizException;
+import com.whatpl.global.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,5 +40,13 @@ public class RecruitJob {
     //==비즈니스 로직==//
     public boolean isFullJob() {
         return Objects.equals(totalAmount, currentAmount);
+    }
+
+    public void increaseCurrentAmount() {
+        // 모집인원이 초과될 경우 Error
+        if (isFullJob()) {
+            throw new BizException(ErrorCode.RECRUIT_COMPLETED_APPLY_JOB);
+        }
+        this.currentAmount++;
     }
 }

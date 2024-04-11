@@ -4,6 +4,7 @@ import com.whatpl.global.common.domain.enums.Career;
 import com.whatpl.global.common.domain.enums.Subject;
 import com.whatpl.global.common.domain.enums.WorkTime;
 import com.whatpl.project.domain.Project;
+import com.whatpl.project.domain.RecruitJob;
 import com.whatpl.project.domain.enums.MeetingType;
 import com.whatpl.project.domain.enums.UpDown;
 
@@ -24,5 +25,15 @@ public class ProjectFixture {
                 .wishCareerUpDown(UpDown.UP)
                 .wishWorkTime(WorkTime.TEN_TO_TWENTY)
                 .build();
+    }
+
+    public static Project withRecruitJobs(RecruitJob... recruitJobs) {
+        Project project = create();
+        if(recruitJobs != null) {
+            for (RecruitJob recruitJob : recruitJobs) {
+                project.addRecruitJob(recruitJob);
+            }
+        }
+        return project;
     }
 }
