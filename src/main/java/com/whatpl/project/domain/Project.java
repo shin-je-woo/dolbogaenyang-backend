@@ -1,6 +1,7 @@
 package com.whatpl.project.domain;
 
 import com.whatpl.attachment.domain.Attachment;
+import com.whatpl.global.common.BaseTimeEntity;
 import com.whatpl.global.common.domain.enums.Career;
 import com.whatpl.global.common.domain.enums.Subject;
 import com.whatpl.global.common.domain.enums.WorkTime;
@@ -19,7 +20,7 @@ import java.util.Set;
 @Entity
 @Table(name = "project")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Project {
+public class Project extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +33,8 @@ public class Project {
     private LocalDate startDate;
 
     private LocalDate endDate;
+
+    private Integer views;
 
     @Setter
     @Enumerated(EnumType.STRING)
@@ -86,6 +89,7 @@ public class Project {
         this.wishWorkTime = wishWorkTime;
         this.content = content;
         this.representImage = representImage;
+        this.views = 0;
     }
 
     //==연관관계 메서드==//
@@ -108,5 +112,13 @@ public class Project {
     public void addRepresentImageAndWriter(Attachment representImage, Member writer) {
         this.representImage = representImage;
         this.writer = writer;
+    }
+
+    //==비즈니스 로직==//
+    public void increaseViews() {
+        if (this.views == null) {
+            this.views = 0;
+        }
+        this.views++;
     }
 }

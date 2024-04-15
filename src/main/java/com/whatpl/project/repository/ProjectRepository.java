@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface ProjectRepository extends JpaRepository<Project, Long> {
+public interface ProjectRepository extends JpaRepository<Project, Long>, ProjectQueryRepository {
 
     @Query("select p from Project p left join fetch p.recruitJobs where p.id = :id")
-    Optional<Project> findByIdWithRecruitJobs(Long id);
+    Optional<Project> findWithRecruitJobsById(Long id);
 }

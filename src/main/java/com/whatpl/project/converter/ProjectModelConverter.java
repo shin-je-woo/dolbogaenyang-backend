@@ -1,23 +1,28 @@
 package com.whatpl.project.converter;
 
 import com.whatpl.attachment.domain.Attachment;
+import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.member.domain.Member;
+import com.whatpl.project.domain.Apply;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.domain.ProjectSkill;
-import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.domain.RecruitJob;
+import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.dto.ProjectCreateRequest;
+import com.whatpl.project.dto.ProjectJobParticipantDto;
+import com.whatpl.project.dto.ProjectReadResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProjectModelConverter {
 
-    public static Project convert(final ProjectCreateRequest request, final Member writer, final Attachment representImage) {
-        if(request == null || writer == null || representImage == null) {
+    public static Project toProject(final ProjectCreateRequest request, final Member writer, final Attachment representImage) {
+        if (request == null || writer == null || representImage == null) {
             throw new IllegalStateException("convert failed!");
         }
         Project project = Project.builder()
@@ -54,5 +59,50 @@ public final class ProjectModelConverter {
         project.addRepresentImageAndWriter(representImage, writer);
 
         return project;
+    }
+
+    public static ProjectReadResponse toProjectReadResponse(Project project, List<Apply> projectParticipants) {
+        return ProjectReadResponse.builder()
+                .projectId(project.getId())
+                .title(project.getTitle())
+                .projectStatus(project.getStatus())
+                .subject(project.getSubject())
+                .meetingType(project.getMeetingType())
+                .views(project.getViews())
+                .likes(0) // TODO 프로젝트 좋아요 기능
+                .profitable(project.getProfitable())
+                .writerNickname(project.getWriter().getNickname())
+                .createdAt(project.getCreatedAt())
+                .content(project.getContent())
+                .skills(project.getProjectSkills().stream()
+                        .map(ProjectSkill::getSkill)
+                        .toList())
+                .startDate(project.getStartDate())
+                .endDate(project.getEndDate())
+                .projectJobParticipants(project.getRecruitJobs().stream()
+                        .map(recruitJob -> ProjectJobParticipantDto.builder()
+                                .job(recruitJob.getJob())
+                                .totalAmount(recruitJob.getTotalAmount())
+                                .currentAmount(recruitJob.getCurrentAmount())
+                                .participants(getJobMatchedParticipants(recruitJob.getJob(), projectParticipants))
+                                .build()
+                        )
+                        .toList())
+                .build();
+    }
+
+    private static List<ProjectJobParticipantDto.Participant> getJobMatchedParticipants(Job job, List<Apply> projectParticipants) {
+        if (job == null || projectParticipants == null || projectParticipants.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return projectParticipants.stream()
+                .filter(projectParticipant -> projectParticipant.getJob().equals(job))
+                .map(projectParticipant -> ProjectJobParticipantDto.Participant.builder()
+                        .memberId(projectParticipant.getApplicant().getId())
+                        .nickname(projectParticipant.getApplicant().getNickname())
+                        .career(projectParticipant.getApplicant().getCareer())
+                        .build()
+                )
+                .toList();
     }
 }

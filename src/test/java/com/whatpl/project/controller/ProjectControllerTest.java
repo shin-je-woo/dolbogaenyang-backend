@@ -5,11 +5,9 @@ import com.whatpl.BaseSecurityWebMvcTest;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.security.model.WithMockWhatplMember;
 import com.whatpl.project.domain.enums.ApplyStatus;
-import com.whatpl.project.dto.ProjectApplyReadResponse;
-import com.whatpl.project.dto.ProjectApplyRequest;
-import com.whatpl.project.dto.ProjectApplyStatusRequest;
-import com.whatpl.project.dto.ProjectCreateRequest;
+import com.whatpl.project.dto.*;
 import com.whatpl.project.model.ProjectCreateRequestFixture;
+import com.whatpl.project.model.ProjectReadResponseFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +18,9 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
@@ -118,15 +118,15 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 .summary("프로젝트 지원")
                                 .description("""
                                         프로젝트에 지원합니다.
-                                        
+                                                                                
                                         삭제된 프로젝트는 지원 불가
-                                        
+                                                                                
                                         모집완료된 프로젝트는 지원 불가
-                                        
+                                                                                
                                         프로젝트 등록자는 본인이 등록한 프로젝트에 지원 불가
-                                        
+                                                                                
                                         모집직군에 지원하는 직무가 없을 경우, 모집직군에 지원하는 직무가 마감된 경우 지원 불가
-                                        
+                                                                                
                                         이미 지원한 프로젝트는 지원 불가
                                         """),
                         requestHeaders(
@@ -149,7 +149,10 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
         // given
         long projectId = 1L;
         long applyId = 1L;
-        LocalDateTime recruiterReadAt = LocalDateTime.now(Clock.systemDefaultZone());
+        LocalDateTime recruiterReadAt = LocalDateTime.now(Clock.fixed(
+                Instant.parse("2024-04-12T12:35:43.00Z"),
+                ZoneId.of("Asia/Seoul"))
+        );
         ProjectApplyReadResponse response = ProjectApplyReadResponse.builder()
                 .projectId(projectId)
                 .applyId(applyId)
@@ -185,7 +188,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 .summary("프로젝트 지원서 조회")
                                 .description("""
                                         프로젝트 지원서를 조회합니다.
-                                        
+                                                                                
                                         프로젝트의 지원자, 모집자만 조회 가능합니다.
                                         """),
                         requestHeaders(
@@ -234,9 +237,9 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 .summary("프로젝트 지원서 승인/거절")
                                 .description("""
                                         프로젝트 지원서를 승인/거절합니다.
-                                        
+                                                                                
                                         프로젝트의 모집자만 승인/거절 가능합니다.
-                                        
+                                                                                
                                         승인 대기 상태로는 변경할 수 없습니다. (승인/거절만 가능)
                                         """),
                         requestHeaders(
@@ -248,6 +251,90 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         ),
                         requestFields(
                                 fieldWithPath("applyStatus").type(JsonFieldType.STRING).description("지원 상태")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockWhatplMember
+    @DisplayName("프로젝트 조회 API Docs")
+    void read() throws Exception {
+        // given
+        long projectId = 1L;
+        ProjectReadResponse response = ProjectReadResponseFixture.from(projectId);
+        when(projectReadService.find(projectId))
+                .thenReturn(response);
+
+        // expected
+        mockMvc.perform(get("/projects/{projectId}", projectId)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer {AccessToken}"))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.projectId").value(response.getProjectId()),
+                        jsonPath("$.title").value(response.getTitle()),
+                        jsonPath("$.projectStatus").value(response.getProjectStatus().getValue()),
+                        jsonPath("$.meetingType").value(response.getMeetingType().getValue()),
+                        jsonPath("$.views").value(response.getViews()),
+                        jsonPath("$.likes").value(response.getLikes()),
+                        jsonPath("$.profitable").value(response.isProfitable()),
+                        jsonPath("$.createdAt").value(response.getCreatedAt().toString()),
+                        jsonPath("$.content").value(response.getContent()),
+                        jsonPath("$.skills[0]").value(response.getSkills().get(0).getValue()),
+                        jsonPath("$.skills[1]").value(response.getSkills().get(1).getValue()),
+                        jsonPath("$.startDate").value(response.getStartDate().toString()),
+                        jsonPath("$.endDate").value(response.getEndDate().toString()),
+                        jsonPath("$.projectJobParticipants[0].job").value(response.getProjectJobParticipants().get(0).getJob().getValue()),
+                        jsonPath("$.projectJobParticipants[0].totalAmount").value(response.getProjectJobParticipants().get(0).getTotalAmount()),
+                        jsonPath("$.projectJobParticipants[0].currentAmount").value(response.getProjectJobParticipants().get(0).getCurrentAmount()),
+                        jsonPath("$.projectJobParticipants[0].participants[0].memberId")
+                                .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getMemberId()),
+                        jsonPath("$.projectJobParticipants[0].participants[0].nickname")
+                                .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getNickname()),
+                        jsonPath("$.projectJobParticipants[0].participants[0].career")
+                                .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getCareer().getValue()),
+                        jsonPath("$.projectJobParticipants[0].participants[1].memberId")
+                                .value(response.getProjectJobParticipants().get(0).getParticipants().get(1).getMemberId()),
+                        jsonPath("$.projectJobParticipants[0].participants[1].nickname")
+                                .value(response.getProjectJobParticipants().get(0).getParticipants().get(1).getNickname()),
+                        jsonPath("$.projectJobParticipants[0].participants[1].career")
+                                .value(response.getProjectJobParticipants().get(0).getParticipants().get(1).getCareer().getValue()),
+                        jsonPath("$.projectJobParticipants[1].job").value(response.getProjectJobParticipants().get(1).getJob().getValue()),
+                        jsonPath("$.projectJobParticipants[1].totalAmount").value(response.getProjectJobParticipants().get(1).getTotalAmount()),
+                        jsonPath("$.projectJobParticipants[1].currentAmount").value(response.getProjectJobParticipants().get(1).getCurrentAmount())
+                )
+                .andDo(print())
+                .andDo(document("read-project",
+                        resourceDetails().tag(ApiDocTag.PROJECT.getTag())
+                                .summary("프로젝트 조회"),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("AccessToken")
+                        ),
+                        pathParameters(
+                                parameterWithName("projectId").description("프로젝트 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("projectId").type(JsonFieldType.NUMBER).description("프로젝트 ID"),
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("프로젝트 제목"),
+                                fieldWithPath("projectStatus").type(JsonFieldType.STRING).description("프로젝트 상태"),
+                                fieldWithPath("subject").type(JsonFieldType.STRING).description("프로젝트 주제"),
+                                fieldWithPath("meetingType").type(JsonFieldType.STRING).description("모임 방식"),
+                                fieldWithPath("views").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("likes").type(JsonFieldType.NUMBER).description("좋아요 수"),
+                                fieldWithPath("writerNickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                                fieldWithPath("createdAt").type(JsonFieldType.STRING).description("작성 일시"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("본문"),
+                                fieldWithPath("profitable").type(JsonFieldType.BOOLEAN).description("수익화 여부"),
+                                fieldWithPath("skills").type(JsonFieldType.ARRAY).description("사용 기술 스택"),
+                                fieldWithPath("startDate").type(JsonFieldType.STRING).description("시작 일자"),
+                                fieldWithPath("endDate").type(JsonFieldType.STRING).description("종료 일자"),
+                                fieldWithPath("projectJobParticipants").type(JsonFieldType.ARRAY).description("직무별 참여자 (팀원 구성)"),
+                                fieldWithPath("projectJobParticipants[].job").type(JsonFieldType.STRING).description("직무"),
+                                fieldWithPath("projectJobParticipants[].totalAmount").type(JsonFieldType.NUMBER).description("모집 인원"),
+                                fieldWithPath("projectJobParticipants[].currentAmount").type(JsonFieldType.NUMBER).description("현재 인원"),
+                                fieldWithPath("projectJobParticipants[].participants").type(JsonFieldType.ARRAY).description("참여자"),
+                                fieldWithPath("projectJobParticipants[].participants[].memberId").type(JsonFieldType.NUMBER).description("참여자 ID"),
+                                fieldWithPath("projectJobParticipants[].participants[].nickname").type(JsonFieldType.STRING).description("닉네임"),
+                                fieldWithPath("projectJobParticipants[].participants[].career").type(JsonFieldType.STRING).description("경력")
                         )
                 ));
     }

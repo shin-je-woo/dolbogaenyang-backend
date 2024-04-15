@@ -62,7 +62,8 @@ public enum ErrorCode {
     WORK_TIME_NOT_VALID("DMN5", 400, "작업시간에 유효하지 않은 값이 존재합니다."),
     UP_DOWN_NOT_VALID("DMN6", 400, "이상/이하에 유효하지 않은 값이 존재합니다."),
     MEETING_TYPE_NOT_VALID("DMN7", 400, "모임 방식에 유효하지 않은 값이 존재합니다."),
-    APPLY_STATUS_NOT_VALID("DMN8", 400, "프로젝트 지원 상태에 유효하지 않은 값이 존재합니다.");
+    APPLY_STATUS_NOT_VALID("DMN8", 400, "프로젝트 지원 상태에 유효하지 않은 값이 존재합니다."),
+    PROJECT_STATUS_NOT_VALID("DMN9", 400, "프로젝트 상태에 유효하지 않은 값이 존재합니다.");
 
     private final String code;
     private final int status;

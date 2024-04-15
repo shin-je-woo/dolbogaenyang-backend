@@ -45,6 +45,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(WEB_SECURITY_WHITE_LIST).permitAll()
                         .requestMatchers(HttpMethod.GET, "/attachments/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/projects/{projectId}").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
@@ -66,9 +67,11 @@ public class SecurityConfig {
     }
 
     private SecurityContextRepository securityContextRepository() {
-        var httpSessionSecurityContextRepository = new HttpSessionSecurityContextRepository();
-        var requestAttributeSecurityContextRepository = new RequestAttributeSecurityContextRepository();
-        return new DelegatingSecurityContextRepository(httpSessionSecurityContextRepository,
-                requestAttributeSecurityContextRepository);
+        return new RequestAttributeSecurityContextRepository();
+        // Session 으로 SecurityContextRepository 사용할 경우 로그아웃해서 JWT 날려도 Session 에 Authentication 이 남기 때문에 인증 가능한 문제 -> 세션저장소 사용 X
+//        var httpSessionSecurityContextRepository = new HttpSessionSecurityContextRepository();
+//        var requestAttributeSecurityContextRepository = new RequestAttributeSecurityContextRepository();
+//        return new DelegatingSecurityContextRepository(httpSessionSecurityContextRepository,
+//                requestAttributeSecurityContextRepository);
     }
 }

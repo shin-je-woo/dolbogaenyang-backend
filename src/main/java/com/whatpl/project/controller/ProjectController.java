@@ -4,11 +4,9 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.project.domain.enums.ApplyStatus;
-import com.whatpl.project.dto.ProjectApplyReadResponse;
-import com.whatpl.project.dto.ProjectApplyRequest;
-import com.whatpl.project.dto.ProjectApplyStatusRequest;
-import com.whatpl.project.dto.ProjectCreateRequest;
+import com.whatpl.project.dto.*;
 import com.whatpl.project.service.ProjectApplyService;
+import com.whatpl.project.service.ProjectReadService;
 import com.whatpl.project.service.ProjectWriteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +23,7 @@ public class ProjectController {
 
     private final ProjectWriteService projectWriteService;
     private final ProjectApplyService projectApplyService;
+    private final ProjectReadService projectReadService;
 
     @PostMapping("/projects")
     public ResponseEntity<Void> write(@Valid @RequestBody ProjectCreateRequest request,
@@ -69,5 +68,11 @@ public class ProjectController {
         projectApplyService.status(projectId, applyId, request.getApplyStatus());
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/projects/{projectId}")
+    public ResponseEntity<ProjectReadResponse> read(@PathVariable Long projectId) {
+        ProjectReadResponse projectReadResponse = projectReadService.find(projectId);
+        return ResponseEntity.ok(projectReadResponse);
     }
 }
