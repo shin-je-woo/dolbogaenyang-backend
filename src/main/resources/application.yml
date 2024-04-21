@@ -89,3 +89,26 @@ jwt:
   token-type: Bearer
   access-expiration-time: 1_800_000 # 30min
   refresh-expiration-time: 1_209_600_000 # 2weeks
+
+# 운영 prod
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  data:
+    redis:
+      host: redis
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            redirect-uri: https://whatpl.com/oauth2/callback/google
+          naver:
+            redirect-uri: https://whatpl.com/oauth2/callback/naver
+          kakao:
+            redirect-uri: https://whatpl.com/oauth2/callback/kakao
+
