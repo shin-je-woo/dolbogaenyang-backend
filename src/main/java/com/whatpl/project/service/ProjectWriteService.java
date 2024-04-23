@@ -11,9 +11,9 @@ import com.whatpl.project.converter.ProjectModelConverter;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.dto.ProjectCreateRequest;
 import com.whatpl.project.repository.ProjectRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
