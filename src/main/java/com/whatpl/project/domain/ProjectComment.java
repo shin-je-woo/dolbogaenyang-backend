@@ -42,4 +42,12 @@ public class ProjectComment extends BaseTimeEntity {
         this.project = project;
         this.parent = parent;
     }
+
+    public void modify(String content) {
+        this.content = content;
+    }
+
+    public boolean isModified() {
+        return !getCreatedAt().equals(getUpdatedAt());
+    }
 }

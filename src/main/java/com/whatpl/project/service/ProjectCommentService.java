@@ -7,6 +7,7 @@ import com.whatpl.member.repository.MemberRepository;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.domain.ProjectComment;
 import com.whatpl.project.dto.ProjectCommentCreateRequest;
+import com.whatpl.project.dto.ProjectCommentUpdateRequest;
 import com.whatpl.project.repository.ProjectCommentRepository;
 import com.whatpl.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,5 +40,15 @@ public class ProjectCommentService {
                 .parent(parent)
                 .build();
         projectCommentRepository.save(projectComment);
+    }
+
+    @Transactional
+    public void updateProjectComment(final ProjectCommentUpdateRequest request, final long projectId, final long commentId) {
+        ProjectComment projectComment = projectCommentRepository.findById(commentId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT_COMMENT));
+        if (!projectComment.getProject().getId().equals(projectId)) {
+            throw new BizException(ErrorCode.REQUEST_VALUE_INVALID);
+        }
+        projectComment.modify(request.getContent());
     }
 }

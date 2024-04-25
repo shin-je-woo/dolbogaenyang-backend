@@ -35,6 +35,7 @@ public enum ErrorCode {
     ALREADY_PROCESSED_APPLY("PRJ9", 400, "이미 승인 또는 거절된 지원서입니다."),
     CANT_PROCESS_WAITING("PRJ10", 400, "프로젝트 지원서를 대기 상태로 변경할 수 없습니다."),
     NOT_FOUND_PARENT_PROJECT_COMMENT("PRJ11", 404, "상위 댓글을 찾을 수 없습니다."),
+    NOT_FOUND_PROJECT_COMMENT("PRJ12", 404, "댓글을 찾을 수 없습니다."),
 
     // APPLY
     NOT_FOUND_APPLY("APL1", 404, "지원서를 찾을 수 없습니다."),
