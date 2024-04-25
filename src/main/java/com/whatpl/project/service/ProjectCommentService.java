@@ -51,4 +51,14 @@ public class ProjectCommentService {
         }
         projectComment.modify(request.getContent());
     }
+
+    @Transactional
+    public void deleteProjectComment(final long projectId, final long commentId) {
+        ProjectComment projectComment = projectCommentRepository.findById(commentId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT_COMMENT));
+        if (!projectComment.getProject().getId().equals(projectId)) {
+            throw new BizException(ErrorCode.REQUEST_VALUE_INVALID);
+        }
+        projectCommentRepository.delete(projectComment);
+    }
 }

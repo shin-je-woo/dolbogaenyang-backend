@@ -33,4 +33,12 @@ public class ProjectCommentController {
         projectCommentService.updateProjectComment(request, projectId, commentId);
         return ResponseEntity.noContent().build();
     }
+
+    @PreAuthorize("hasPermission(#commentId, 'PROJECT_COMMENT', 'DELETE')")
+    @DeleteMapping("/projects/{projectId}/comments/{commentId}")
+    public ResponseEntity<Void> delete(@PathVariable Long projectId,
+                                       @PathVariable Long commentId) {
+        projectCommentService.deleteProjectComment(projectId, commentId);
+        return ResponseEntity.noContent().build();
+    }
 }

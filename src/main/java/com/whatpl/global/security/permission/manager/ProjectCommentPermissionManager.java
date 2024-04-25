@@ -20,6 +20,7 @@ public class ProjectCommentPermissionManager implements WhatplPermissionManager 
     public boolean hasPrivilege(MemberPrincipal memberPrincipal, Long targetId, String permission) {
         return switch (permission) {
             case "UPDATE" -> hasUpdatePrivilege(memberPrincipal, targetId);
+            case "DELETE" -> hasDeletePrivilege(memberPrincipal, targetId);
             default -> false;
         };
     }
@@ -29,6 +30,17 @@ public class ProjectCommentPermissionManager implements WhatplPermissionManager 
      * 댓글 등록자
      */
     private boolean hasUpdatePrivilege(MemberPrincipal memberPrincipal, Long commentId) {
+        ProjectComment projectComment = projectCommentRepository.findById(commentId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT_COMMENT));
+
+        return projectComment.getWriter().getId().equals(memberPrincipal.getId());
+    }
+
+    /**
+     * 프로젝트 댓글 삭제 권한
+     * 댓글 등록자
+     */
+    private boolean hasDeletePrivilege(MemberPrincipal memberPrincipal, Long commentId) {
         ProjectComment projectComment = projectCommentRepository.findById(commentId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT_COMMENT));
 
