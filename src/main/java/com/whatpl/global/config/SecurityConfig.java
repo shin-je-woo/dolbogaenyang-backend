@@ -45,7 +45,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(WEB_SECURITY_WHITE_LIST).permitAll()
                         .requestMatchers(HttpMethod.GET, "/attachments/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/projects/{projectId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/projects/{projectId}/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
