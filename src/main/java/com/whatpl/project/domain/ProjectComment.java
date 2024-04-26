@@ -23,9 +23,9 @@ public class ProjectComment extends BaseTimeEntity {
 
     private String content;
 
-    private boolean isModified;
+    private Boolean isModified;
 
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id")
@@ -46,6 +46,7 @@ public class ProjectComment extends BaseTimeEntity {
     @Builder
     public ProjectComment(String content, Member writer, Project project, ProjectComment parent) {
         this.content = content;
+        this.isModified = false;
         this.isDeleted = false;
         this.writer = writer;
         this.project = project;
