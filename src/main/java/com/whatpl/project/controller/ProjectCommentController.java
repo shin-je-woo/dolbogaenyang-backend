@@ -2,6 +2,7 @@ package com.whatpl.project.controller;
 
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.project.dto.ProjectCommentCreateRequest;
+import com.whatpl.project.dto.ProjectCommentListResponse;
 import com.whatpl.project.dto.ProjectCommentUpdateRequest;
 import com.whatpl.project.service.ProjectCommentService;
 import jakarta.validation.Valid;
@@ -16,6 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectCommentController {
 
     private final ProjectCommentService projectCommentService;
+
+    @GetMapping("/projects/{projectId}/comments")
+    public ResponseEntity<ProjectCommentListResponse> readList(@PathVariable Long projectId) {
+        ProjectCommentListResponse projectCommentListResponse = projectCommentService.readProjectCommentList(projectId);
+        return ResponseEntity.ok(projectCommentListResponse);
+    }
 
     @PostMapping("/projects/{projectId}/comments")
     public ResponseEntity<Void> write(@PathVariable Long projectId,

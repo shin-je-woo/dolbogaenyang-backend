@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Getter
 @Entity
 @Table(name = "project_comment")
@@ -19,6 +22,8 @@ public class ProjectComment extends BaseTimeEntity {
     private Long id;
 
     private String content;
+
+    private boolean isModified;
 
     private boolean isDeleted;
 
@@ -34,6 +39,10 @@ public class ProjectComment extends BaseTimeEntity {
     @JoinColumn(name = "parent_id")
     private ProjectComment parent;
 
+    @OneToMany(mappedBy = "parent")
+    @OrderBy("createdAt ASC")
+    private Set<ProjectComment> children = new LinkedHashSet<>();
+
     @Builder
     public ProjectComment(String content, Member writer, Project project, ProjectComment parent) {
         this.content = content;
@@ -43,11 +52,13 @@ public class ProjectComment extends BaseTimeEntity {
         this.parent = parent;
     }
 
+    //==비즈니스 로직==//
     public void modify(String content) {
         this.content = content;
+        this.isModified = true;
     }
 
-    public boolean isModified() {
-        return !getCreatedAt().equals(getUpdatedAt());
+    public void delete() {
+        this.isDeleted = true;
     }
 }

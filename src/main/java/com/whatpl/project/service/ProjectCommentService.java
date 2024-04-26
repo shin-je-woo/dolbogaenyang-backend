@@ -4,15 +4,20 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.member.domain.Member;
 import com.whatpl.member.repository.MemberRepository;
+import com.whatpl.project.converter.ProjectCommentModelConverter;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.domain.ProjectComment;
 import com.whatpl.project.dto.ProjectCommentCreateRequest;
+import com.whatpl.project.dto.ProjectCommentDto;
+import com.whatpl.project.dto.ProjectCommentListResponse;
 import com.whatpl.project.dto.ProjectCommentUpdateRequest;
 import com.whatpl.project.repository.ProjectCommentRepository;
 import com.whatpl.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +64,22 @@ public class ProjectCommentService {
         if (!projectComment.getProject().getId().equals(projectId)) {
             throw new BizException(ErrorCode.REQUEST_VALUE_INVALID);
         }
-        projectCommentRepository.delete(projectComment);
+        projectComment.delete();
+    }
+
+    @Transactional(readOnly = true)
+    public ProjectCommentListResponse readProjectCommentList(final long projectId) {
+        List<ProjectComment> projectComments = projectCommentRepository.findWithAllByProjectId(projectId).stream()
+                .filter(comment -> comment.getParent() == null)
+                .toList();
+
+        List<ProjectCommentDto> projectCommentDtos = projectComments.stream()
+                .map(ProjectCommentModelConverter::toProjectCommentDto)
+                .toList();
+
+        return ProjectCommentListResponse.builder()
+                .projectId(projectId)
+                .comments(projectCommentDtos)
+                .build();
     }
 }
