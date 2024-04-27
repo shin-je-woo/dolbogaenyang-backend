@@ -3,10 +3,7 @@ package com.whatpl.project.converter;
 import com.whatpl.attachment.domain.Attachment;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.member.domain.Member;
-import com.whatpl.project.domain.Apply;
-import com.whatpl.project.domain.Project;
-import com.whatpl.project.domain.ProjectSkill;
-import com.whatpl.project.domain.RecruitJob;
+import com.whatpl.project.domain.*;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.dto.ProjectCreateRequest;
 import com.whatpl.project.dto.ProjectJobParticipantDto;
@@ -31,7 +28,6 @@ public final class ProjectModelConverter {
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .status(ProjectStatus.RECRUITING)
-                .subject(request.getSubject())
                 .meetingType(request.getMeetingType())
                 .wishCareer(request.getWishCareer())
                 .wishCareerUpDown(request.getWishCareerUpDown())
@@ -55,6 +51,12 @@ public final class ProjectModelConverter {
                         .build())
                 .forEach(project::addRecruitJob);
 
+        // ProjectSubject 추가
+        Optional.ofNullable(request.getSubjects())
+                .orElseGet(Collections::emptySet).stream()
+                .map(ProjectSubject::new)
+                .forEach(project::addProjectSubject);
+
         // 대표이미지, 작성자 추가
         project.addRepresentImageAndWriter(representImage, writer);
 
@@ -66,7 +68,9 @@ public final class ProjectModelConverter {
                 .projectId(project.getId())
                 .title(project.getTitle())
                 .projectStatus(project.getStatus())
-                .subject(project.getSubject())
+                .subjects(project.getProjectSubjects().stream()
+                        .map(ProjectSubject::getSubject)
+                        .toList())
                 .meetingType(project.getMeetingType())
                 .views(project.getViews())
                 .likes(0) // TODO 프로젝트 좋아요 기능

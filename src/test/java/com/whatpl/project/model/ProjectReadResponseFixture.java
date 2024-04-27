@@ -20,7 +20,6 @@ public class ProjectReadResponseFixture {
                 .projectId(projectId)
                 .title("테스트 프로젝트")
                 .projectStatus(ProjectStatus.RECRUITING)
-                .subject(Subject.SOCIAL_MEDIA)
                 .meetingType(MeetingType.ONLINE)
                 .views(100)
                 .likes(30)
@@ -30,6 +29,7 @@ public class ProjectReadResponseFixture {
                         Instant.parse("2024-04-12T12:35:43.00Z"),
                         ZoneId.of("Asia/Seoul"))))
                 .content("<p>테스트 콘텐츠 HTML<p>")
+                .subjects(List.of(Subject.HEALTH, Subject.SOCIAL_MEDIA))
                 .skills(List.of(Skill.JAVA, Skill.JAVA_SCRIPT))
                 .startDate(LocalDate.of(2024, 4, 15))
                 .endDate(LocalDate.of(2024, 4, 30))

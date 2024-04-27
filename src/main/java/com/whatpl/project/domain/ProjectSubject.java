@@ -1,7 +1,7 @@
 package com.whatpl.project.domain;
 
 import com.whatpl.global.common.BaseTimeEntity;
-import com.whatpl.global.common.domain.enums.Skill;
+import com.whatpl.global.common.domain.enums.Subject;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,23 +10,23 @@ import lombok.Setter;
 
 @Getter
 @Entity
-@Table(name = "project_skill")
+@Table(name = "project_subject")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProjectSkill extends BaseTimeEntity {
+public class ProjectSubject extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private Skill skill;
+    private Subject subject;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
 
-    public ProjectSkill(Skill skill) {
-        this.skill = skill;
+    public ProjectSubject(Subject subject) {
+        this.subject = subject;
     }
 }

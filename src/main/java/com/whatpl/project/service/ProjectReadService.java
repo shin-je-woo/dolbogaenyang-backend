@@ -22,7 +22,7 @@ public class ProjectReadService {
     private final ApplyRepository applyRepository;
 
     @Transactional
-    public ProjectReadResponse find(final long projectId) {
+    public ProjectReadResponse readProject(final long projectId) {
         Project project = projectRepository.findProjectWithAllById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
         List<Apply> participants = applyRepository.findAllParticipants(project);

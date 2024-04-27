@@ -16,12 +16,12 @@ public class ProjectCreateRequestFixture {
     public static ProjectCreateRequest create() {
         return ProjectCreateRequest.builder()
                 .title("테스트 타이틀")
-                .subject(Subject.SOCIAL_MEDIA)
+                .subjects(Set.of(Subject.SOCIAL_MEDIA, Subject.HEALTH))
                 .recruitJobs(Set.of(
                         new ProjectCreateRequest.RecruitJobField(Job.BACKEND_DEVELOPER, 5),
                         new ProjectCreateRequest.RecruitJobField(Job.DESIGNER, 3),
                         new ProjectCreateRequest.RecruitJobField(Job.DATA_SCIENTIST, 1)
-                        ))
+                ))
                 .skills(Set.of(Skill.JAVA, Skill.FIGMA, Skill.PYTHON))
                 .content("<p>테스트 콘텐츠 HTML<p>")
                 .profitable(false)
