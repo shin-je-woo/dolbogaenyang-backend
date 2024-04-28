@@ -28,7 +28,7 @@ class JwtControllerTest extends BaseSecurityWebMvcTest {
         // when
         mockMvc.perform(post("/token")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                        .content("refreshToken=Bearer testToken"))
+                        .content("refreshToken=testToken"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").value(jwtResponse.getAccessToken()))
