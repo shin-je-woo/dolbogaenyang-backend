@@ -20,7 +20,7 @@ public class ProjectReadResponse {
     private final long projectId;
     private final String title;
     private final ProjectStatus projectStatus;
-    private final Subject subject;
+    private final List<Subject> subjects;
     private final MeetingType meetingType;
     private final int views;
     private final int likes;

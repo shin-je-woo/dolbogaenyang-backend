@@ -72,7 +72,7 @@ public class ProjectController {
 
     @GetMapping("/projects/{projectId}")
     public ResponseEntity<ProjectReadResponse> read(@PathVariable Long projectId) {
-        ProjectReadResponse projectReadResponse = projectReadService.find(projectId);
+        ProjectReadResponse projectReadResponse = projectReadService.readProject(projectId);
         return ResponseEntity.ok(projectReadResponse);
     }
 }

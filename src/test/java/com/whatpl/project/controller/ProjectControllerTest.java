@@ -71,7 +71,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         ),
                         requestFields(
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
-                                fieldWithPath("subject").type(JsonFieldType.STRING).description("도메인(관심주제)"),
+                                fieldWithPath("subjects").type(JsonFieldType.ARRAY).description("도메인(관심주제)"),
                                 fieldWithPath("recruitJobs").type(JsonFieldType.ARRAY).description("모집직군"),
                                 fieldWithPath("recruitJobs[].job").type(JsonFieldType.STRING).description("직무"),
                                 fieldWithPath("recruitJobs[].totalCount").type(JsonFieldType.NUMBER).description("모집인원"),
@@ -262,7 +262,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
         // given
         long projectId = 1L;
         ProjectReadResponse response = ProjectReadResponseFixture.from(projectId);
-        when(projectReadService.find(projectId))
+        when(projectReadService.readProject(projectId))
                 .thenReturn(response);
 
         // expected
@@ -279,6 +279,8 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.profitable").value(response.isProfitable()),
                         jsonPath("$.createdAt").value(response.getCreatedAt().toString()),
                         jsonPath("$.content").value(response.getContent()),
+                        jsonPath("$.subjects[0]").value(response.getSubjects().get(0).getValue()),
+                        jsonPath("$.subjects[1]").value(response.getSubjects().get(1).getValue()),
                         jsonPath("$.skills[0]").value(response.getSkills().get(0).getValue()),
                         jsonPath("$.skills[1]").value(response.getSkills().get(1).getValue()),
                         jsonPath("$.startDate").value(response.getStartDate().toString()),
@@ -316,7 +318,6 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("projectId").type(JsonFieldType.NUMBER).description("프로젝트 ID"),
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("프로젝트 제목"),
                                 fieldWithPath("projectStatus").type(JsonFieldType.STRING).description("프로젝트 상태"),
-                                fieldWithPath("subject").type(JsonFieldType.STRING).description("프로젝트 주제"),
                                 fieldWithPath("meetingType").type(JsonFieldType.STRING).description("모임 방식"),
                                 fieldWithPath("views").type(JsonFieldType.NUMBER).description("조회수"),
                                 fieldWithPath("likes").type(JsonFieldType.NUMBER).description("좋아요 수"),
@@ -324,6 +325,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("createdAt").type(JsonFieldType.STRING).description("작성 일시"),
                                 fieldWithPath("content").type(JsonFieldType.STRING).description("본문"),
                                 fieldWithPath("profitable").type(JsonFieldType.BOOLEAN).description("수익화 여부"),
+                                fieldWithPath("subjects").type(JsonFieldType.ARRAY).description("도메인(관심 주제)"),
                                 fieldWithPath("skills").type(JsonFieldType.ARRAY).description("사용 기술 스택"),
                                 fieldWithPath("startDate").type(JsonFieldType.STRING).description("시작 일자"),
                                 fieldWithPath("endDate").type(JsonFieldType.STRING).description("종료 일자"),
