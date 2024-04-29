@@ -55,7 +55,7 @@ public class Project extends BaseTimeEntity {
     @JoinColumn(name = "represent_image_id")
     private Attachment representImage;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id")
     private Member writer;
 
