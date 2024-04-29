@@ -29,9 +29,6 @@ public final class ProjectModelConverter {
                 .endDate(request.getEndDate())
                 .status(ProjectStatus.RECRUITING)
                 .meetingType(request.getMeetingType())
-                .wishCareer(request.getWishCareer())
-                .wishCareerUpDown(request.getWishCareerUpDown())
-                .wishWorkTime(request.getWishWorkTime())
                 .content(request.getContent())
                 .build();
 
