@@ -48,7 +48,7 @@ public class ProjectCreateRequest {
     @NotNull(message = "프로젝트 종료 일자는 필수 입력 항목입니다.")
     private LocalDate endDate;
 
-    private Long representId;
+    private Long representImageId;
 
     @Getter
     @AllArgsConstructor

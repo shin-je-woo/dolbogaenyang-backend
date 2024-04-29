@@ -81,7 +81,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("meetingType").type(JsonFieldType.STRING).description("모임방식"),
                                 fieldWithPath("startDate").type(JsonFieldType.STRING).description("프로젝트 진행 기간 - 시작일자 yyyy-MM-dd"),
                                 fieldWithPath("endDate").type(JsonFieldType.STRING).description("프로젝트 진행 기간 - 종료일자 yyyy-MM-dd"),
-                                fieldWithPath("representId").type(JsonFieldType.NUMBER).description("대표이미지 ID").optional()
+                                fieldWithPath("representImageId").type(JsonFieldType.NUMBER).description("대표이미지 ID").optional()
                         )
                 ));
     }

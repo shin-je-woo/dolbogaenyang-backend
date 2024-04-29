@@ -29,7 +29,7 @@ public class ProjectCreateRequestFixture {
                 .meetingType(MeetingType.ONLINE)
                 .startDate(LocalDate.of(2024, 4, 1))
                 .endDate(LocalDate.of(2024, 6, 30))
-                .representId(1L)
+                .representImageId(1L)
                 .build();
     }
 }
