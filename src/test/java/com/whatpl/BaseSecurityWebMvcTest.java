@@ -8,10 +8,7 @@ import com.whatpl.global.jwt.JwtService;
 import com.whatpl.global.upload.S3Uploader;
 import com.whatpl.member.service.MemberLoginService;
 import com.whatpl.member.service.MemberProfileService;
-import com.whatpl.project.service.ProjectApplyService;
-import com.whatpl.project.service.ProjectCommentService;
-import com.whatpl.project.service.ProjectReadService;
-import com.whatpl.project.service.ProjectWriteService;
+import com.whatpl.project.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -66,6 +63,9 @@ public abstract class BaseSecurityWebMvcTest {
 
     @MockBean
     protected S3Uploader s3Uploader;
+
+    @MockBean
+    protected ProjectLikeService projectLikeService;
 
     @BeforeEach
     protected void init() {
