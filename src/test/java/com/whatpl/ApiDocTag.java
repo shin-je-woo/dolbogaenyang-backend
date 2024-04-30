@@ -11,6 +11,7 @@ public enum ApiDocTag {
     MEMBER("Members"),
     PROJECT("Projects"),
     PROJECT_COMMENT("Project Comments"),
+    PROJECT_LIKE("Project Likes"),
     ATTACHMENT("Attachments"),
     DOMAIN("Domains");
 
