@@ -29,9 +29,6 @@ public final class ProjectModelConverter {
                 .endDate(request.getEndDate())
                 .status(ProjectStatus.RECRUITING)
                 .meetingType(request.getMeetingType())
-                .wishCareer(request.getWishCareer())
-                .wishCareerUpDown(request.getWishCareerUpDown())
-                .wishWorkTime(request.getWishWorkTime())
                 .content(request.getContent())
                 .build();
 
@@ -59,6 +56,48 @@ public final class ProjectModelConverter {
 
         // 대표이미지, 작성자 추가
         project.addRepresentImageAndWriter(representImage, writer);
+
+        return project;
+    }
+
+    public static Project toProject(final ProjectCreateRequest request, final Member writer) {
+        if (request == null || writer == null) {
+            throw new IllegalStateException("convert failed!");
+        }
+        Project project = Project.builder()
+                .title(request.getTitle())
+                .profitable(request.getProfitable())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .status(ProjectStatus.RECRUITING)
+                .meetingType(request.getMeetingType())
+                .content(request.getContent())
+                .build();
+
+        // ProjectSkill 추가
+        Optional.ofNullable(request.getSkills())
+                .orElseGet(Collections::emptySet).stream()
+                .map(ProjectSkill::new)
+                .forEach(project::addProjectSkill);
+
+        // RecruitJob 추가
+        Optional.ofNullable(request.getRecruitJobs())
+                .orElseGet(Collections::emptySet).stream()
+                .map(recruitJobField -> RecruitJob.builder()
+                        .job(recruitJobField.getJob())
+                        .totalAmount(recruitJobField.getTotalCount())
+                        .currentAmount(0)
+                        .build())
+                .forEach(project::addRecruitJob);
+
+        // ProjectSubject 추가
+        Optional.ofNullable(request.getSubjects())
+                .orElseGet(Collections::emptySet).stream()
+                .map(ProjectSubject::new)
+                .forEach(project::addProjectSubject);
+
+        // 대표이미지, 작성자 추가
+        project.addRepresentImageAndWriter(null, writer);
 
         return project;
     }

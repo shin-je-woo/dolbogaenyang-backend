@@ -2,12 +2,9 @@ package com.whatpl.project.domain;
 
 import com.whatpl.attachment.domain.Attachment;
 import com.whatpl.global.common.BaseTimeEntity;
-import com.whatpl.global.common.domain.enums.Career;
-import com.whatpl.global.common.domain.enums.WorkTime;
 import com.whatpl.member.domain.Member;
 import com.whatpl.project.domain.enums.MeetingType;
 import com.whatpl.project.domain.enums.ProjectStatus;
-import com.whatpl.project.domain.enums.UpDown;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -42,15 +39,6 @@ public class Project extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MeetingType meetingType;
 
-    @Enumerated(EnumType.STRING)
-    private Career wishCareer;
-
-    @Enumerated(EnumType.STRING)
-    private UpDown wishCareerUpDown;
-
-    @Enumerated(EnumType.STRING)
-    private WorkTime wishWorkTime;
-
     @Column(columnDefinition = "TEXT")
     private String content;
 
@@ -67,14 +55,13 @@ public class Project extends BaseTimeEntity {
     @JoinColumn(name = "represent_image_id")
     private Attachment representImage;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id")
     private Member writer;
 
     @Builder
     public Project(String title, Boolean profitable, LocalDate startDate,
                    LocalDate endDate, ProjectStatus status, MeetingType meetingType,
-                   Career wishCareer, UpDown wishCareerUpDown, WorkTime wishWorkTime,
                    String content, Attachment representImage) {
         this.title = title;
         this.profitable = profitable;
@@ -82,9 +69,6 @@ public class Project extends BaseTimeEntity {
         this.endDate = endDate;
         this.status = status;
         this.meetingType = meetingType;
-        this.wishCareer = wishCareer;
-        this.wishCareerUpDown = wishCareerUpDown;
-        this.wishWorkTime = wishWorkTime;
         this.content = content;
         this.representImage = representImage;
         this.views = 0;

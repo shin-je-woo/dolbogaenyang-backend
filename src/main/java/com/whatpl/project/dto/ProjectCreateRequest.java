@@ -1,8 +1,9 @@
 package com.whatpl.project.dto;
 
-import com.whatpl.global.common.domain.enums.*;
+import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.domain.enums.Skill;
+import com.whatpl.global.common.domain.enums.Subject;
 import com.whatpl.project.domain.enums.MeetingType;
-import com.whatpl.project.domain.enums.UpDown;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -47,13 +48,7 @@ public class ProjectCreateRequest {
     @NotNull(message = "프로젝트 종료 일자는 필수 입력 항목입니다.")
     private LocalDate endDate;
 
-    private Long representId;
-
-    private Career wishCareer;
-
-    private UpDown wishCareerUpDown;
-    
-    private WorkTime wishWorkTime;
+    private Long representImageId;
 
     @Getter
     @AllArgsConstructor

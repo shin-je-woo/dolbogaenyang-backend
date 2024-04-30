@@ -28,13 +28,16 @@ public class ProjectWriteService {
         Member writer = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
 
-        Attachment representImage = attachmentRepository.findById(request.getRepresentId())
-                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_FILE));
-
-        // 프로젝트 대표이미지는 이미지 파일만 가능 (web validation 단계에서 image, pdf 가 넘어오기 때문에 한번 더 체크)
-        FileUtils.validateImageFile(representImage.getMimeType());
-
-        Project project = ProjectModelConverter.toProject(request, writer, representImage);
+        Project project;
+        if (request.getRepresentImageId() != null) {
+            Attachment representImage = attachmentRepository.findById(request.getRepresentImageId())
+                    .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_FILE));
+            // 프로젝트 대표이미지는 이미지 파일만 가능 (web validation 단계에서 image, pdf 가 넘어오기 때문에 한번 더 체크)
+            FileUtils.validateImageFile(representImage.getMimeType());
+            project = ProjectModelConverter.toProject(request, writer, representImage);
+        } else {
+            project = ProjectModelConverter.toProject(request, writer);
+        }
 
         Project savedProject = projectRepository.save(project);
         return savedProject.getId();
