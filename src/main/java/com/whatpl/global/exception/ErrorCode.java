@@ -36,6 +36,7 @@ public enum ErrorCode {
     CANT_PROCESS_WAITING("PRJ10", 400, "프로젝트 지원서를 대기 상태로 변경할 수 없습니다."),
     NOT_FOUND_PARENT_PROJECT_COMMENT("PRJ11", 404, "상위 댓글을 찾을 수 없습니다."),
     NOT_FOUND_PROJECT_COMMENT("PRJ12", 404, "댓글을 찾을 수 없습니다."),
+    NOT_MATCH_PROJECT_LIKE("PRJ13", 400, "프로젝트 ID와 좋아요 ID가 일치하지 않습니다."),
 
     // APPLY
     NOT_FOUND_APPLY("APL1", 404, "지원서를 찾을 수 없습니다."),

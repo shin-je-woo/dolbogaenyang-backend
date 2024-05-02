@@ -4,6 +4,7 @@ package com.whatpl.global.config;
 import com.whatpl.global.security.permission.WhatplPermissionEvaluator;
 import com.whatpl.global.security.permission.manager.ApplyPermissionManager;
 import com.whatpl.global.security.permission.manager.ProjectCommentPermissionManager;
+import com.whatpl.global.security.permission.manager.ProjectLikePermissionManager;
 import com.whatpl.global.security.permission.manager.WhatplPermissionManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,12 +23,14 @@ public class MethodSecurityConfig {
 
     private final ApplyPermissionManager applyPermissionManager;
     private final ProjectCommentPermissionManager projectCommentPermissionManager;
+    private final ProjectLikePermissionManager projectLikePermissionManager;
 
     @Bean
     public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
         Map<String, WhatplPermissionManager> whatplPermissionEvaluatorMap = new HashMap<>();
         whatplPermissionEvaluatorMap.put("APPLY", applyPermissionManager);
         whatplPermissionEvaluatorMap.put("PROJECT_COMMENT", projectCommentPermissionManager);
+        whatplPermissionEvaluatorMap.put("PROJECT_LIKE", projectLikePermissionManager);
 
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
         expressionHandler.setPermissionEvaluator(new WhatplPermissionEvaluator(whatplPermissionEvaluatorMap));

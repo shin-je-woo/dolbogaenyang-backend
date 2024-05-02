@@ -160,7 +160,9 @@ class ProjectCommentControllerTest extends BaseSecurityWebMvcTest {
                                 .description("""
                                         프로젝트 댓글을 수정합니다.
                                         
-                                        Authorization - 프로젝트 댓글 작성자
+                                        [권한]
+                                        
+                                        - 프로젝트 댓글 작성자
                                         """),
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("AccessToken")
@@ -195,7 +197,9 @@ class ProjectCommentControllerTest extends BaseSecurityWebMvcTest {
                                 .description("""
                                         프로젝트 댓글을 삭제합니다.
                                         
-                                        Authorization - 프로젝트 댓글 작성자
+                                        [권한]
+                                        
+                                        - 프로젝트 댓글 작성자
                                         """),
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("AccessToken")
