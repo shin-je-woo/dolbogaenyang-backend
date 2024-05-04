@@ -22,8 +22,8 @@ public class ProjectReadResponse {
     private final ProjectStatus projectStatus;
     private final List<Subject> subjects;
     private final MeetingType meetingType;
-    private final int views;
-    private final int likes;
+    private final long views;
+    private final long likes;
     private final boolean profitable;
     private final String writerNickname;
     private final LocalDateTime createdAt;
