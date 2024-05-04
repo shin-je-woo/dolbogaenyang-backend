@@ -59,6 +59,7 @@ public enum ErrorCode {
     REQUIRED_PARAMETER_MISSING("CMM6", 400, "필수 파라미터가 존재하지 않습니다."),
     HTTP_MESSAGE_NOT_READABLE("CMM7", 400, "요청 메시지를 읽을 수 없습니다. 요청 형식을 확인해 주세요."),
     ACCESS_DENIED("CMM8", 403, "해당 요청에 대한 접근 권한이 없습니다."),
+    NOT_SUPPORTED_METHOD("CMM9", 400, "지원하지 않는 HTTP METHOD 입니다."),
 
     // DOMAIN
     SKILL_NOT_VALID("DMN1", 400, "기술스택에 유효하지 않은 값이 존재합니다."),
