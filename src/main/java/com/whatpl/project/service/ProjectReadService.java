@@ -7,6 +7,7 @@ import com.whatpl.project.domain.Apply;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.dto.ProjectReadResponse;
 import com.whatpl.project.repository.ApplyRepository;
+import com.whatpl.project.repository.ProjectLikeRepository;
 import com.whatpl.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class ProjectReadService {
 
     private final ProjectRepository projectRepository;
     private final ApplyRepository applyRepository;
+    private final ProjectLikeRepository projectLikeRepository;
 
     @Transactional
     public ProjectReadResponse readProject(final long projectId) {
@@ -27,8 +29,9 @@ public class ProjectReadService {
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
         List<Apply> participants = applyRepository.findAllParticipants(project);
 
+        long likes = projectLikeRepository.countByProject(project);
         // 조회수 증가
         project.increaseViews();
-        return ProjectModelConverter.toProjectReadResponse(project, participants);
+        return ProjectModelConverter.toProjectReadResponse(project, participants, likes);
     }
 }

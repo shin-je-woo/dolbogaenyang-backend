@@ -102,7 +102,7 @@ public final class ProjectModelConverter {
         return project;
     }
 
-    public static ProjectReadResponse toProjectReadResponse(Project project, List<Apply> projectParticipants) {
+    public static ProjectReadResponse toProjectReadResponse(Project project, List<Apply> projectParticipants, long likes) {
         return ProjectReadResponse.builder()
                 .projectId(project.getId())
                 .title(project.getTitle())
@@ -112,7 +112,7 @@ public final class ProjectModelConverter {
                         .toList())
                 .meetingType(project.getMeetingType())
                 .views(project.getViews())
-                .likes(0) // TODO 프로젝트 좋아요 기능
+                .likes(likes)
                 .profitable(project.getProfitable())
                 .writerNickname(project.getWriter().getNickname())
                 .createdAt(project.getCreatedAt())

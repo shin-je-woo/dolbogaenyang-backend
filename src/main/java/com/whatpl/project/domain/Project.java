@@ -30,7 +30,7 @@ public class Project extends BaseTimeEntity {
 
     private LocalDate endDate;
 
-    private Integer views;
+    private Long views;
 
     @Setter
     @Enumerated(EnumType.STRING)
@@ -71,7 +71,7 @@ public class Project extends BaseTimeEntity {
         this.meetingType = meetingType;
         this.content = content;
         this.representImage = representImage;
-        this.views = 0;
+        this.views = 0L;
     }
 
     //==연관관계 메서드==//
@@ -107,7 +107,7 @@ public class Project extends BaseTimeEntity {
     //==비즈니스 로직==//
     public void increaseViews() {
         if (this.views == null) {
-            this.views = 0;
+            this.views = 0L;
         }
         this.views++;
     }

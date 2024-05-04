@@ -1,5 +1,6 @@
 package com.whatpl.project.repository;
 
+import com.whatpl.project.domain.Project;
 import com.whatpl.project.domain.ProjectLike;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,6 @@ public interface ProjectLikeRepository extends JpaRepository<ProjectLike, Long> 
 
     @EntityGraph(attributePaths = {"member"})
     Optional<ProjectLike> findWithMemberById(Long memberId);
+
+    long countByProject(Project project);
 }
