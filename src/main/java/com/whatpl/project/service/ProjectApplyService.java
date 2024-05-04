@@ -1,5 +1,8 @@
 package com.whatpl.project.service;
 
+import com.whatpl.chat.domain.enums.ChatRoomType;
+import com.whatpl.chat.dto.ChatRoomDto;
+import com.whatpl.chat.service.ChatService;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
@@ -30,6 +33,7 @@ public class ProjectApplyService {
     private final MemberRepository memberRepository;
     private final ProjectRepository projectRepository;
     private final ApplyRepository applyRepository;
+    private final ChatService chatService;
 
     @Transactional
     public Long apply(final ProjectApplyRequest request, final long projectId, final long applicantId) {
@@ -51,6 +55,16 @@ public class ProjectApplyService {
 
         Apply apply = Apply.of(request.getApplyJob(), request.getContent(), applicant, project);
         Apply savedApply = applyRepository.save(apply);
+
+        // 지원 쪽지 발송
+        chatService.createChatRoom(ChatRoomDto.builder()
+                        .project(project)
+                        .applicant(applicant)
+                        .chatRoomType(ChatRoomType.APPLY)
+                        .job(request.getApplyJob())
+                        .build(),
+                request.getContent());
+
         return savedApply.getId();
     }
 
