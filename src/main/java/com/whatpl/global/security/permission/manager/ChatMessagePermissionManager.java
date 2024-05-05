@@ -20,6 +20,7 @@ public class ChatMessagePermissionManager implements WhatplPermissionManager {
     public boolean hasPrivilege(MemberPrincipal memberPrincipal, Long targetId, String permission) {
         return switch (permission) {
             case "CREATE" -> hasCreatePrivilege(memberPrincipal, targetId);
+            case "READ" -> hasReadPrivilege(memberPrincipal, targetId);
             default -> false;
         };
     }
@@ -29,11 +30,24 @@ public class ChatMessagePermissionManager implements WhatplPermissionManager {
      * 프로젝트 모집자, 지원자(참여 제안자)
      */
     private boolean hasCreatePrivilege(MemberPrincipal memberPrincipal, Long chatRoomId) {
+        long loginUserId = memberPrincipal.getId();
+        return isRecruiterOrApplicant(chatRoomId, loginUserId);
+    }
+
+    /**
+     * 대화 메시지 읽기 권한
+     * 프로젝트 모집자, 지원자(참여 제안자)
+     */
+    private boolean hasReadPrivilege(MemberPrincipal memberPrincipal, Long chatRoomId) {
+        long loginUserId = memberPrincipal.getId();
+        return isRecruiterOrApplicant(chatRoomId, loginUserId);
+    }
+
+    private boolean isRecruiterOrApplicant(long chatRoomId, long loginUserId) {
         ChatRoom chatRoom = chatRoomRepository.findChatRoomWithAllById(chatRoomId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_CHAT_ROOM));
         Long recruiterId = chatRoom.getProject().getWriter().getId();
         Long applicantId = chatRoom.getApplicant().getId();
-        long loginUserId = memberPrincipal.getId();
         return loginUserId == recruiterId || loginUserId == applicantId;
     }
 }
