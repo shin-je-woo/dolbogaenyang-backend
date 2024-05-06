@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ChatMessageDto implements SliceElement {
     private long messageId;
     private String content;
@@ -16,4 +15,15 @@ public class ChatMessageDto implements SliceElement {
     private String senderProfileImgUri; // TODO 보낸 사람 프로필 이미지 URI
     private LocalDateTime sendAt;
     private LocalDateTime readAt;
+
+    @Builder
+    public ChatMessageDto(long messageId, String content, long senderId, String senderNickname, String senderProfileImgUri, LocalDateTime sendAt, LocalDateTime readAt) {
+        this.messageId = messageId;
+        this.content = content;
+        this.senderId = senderId;
+        this.senderNickname = senderNickname;
+        this.senderProfileImgUri = senderProfileImgUri;
+        this.sendAt = sendAt;
+        this.readAt = readAt;
+    }
 }
