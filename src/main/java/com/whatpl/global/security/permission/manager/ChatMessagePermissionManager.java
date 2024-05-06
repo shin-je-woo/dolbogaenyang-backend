@@ -46,8 +46,8 @@ public class ChatMessagePermissionManager implements WhatplPermissionManager {
     private boolean isRecruiterOrApplicant(long chatRoomId, long loginUserId) {
         ChatRoom chatRoom = chatRoomRepository.findChatRoomWithAllById(chatRoomId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_CHAT_ROOM));
-        Long recruiterId = chatRoom.getProject().getWriter().getId();
-        Long applicantId = chatRoom.getApplicant().getId();
+        Long recruiterId = chatRoom.getApply().getProject().getWriter().getId();
+        Long applicantId = chatRoom.getApply().getApplicant().getId();
         return loginUserId == recruiterId || loginUserId == applicantId;
     }
 }

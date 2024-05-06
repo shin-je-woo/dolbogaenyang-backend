@@ -19,24 +19,9 @@ public class ApplyPermissionManager implements WhatplPermissionManager {
     @Transactional(readOnly = true)
     public boolean hasPrivilege(MemberPrincipal memberPrincipal, Long targetId, String permission) {
         return switch (permission) {
-            case "READ" -> hasReadPrivilege(memberPrincipal, targetId);
             case "STATUS" -> hasStatusPrivilege(memberPrincipal, targetId);
             default -> false;
         };
-    }
-
-    /**
-     * 프로젝트 지원서 읽기 권한
-     * 지원자 or 프로젝트 등록자
-     */
-    private boolean hasReadPrivilege(MemberPrincipal memberPrincipal, Long applyId) {
-        Apply apply = applyRepository.findWithProjectAndApplicantById(applyId)
-                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_APPLY));
-
-        boolean isApplicant = apply.getApplicant().getId().equals(memberPrincipal.getId());
-        boolean isProjectWriter = apply.getProject().getWriter().getId().equals(memberPrincipal.getId());
-
-        return isApplicant || isProjectWriter;
     }
 
     /**

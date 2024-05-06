@@ -6,10 +6,12 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.member.domain.Member;
 import com.whatpl.project.domain.enums.ApplyStatus;
+import com.whatpl.project.domain.enums.ApplyType;
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
@@ -24,13 +26,11 @@ public class Apply extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Job job;
 
-    private String content;
-
     @Enumerated(EnumType.STRING)
     private ApplyStatus status;
 
-    @Setter
-    private LocalDateTime recruiterReadAt;
+    @Enumerated(EnumType.STRING)
+    private ApplyType type;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applicant_id")
@@ -41,19 +41,19 @@ public class Apply extends BaseTimeEntity {
     private Project project;
 
     @Builder
-    public Apply(Job job, String content, ApplyStatus status, Member applicant, Project project) {
+    public Apply(Job job, ApplyStatus status, ApplyType type, Member applicant, Project project) {
         this.job = job;
-        this.content = content;
         this.status = status;
+        this.type = type;
         this.applicant = applicant;
         this.project = project;
     }
 
-    public static Apply of(Job job, String content, Member applicant, Project project) {
+    public static Apply of(Job job, ApplyType type, Member applicant, Project project) {
         return Apply.builder()
                 .job(job)
-                .content(content)
                 .status(ApplyStatus.WAITING)
+                .type(type)
                 .applicant(applicant)
                 .project(project)
                 .build();

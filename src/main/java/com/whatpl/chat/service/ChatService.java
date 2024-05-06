@@ -2,15 +2,15 @@ package com.whatpl.chat.service;
 
 import com.whatpl.chat.domain.ChatMessage;
 import com.whatpl.chat.domain.ChatRoom;
-import com.whatpl.chat.domain.enums.ChatRoomType;
 import com.whatpl.chat.dto.ChatMessageDto;
-import com.whatpl.chat.dto.ChatRoomDto;
 import com.whatpl.chat.repository.ChatMessageRepository;
 import com.whatpl.chat.repository.ChatRoomRepository;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.member.domain.Member;
 import com.whatpl.member.repository.MemberRepository;
+import com.whatpl.project.domain.Apply;
+import com.whatpl.project.domain.enums.ApplyType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -28,16 +28,12 @@ public class ChatService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public long createChatRoom(ChatRoomDto chatRoomDto, String content) {
-        ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.builder()
-                .project(chatRoomDto.getProject())
-                .applicant(chatRoomDto.getApplicant())
-                .type(chatRoomDto.getChatRoomType())
-                .job(chatRoomDto.getJob())
-                .build());
+    public long createChatRoom(final Apply apply, final String content) {
+        ChatRoom chatRoom = ChatRoom.from(apply);
+        chatRoomRepository.save(chatRoom);
         // 메시지 발신자 = 프로젝트 지원일 경우 지원자 : 프로젝트 참여 제안일 경우 모집자
-        long senderId = chatRoomDto.getChatRoomType() == ChatRoomType.APPLY ?
-                chatRoomDto.getApplicant().getId() : chatRoomDto.getProject().getWriter().getId();
+        long senderId = apply.getType() == ApplyType.APPLY ?
+                apply.getApplicant().getId() : apply.getProject().getWriter().getId();
         this.sendMessage(chatRoom.getId(), senderId, content);
 
         return chatRoom.getId();
