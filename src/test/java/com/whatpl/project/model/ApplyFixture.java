@@ -11,7 +11,6 @@ public class ApplyFixture {
     public static Apply waiting(Job job, Member applicant, Project project) {
         return Apply.builder()
                 .job(job)
-                .content("test content")
                 .status(ApplyStatus.WAITING)
                 .applicant(applicant)
                 .project(project)
@@ -21,7 +20,6 @@ public class ApplyFixture {
     public static Apply accepted(Job job, Member applicant, Project project) {
         return Apply.builder()
                 .job(job)
-                .content("test content")
                 .status(ApplyStatus.ACCEPTED)
                 .applicant(applicant)
                 .project(project)

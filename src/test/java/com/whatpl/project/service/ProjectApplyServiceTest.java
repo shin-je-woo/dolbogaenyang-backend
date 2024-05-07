@@ -10,6 +10,7 @@ import com.whatpl.project.domain.Apply;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.domain.RecruitJob;
 import com.whatpl.project.domain.enums.ApplyStatus;
+import com.whatpl.project.domain.enums.ApplyType;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.dto.ProjectApplyRequest;
 import com.whatpl.project.model.ApplyFixture;
@@ -55,7 +56,7 @@ class ProjectApplyServiceTest {
         Project project = ProjectFixture.create();
         Member writer = MemberFixture.onlyRequired();
         project.setStatus(ProjectStatus.DELETED);
-        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content");
+        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
@@ -74,7 +75,7 @@ class ProjectApplyServiceTest {
         Project project = ProjectFixture.create();
         Member writer = MemberFixture.onlyRequired();
         project.setStatus(ProjectStatus.COMPLETED);
-        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content");
+        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
@@ -93,7 +94,7 @@ class ProjectApplyServiceTest {
         Member writer = MemberFixture.onlyRequired();
         project.addRepresentImageAndWriter(null, writer);
         project.setStatus(ProjectStatus.RECRUITING);
-        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content");
+        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
@@ -114,7 +115,7 @@ class ProjectApplyServiceTest {
         project.setStatus(ProjectStatus.RECRUITING);
         project.addRecruitJob(new RecruitJob(Job.DESIGNER, 5, 0));
 
-        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content");
+        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
@@ -135,7 +136,7 @@ class ProjectApplyServiceTest {
         project.setStatus(ProjectStatus.RECRUITING);
         project.addRecruitJob(new RecruitJob(Job.BACKEND_DEVELOPER, 5, 5));
 
-        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content");
+        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
@@ -156,14 +157,13 @@ class ProjectApplyServiceTest {
         project.setStatus(ProjectStatus.RECRUITING);
         project.addRecruitJob(new RecruitJob(Job.BACKEND_DEVELOPER, 5, 0));
 
-        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content");
+        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
                 .thenReturn(Optional.of(MemberFixture.withAll()));
         when(applyRepository.findByProjectAndApplicant(any(Project.class), any(Member.class)))
-                .thenReturn(Optional.of(new Apply(Job.BACKEND_DEVELOPER, "test content",
-                        ApplyStatus.WAITING, MemberFixture.withAll(), project)));
+                .thenReturn(Optional.of(new Apply(Job.BACKEND_DEVELOPER, ApplyStatus.WAITING, ApplyType.APPLY, MemberFixture.withAll(), project)));
 
         // when & then
         BizException bizException = assertThrows(BizException.class, () ->

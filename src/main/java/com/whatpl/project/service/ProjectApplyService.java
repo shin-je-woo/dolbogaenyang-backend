@@ -1,27 +1,23 @@
 package com.whatpl.project.service;
 
+import com.whatpl.chat.service.ChatService;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
-import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.member.domain.Member;
 import com.whatpl.member.repository.MemberRepository;
-import com.whatpl.project.converter.ApplyModelConverter;
 import com.whatpl.project.domain.Apply;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.domain.RecruitJob;
 import com.whatpl.project.domain.enums.ApplyStatus;
 import com.whatpl.project.domain.enums.ProjectStatus;
-import com.whatpl.project.dto.ProjectApplyReadResponse;
+import com.whatpl.project.dto.ApplyResponse;
 import com.whatpl.project.dto.ProjectApplyRequest;
 import com.whatpl.project.repository.ApplyRepository;
 import com.whatpl.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -30,9 +26,10 @@ public class ProjectApplyService {
     private final MemberRepository memberRepository;
     private final ProjectRepository projectRepository;
     private final ApplyRepository applyRepository;
+    private final ChatService chatService;
 
     @Transactional
-    public Long apply(final ProjectApplyRequest request, final long projectId, final long applicantId) {
+    public ApplyResponse apply(final ProjectApplyRequest request, final long projectId, final long applicantId) {
         Project project = projectRepository.findWithRecruitJobsById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
         Member applicant = memberRepository.findById(applicantId)
@@ -49,29 +46,17 @@ public class ProjectApplyService {
         // 이미 지원한 프로젝트는 지원 불가
         validateDuplicatedApply(project, applicant);
 
-        Apply apply = Apply.of(request.getApplyJob(), request.getContent(), applicant, project);
+        Apply apply = Apply.of(request.getApplyJob(), request.getApplyType(), applicant, project);
         Apply savedApply = applyRepository.save(apply);
-        return savedApply.getId();
-    }
 
-    @Transactional
-    public ProjectApplyReadResponse read(final long projectId, final long applyId) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
-        Apply apply = applyRepository.findWithProjectAndApplicantById(applyId)
-                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_APPLY));
+        // 지원 쪽지 발송
+        long chatRoomId = chatService.createChatRoom(apply, request.getContent());
 
-        if (!project.getId().equals(apply.getProject().getId())) {
-            throw new BizException(ErrorCode.NOT_MATCH_PROJECT_APPLY);
-        }
-
-        // 모집자가 지원서를 읽을 경우 조회한 시간 update
-        MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal.getId() == project.getWriter().getId() && apply.getRecruiterReadAt() == null) {
-            apply.setRecruiterReadAt(LocalDateTime.now().withNano(0));
-        }
-
-        return ApplyModelConverter.convert(apply);
+        return ApplyResponse.builder()
+                .applyId(savedApply.getId())
+                .projectId(project.getId())
+                .chatRoomId(chatRoomId)
+                .build();
     }
 
     @Transactional
