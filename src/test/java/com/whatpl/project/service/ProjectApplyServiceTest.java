@@ -17,6 +17,7 @@ import com.whatpl.project.model.ApplyFixture;
 import com.whatpl.project.model.ProjectFixture;
 import com.whatpl.project.model.RecruitJobFixture;
 import com.whatpl.project.repository.ApplyRepository;
+import com.whatpl.project.repository.ProjectParticipantRepository;
 import com.whatpl.project.repository.ProjectRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,9 @@ class ProjectApplyServiceTest {
 
     @Mock
     private ProjectRepository projectRepository;
+
+    @Mock
+    private ProjectParticipantRepository projectParticipantRepository;
 
     @Mock
     private ApplyRepository applyRepository;

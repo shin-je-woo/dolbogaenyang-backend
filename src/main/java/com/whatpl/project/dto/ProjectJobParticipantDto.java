@@ -16,12 +16,12 @@ public class ProjectJobParticipantDto {
     private final Job job;
     private final int totalAmount;
     private final int currentAmount;
-    private final List<Participant> participants;
+    private final List<ParticipantDto> participants;
 
     @Getter
     @Builder
     @RequiredArgsConstructor
-    public static class Participant {
+    public static class ParticipantDto {
         private final Long memberId;
         private final String nickname;
         private final Career career;

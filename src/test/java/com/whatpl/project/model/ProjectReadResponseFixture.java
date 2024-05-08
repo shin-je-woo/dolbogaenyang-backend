@@ -39,12 +39,12 @@ public class ProjectReadResponseFixture {
                                 .totalAmount(10)
                                 .currentAmount(2)
                                 .participants(List.of(
-                                        ProjectJobParticipantDto.Participant.builder()
+                                        ProjectJobParticipantDto.ParticipantDto.builder()
                                                 .memberId(1L)
                                                 .nickname("백엔드 참여자1")
                                                 .career(Career.FIVE)
                                                 .build(),
-                                        ProjectJobParticipantDto.Participant.builder()
+                                        ProjectJobParticipantDto.ParticipantDto.builder()
                                                 .memberId(2L)
                                                 .nickname("백엔드 참여자2")
                                                 .career(Career.NONE)

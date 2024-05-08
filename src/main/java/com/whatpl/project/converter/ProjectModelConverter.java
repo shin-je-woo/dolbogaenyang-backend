@@ -134,13 +134,13 @@ public final class ProjectModelConverter {
                 .build();
     }
 
-    private static List<ProjectJobParticipantDto.Participant> getJobMatchedParticipants(Job job, List<Apply> projectParticipants) {
+    private static List<ProjectJobParticipantDto.ParticipantDto> getJobMatchedParticipants(Job job, List<Apply> projectParticipants) {
         if (job == null || projectParticipants == null || projectParticipants.isEmpty()) {
             return Collections.emptyList();
         }
         return projectParticipants.stream()
                 .filter(projectParticipant -> projectParticipant.getJob().equals(job))
-                .map(projectParticipant -> ProjectJobParticipantDto.Participant.builder()
+                .map(projectParticipant -> ProjectJobParticipantDto.ParticipantDto.builder()
                         .memberId(projectParticipant.getApplicant().getId())
                         .nickname(projectParticipant.getApplicant().getNickname())
                         .career(projectParticipant.getApplicant().getCareer())
