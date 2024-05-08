@@ -14,8 +14,8 @@ import java.util.List;
 public class ProjectJobParticipantDto {
 
     private final Job job;
-    private final int totalAmount;
-    private final int currentAmount;
+    private final int recruitAmount;
+    private final int participantAmount;
     private final List<ParticipantDto> participants;
 
     @Getter

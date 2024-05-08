@@ -43,8 +43,7 @@ public final class ProjectModelConverter {
                 .orElseGet(Collections::emptySet).stream()
                 .map(recruitJobField -> RecruitJob.builder()
                         .job(recruitJobField.getJob())
-                        .totalAmount(recruitJobField.getTotalCount())
-                        .currentAmount(0)
+                        .recruitAmount(recruitJobField.getRecruitAmount())
                         .build())
                 .forEach(project::addRecruitJob);
 
@@ -85,8 +84,7 @@ public final class ProjectModelConverter {
                 .orElseGet(Collections::emptySet).stream()
                 .map(recruitJobField -> RecruitJob.builder()
                         .job(recruitJobField.getJob())
-                        .totalAmount(recruitJobField.getTotalCount())
-                        .currentAmount(0)
+                        .recruitAmount(recruitJobField.getRecruitAmount())
                         .build())
                 .forEach(project::addRecruitJob);
 
@@ -125,13 +123,19 @@ public final class ProjectModelConverter {
                 .projectJobParticipants(project.getRecruitJobs().stream()
                         .map(recruitJob -> ProjectJobParticipantDto.builder()
                                 .job(recruitJob.getJob())
-                                .totalAmount(recruitJob.getTotalAmount())
-                                .currentAmount(recruitJob.getCurrentAmount())
+                                .recruitAmount(recruitJob.getRecruitAmount())
+                                .participantAmount(countParticipants(projectParticipants, recruitJob))
                                 .participants(getJobMatchedParticipants(recruitJob.getJob(), projectParticipants))
                                 .build()
                         )
                         .toList())
                 .build();
+    }
+
+    private static int countParticipants(List<ProjectParticipant> projectParticipants, RecruitJob recruitJob) {
+        return Long.valueOf(projectParticipants.stream()
+                .filter(participant -> recruitJob.getJob().equals(participant.getJob()))
+                .count()).intValue();
     }
 
     private static List<ProjectJobParticipantDto.ParticipantDto> getJobMatchedParticipants(Job job, List<ProjectParticipant> projectParticipants) {

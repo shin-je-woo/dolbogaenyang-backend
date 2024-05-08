@@ -36,8 +36,8 @@ public class ProjectReadResponseFixture {
                 .projectJobParticipants(List.of(
                         ProjectJobParticipantDto.builder()
                                 .job(Job.BACKEND_DEVELOPER)
-                                .totalAmount(10)
-                                .currentAmount(2)
+                                .recruitAmount(10)
+                                .participantAmount(2)
                                 .participants(List.of(
                                         ProjectJobParticipantDto.ParticipantDto.builder()
                                                 .memberId(1L)
@@ -52,8 +52,8 @@ public class ProjectReadResponseFixture {
                                 .build(),
                         ProjectJobParticipantDto.builder()
                                 .job(Job.MOBILE_DEVELOPER)
-                                .totalAmount(2)
-                                .currentAmount(0)
+                                .recruitAmount(2)
+                                .participantAmount(0)
                                 .participants(Collections.emptyList())
                                 .build()
                         ))
