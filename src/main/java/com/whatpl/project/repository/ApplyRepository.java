@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface ApplyRepository extends JpaRepository<Apply, Long>, ApplyQueryRepository {
+public interface ApplyRepository extends JpaRepository<Apply, Long> {
 
     Optional<Apply> findByProjectAndApplicant(Project project, Member applicant);
 

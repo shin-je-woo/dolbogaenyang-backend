@@ -102,7 +102,7 @@ public final class ProjectModelConverter {
         return project;
     }
 
-    public static ProjectReadResponse toProjectReadResponse(Project project, List<Apply> projectParticipants, long likes) {
+    public static ProjectReadResponse toProjectReadResponse(Project project, List<ProjectParticipant> projectParticipants, long likes) {
         return ProjectReadResponse.builder()
                 .projectId(project.getId())
                 .title(project.getTitle())
@@ -134,16 +134,16 @@ public final class ProjectModelConverter {
                 .build();
     }
 
-    private static List<ProjectJobParticipantDto.ParticipantDto> getJobMatchedParticipants(Job job, List<Apply> projectParticipants) {
+    private static List<ProjectJobParticipantDto.ParticipantDto> getJobMatchedParticipants(Job job, List<ProjectParticipant> projectParticipants) {
         if (job == null || projectParticipants == null || projectParticipants.isEmpty()) {
             return Collections.emptyList();
         }
         return projectParticipants.stream()
                 .filter(projectParticipant -> projectParticipant.getJob().equals(job))
                 .map(projectParticipant -> ProjectJobParticipantDto.ParticipantDto.builder()
-                        .memberId(projectParticipant.getApplicant().getId())
-                        .nickname(projectParticipant.getApplicant().getNickname())
-                        .career(projectParticipant.getApplicant().getCareer())
+                        .memberId(projectParticipant.getParticipant().getId())
+                        .nickname(projectParticipant.getParticipant().getNickname())
+                        .career(projectParticipant.getParticipant().getCareer())
                         .build()
                 )
                 .toList();
