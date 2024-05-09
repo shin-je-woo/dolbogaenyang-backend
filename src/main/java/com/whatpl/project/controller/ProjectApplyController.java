@@ -4,6 +4,7 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.project.domain.enums.ApplyStatus;
+import com.whatpl.project.domain.enums.ApplyType;
 import com.whatpl.project.dto.ApplyResponse;
 import com.whatpl.project.dto.ProjectApplyRequest;
 import com.whatpl.project.dto.ProjectApplyStatusRequest;
@@ -15,20 +16,26 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @RestController
 @RequiredArgsConstructor
 public class ProjectApplyController {
 
     private final ProjectApplyService projectApplyService;
 
+    @PreAuthorize("hasPermission(#projectId, 'APPLY', #request.applyType.name())")
     @PostMapping("/projects/{projectId}/apply")
     public ResponseEntity<ApplyResponse> apply(@PathVariable Long projectId,
                                                @Valid @RequestBody ProjectApplyRequest request,
                                                @AuthenticationPrincipal MemberPrincipal principal) {
-
-        ApplyResponse applyResponse = projectApplyService.apply(request, projectId, principal.getId());
-
-        return ResponseEntity.ok(applyResponse);
+        if(ApplyType.APPLY == request.getApplyType()) {
+            return ResponseEntity.ok(projectApplyService.apply(request, projectId, principal.getId()));
+        } else if (ApplyType.OFFER == request.getApplyType()){
+            return ResponseEntity.ok(projectApplyService.apply(request, projectId, Objects.requireNonNullElse(request.getApplicantId(), Long.MIN_VALUE)));
+        } else {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @PreAuthorize("hasPermission(#applyId, 'APPLY', 'STATUS')")

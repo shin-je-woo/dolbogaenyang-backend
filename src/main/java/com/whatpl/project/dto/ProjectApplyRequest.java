@@ -21,4 +21,6 @@ public class ProjectApplyRequest {
 
     @NotNull(message = "지원 타입은 필수 입력 항목입니다.")
     private ApplyType applyType;
+
+    private Long applicantId;
 }
