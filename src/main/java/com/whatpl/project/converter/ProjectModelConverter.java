@@ -43,8 +43,7 @@ public final class ProjectModelConverter {
                 .orElseGet(Collections::emptySet).stream()
                 .map(recruitJobField -> RecruitJob.builder()
                         .job(recruitJobField.getJob())
-                        .totalAmount(recruitJobField.getTotalCount())
-                        .currentAmount(0)
+                        .recruitAmount(recruitJobField.getRecruitAmount())
                         .build())
                 .forEach(project::addRecruitJob);
 
@@ -85,8 +84,7 @@ public final class ProjectModelConverter {
                 .orElseGet(Collections::emptySet).stream()
                 .map(recruitJobField -> RecruitJob.builder()
                         .job(recruitJobField.getJob())
-                        .totalAmount(recruitJobField.getTotalCount())
-                        .currentAmount(0)
+                        .recruitAmount(recruitJobField.getRecruitAmount())
                         .build())
                 .forEach(project::addRecruitJob);
 
@@ -102,7 +100,7 @@ public final class ProjectModelConverter {
         return project;
     }
 
-    public static ProjectReadResponse toProjectReadResponse(Project project, List<Apply> projectParticipants, long likes) {
+    public static ProjectReadResponse toProjectReadResponse(Project project, List<ProjectParticipant> projectParticipants, long likes) {
         return ProjectReadResponse.builder()
                 .projectId(project.getId())
                 .title(project.getTitle())
@@ -125,8 +123,8 @@ public final class ProjectModelConverter {
                 .projectJobParticipants(project.getRecruitJobs().stream()
                         .map(recruitJob -> ProjectJobParticipantDto.builder()
                                 .job(recruitJob.getJob())
-                                .totalAmount(recruitJob.getTotalAmount())
-                                .currentAmount(recruitJob.getCurrentAmount())
+                                .recruitAmount(recruitJob.getRecruitAmount())
+                                .participantAmount(countParticipants(projectParticipants, recruitJob))
                                 .participants(getJobMatchedParticipants(recruitJob.getJob(), projectParticipants))
                                 .build()
                         )
@@ -134,16 +132,22 @@ public final class ProjectModelConverter {
                 .build();
     }
 
-    private static List<ProjectJobParticipantDto.Participant> getJobMatchedParticipants(Job job, List<Apply> projectParticipants) {
+    private static int countParticipants(List<ProjectParticipant> projectParticipants, RecruitJob recruitJob) {
+        return Long.valueOf(projectParticipants.stream()
+                .filter(participant -> recruitJob.getJob().equals(participant.getJob()))
+                .count()).intValue();
+    }
+
+    private static List<ProjectJobParticipantDto.ParticipantDto> getJobMatchedParticipants(Job job, List<ProjectParticipant> projectParticipants) {
         if (job == null || projectParticipants == null || projectParticipants.isEmpty()) {
             return Collections.emptyList();
         }
         return projectParticipants.stream()
                 .filter(projectParticipant -> projectParticipant.getJob().equals(job))
-                .map(projectParticipant -> ProjectJobParticipantDto.Participant.builder()
-                        .memberId(projectParticipant.getApplicant().getId())
-                        .nickname(projectParticipant.getApplicant().getNickname())
-                        .career(projectParticipant.getApplicant().getCareer())
+                .map(projectParticipant -> ProjectJobParticipantDto.ParticipantDto.builder()
+                        .memberId(projectParticipant.getParticipant().getId())
+                        .nickname(projectParticipant.getParticipant().getNickname())
+                        .career(projectParticipant.getParticipant().getCareer())
                         .build()
                 )
                 .toList();

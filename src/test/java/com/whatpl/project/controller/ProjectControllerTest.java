@@ -70,7 +70,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("subjects").type(JsonFieldType.ARRAY).description("도메인(관심주제)"),
                                 fieldWithPath("recruitJobs").type(JsonFieldType.ARRAY).description("모집직군"),
                                 fieldWithPath("recruitJobs[].job").type(JsonFieldType.STRING).description("직무"),
-                                fieldWithPath("recruitJobs[].totalCount").type(JsonFieldType.NUMBER).description("모집인원"),
+                                fieldWithPath("recruitJobs[].recruitAmount").type(JsonFieldType.NUMBER).description("모집 인원수"),
                                 fieldWithPath("skills").type(JsonFieldType.ARRAY).description("기술스택"),
                                 fieldWithPath("content").type(JsonFieldType.STRING).description("프로젝트 설명"),
                                 fieldWithPath("profitable").type(JsonFieldType.BOOLEAN).description("수익화 여부"),
@@ -113,8 +113,8 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.startDate").value(response.getStartDate().toString()),
                         jsonPath("$.endDate").value(response.getEndDate().toString()),
                         jsonPath("$.projectJobParticipants[0].job").value(response.getProjectJobParticipants().get(0).getJob().getValue()),
-                        jsonPath("$.projectJobParticipants[0].totalAmount").value(response.getProjectJobParticipants().get(0).getTotalAmount()),
-                        jsonPath("$.projectJobParticipants[0].currentAmount").value(response.getProjectJobParticipants().get(0).getCurrentAmount()),
+                        jsonPath("$.projectJobParticipants[0].recruitAmount").value(response.getProjectJobParticipants().get(0).getRecruitAmount()),
+                        jsonPath("$.projectJobParticipants[0].participantAmount").value(response.getProjectJobParticipants().get(0).getParticipantAmount()),
                         jsonPath("$.projectJobParticipants[0].participants[0].memberId")
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getMemberId()),
                         jsonPath("$.projectJobParticipants[0].participants[0].nickname")
@@ -128,8 +128,8 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.projectJobParticipants[0].participants[1].career")
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(1).getCareer().getValue()),
                         jsonPath("$.projectJobParticipants[1].job").value(response.getProjectJobParticipants().get(1).getJob().getValue()),
-                        jsonPath("$.projectJobParticipants[1].totalAmount").value(response.getProjectJobParticipants().get(1).getTotalAmount()),
-                        jsonPath("$.projectJobParticipants[1].currentAmount").value(response.getProjectJobParticipants().get(1).getCurrentAmount())
+                        jsonPath("$.projectJobParticipants[1].recruitAmount").value(response.getProjectJobParticipants().get(1).getRecruitAmount()),
+                        jsonPath("$.projectJobParticipants[1].participantAmount").value(response.getProjectJobParticipants().get(1).getParticipantAmount())
                 )
                 .andDo(print())
                 .andDo(document("read-project",
@@ -158,8 +158,8 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("endDate").type(JsonFieldType.STRING).description("종료 일자"),
                                 fieldWithPath("projectJobParticipants").type(JsonFieldType.ARRAY).description("직무별 참여자 (팀원 구성)"),
                                 fieldWithPath("projectJobParticipants[].job").type(JsonFieldType.STRING).description("직무"),
-                                fieldWithPath("projectJobParticipants[].totalAmount").type(JsonFieldType.NUMBER).description("모집 인원"),
-                                fieldWithPath("projectJobParticipants[].currentAmount").type(JsonFieldType.NUMBER).description("현재 인원"),
+                                fieldWithPath("projectJobParticipants[].recruitAmount").type(JsonFieldType.NUMBER).description("모집 인원수"),
+                                fieldWithPath("projectJobParticipants[].participantAmount").type(JsonFieldType.NUMBER).description("참여자 인원수"),
                                 fieldWithPath("projectJobParticipants[].participants").type(JsonFieldType.ARRAY).description("참여자"),
                                 fieldWithPath("projectJobParticipants[].participants[].memberId").type(JsonFieldType.NUMBER).description("참여자 ID"),
                                 fieldWithPath("projectJobParticipants[].participants[].nickname").type(JsonFieldType.STRING).description("닉네임"),

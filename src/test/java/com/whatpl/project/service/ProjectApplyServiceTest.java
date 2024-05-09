@@ -8,6 +8,7 @@ import com.whatpl.member.model.MemberFixture;
 import com.whatpl.member.repository.MemberRepository;
 import com.whatpl.project.domain.Apply;
 import com.whatpl.project.domain.Project;
+import com.whatpl.project.domain.ProjectParticipant;
 import com.whatpl.project.domain.RecruitJob;
 import com.whatpl.project.domain.enums.ApplyStatus;
 import com.whatpl.project.domain.enums.ApplyType;
@@ -17,6 +18,7 @@ import com.whatpl.project.model.ApplyFixture;
 import com.whatpl.project.model.ProjectFixture;
 import com.whatpl.project.model.RecruitJobFixture;
 import com.whatpl.project.repository.ApplyRepository;
+import com.whatpl.project.repository.ProjectParticipantRepository;
 import com.whatpl.project.repository.ProjectRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,11 +30,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectApplyServiceTest {
@@ -45,6 +45,9 @@ class ProjectApplyServiceTest {
 
     @Mock
     private ProjectRepository projectRepository;
+
+    @Mock
+    private ProjectParticipantRepository projectParticipantRepository;
 
     @Mock
     private ApplyRepository applyRepository;
@@ -113,7 +116,7 @@ class ProjectApplyServiceTest {
         Member writer = MemberFixture.onlyRequired();
         project.addRepresentImageAndWriter(null, writer);
         project.setStatus(ProjectStatus.RECRUITING);
-        project.addRecruitJob(new RecruitJob(Job.DESIGNER, 5, 0));
+        project.addRecruitJob(new RecruitJob(Job.DESIGNER, 5));
 
         ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
         when(projectRepository.findWithRecruitJobsById(anyLong()))
@@ -130,17 +133,20 @@ class ProjectApplyServiceTest {
     @Test
     @DisplayName("모집직군에 지원하는 직무가 마감된 경우 실패")
     void apply_full_job_project() {
+        int recruitAmount = 5;
         Project project = ProjectFixture.create();
         Member writer = MemberFixture.onlyRequired();
         project.addRepresentImageAndWriter(null, writer);
         project.setStatus(ProjectStatus.RECRUITING);
-        project.addRecruitJob(new RecruitJob(Job.BACKEND_DEVELOPER, 5, 5));
+        project.addRecruitJob(new RecruitJob(Job.BACKEND_DEVELOPER, recruitAmount));
 
         ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
                 .thenReturn(Optional.of(MemberFixture.withAll()));
+        when(projectParticipantRepository.countByProjectIdAndJob(any(), any()))
+                .thenReturn(5);
 
         // when & then
         BizException bizException = assertThrows(BizException.class, () ->
@@ -155,7 +161,7 @@ class ProjectApplyServiceTest {
         Member writer = MemberFixture.onlyRequired();
         project.addRepresentImageAndWriter(null, writer);
         project.setStatus(ProjectStatus.RECRUITING);
-        project.addRecruitJob(new RecruitJob(Job.BACKEND_DEVELOPER, 5, 0));
+        project.addRecruitJob(new RecruitJob(Job.BACKEND_DEVELOPER, 5));
 
         ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
         when(projectRepository.findWithRecruitJobsById(anyLong()))
@@ -172,11 +178,11 @@ class ProjectApplyServiceTest {
     }
 
     @Test
-    @DisplayName("프로젝트 지원서 승인할 경우 모집직군의 현재인원이 증가되고, 승인 완료상태로 변경된다.")
+    @DisplayName("프로젝트 지원서 승인할 경우 승인 완료상태로 변경되고, project_participant 데이터가 추가된다.")
     void status_accept() {
         // given
         Member applicant = MemberFixture.onlyRequired();
-        RecruitJob recruitJob = RecruitJobFixture.notFull(Job.BACKEND_DEVELOPER); // 현재인원 0명
+        RecruitJob recruitJob = RecruitJobFixture.create(Job.BACKEND_DEVELOPER);
         Project project = Mockito.spy(ProjectFixture.withRecruitJobs(recruitJob));
         when(project.getId()).thenReturn(1L);
         Apply apply = Mockito.spy(ApplyFixture.waiting(Job.BACKEND_DEVELOPER, applicant, project)); // 현재상태 WAITING
@@ -190,8 +196,8 @@ class ProjectApplyServiceTest {
         projectApplyService.status(project.getId(), apply.getId(), ApplyStatus.ACCEPTED);
 
         // then
-        assertEquals(1, recruitJob.getCurrentAmount());
         assertEquals(ApplyStatus.ACCEPTED, apply.getStatus());
+        verify(projectParticipantRepository, times(1)).save(any(ProjectParticipant.class));
     }
 
     @Test
@@ -199,7 +205,7 @@ class ProjectApplyServiceTest {
     void status_accept_full() {
         // given
         Member applicant = MemberFixture.onlyRequired();
-        RecruitJob recruitJob = RecruitJobFixture.full(Job.BACKEND_DEVELOPER); // 현재인원 10명 (MAX)
+        RecruitJob recruitJob = RecruitJobFixture.create(Job.BACKEND_DEVELOPER);
         Project project = Mockito.spy(ProjectFixture.withRecruitJobs(recruitJob));
         when(project.getId()).thenReturn(1L);
         Apply apply = Mockito.spy(ApplyFixture.waiting(Job.BACKEND_DEVELOPER, applicant, project)); // 현재상태 WAITING
@@ -208,6 +214,8 @@ class ProjectApplyServiceTest {
                 .thenReturn(Optional.of(project));
         when(applyRepository.findWithProjectAndApplicantById(anyLong()))
                 .thenReturn(Optional.of(apply));
+        when(projectParticipantRepository.countByProjectIdAndJob(any(), any()))
+                .thenReturn(recruitJob.getRecruitAmount());
 
         // when & then
         BizException bizException = assertThrows(BizException.class, () ->
@@ -220,7 +228,7 @@ class ProjectApplyServiceTest {
     void status_reject() {
         // given
         Member applicant = MemberFixture.onlyRequired();
-        RecruitJob recruitJob = RecruitJobFixture.notFull(Job.BACKEND_DEVELOPER);
+        RecruitJob recruitJob = RecruitJobFixture.create(Job.BACKEND_DEVELOPER);
         Project project = Mockito.spy(ProjectFixture.withRecruitJobs(recruitJob));
         when(project.getId()).thenReturn(1L);
         Apply apply = Mockito.spy(ApplyFixture.waiting(Job.BACKEND_DEVELOPER, applicant, project));
@@ -242,7 +250,7 @@ class ProjectApplyServiceTest {
     void status_already_processed() {
         // given
         Member applicant = MemberFixture.onlyRequired();
-        RecruitJob recruitJob = RecruitJobFixture.notFull(Job.BACKEND_DEVELOPER);
+        RecruitJob recruitJob = RecruitJobFixture.create(Job.BACKEND_DEVELOPER);
         Project project = Mockito.spy(ProjectFixture.withRecruitJobs(recruitJob));
         when(project.getId()).thenReturn(1L);
         Apply apply = Mockito.spy(ApplyFixture.accepted(Job.BACKEND_DEVELOPER, applicant, project));

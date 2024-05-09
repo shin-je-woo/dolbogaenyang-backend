@@ -8,12 +8,14 @@ import com.whatpl.member.domain.Member;
 import com.whatpl.member.repository.MemberRepository;
 import com.whatpl.project.domain.Apply;
 import com.whatpl.project.domain.Project;
+import com.whatpl.project.domain.ProjectParticipant;
 import com.whatpl.project.domain.RecruitJob;
 import com.whatpl.project.domain.enums.ApplyStatus;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.dto.ApplyResponse;
 import com.whatpl.project.dto.ProjectApplyRequest;
 import com.whatpl.project.repository.ApplyRepository;
+import com.whatpl.project.repository.ProjectParticipantRepository;
 import com.whatpl.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ public class ProjectApplyService {
     private final MemberRepository memberRepository;
     private final ProjectRepository projectRepository;
     private final ApplyRepository applyRepository;
+    private final ProjectParticipantRepository projectParticipantRepository;
     private final ChatService chatService;
 
     @Transactional
@@ -65,22 +68,26 @@ public class ProjectApplyService {
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
         Apply apply = applyRepository.findWithProjectAndApplicantById(applyId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_APPLY));
-
         if (!project.getId().equals(apply.getProject().getId())) {
             throw new BizException(ErrorCode.NOT_MATCH_PROJECT_APPLY);
         }
-
-        RecruitJob recruitJob = project.getRecruitJobs().stream()
-                .filter(rj -> rj.getJob().equals(apply.getJob()))
-                .findFirst()
-                .orElseThrow(() -> new BizException(ErrorCode.NOT_MATCH_APPLY_JOB_WITH_PROJECT));
-
         // 지원서의 상태를 승인/거절 상태로 변경한다. 만약, 이미 처리된 지원서라면 BizException 발생
         apply.changeStatus(applyStatus);
         if (applyStatus.equals(ApplyStatus.ACCEPTED)) {
-            // 지원서 승인일 경우 프로젝트 모집직군의 현재 인원을 증가한다. 만약, 모집인원이 초과될 경우 BizException 발생
-            recruitJob.increaseCurrentAmount();
+            // 지원서 승인일 경우 지원자를 프로젝트에 참여시킨다.
+            participate(project, apply.getApplicant(), apply.getJob());
         }
+    }
+
+    private void participate(Project project, Member participant, Job job) {
+        // 만약, 모집인원이 초과될 경우 BizException 발생
+        validateFullJob(project, job);
+        ProjectParticipant projectParticipant = ProjectParticipant.builder()
+                .project(project)
+                .participant(participant)
+                .job(job)
+                .build();
+        projectParticipantRepository.save(projectParticipant);
     }
 
     private void validateDeletedProject(Project project) {
@@ -106,7 +113,9 @@ public class ProjectApplyService {
                 .filter(recruitJob -> recruitJob.getJob().equals(applyJob))
                 .findFirst()
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_MATCH_APPLY_JOB_WITH_PROJECT));
-        if (matchedRecruitJob.isFullJob()) {
+        int recruitAmount = matchedRecruitJob.getRecruitAmount();
+        int participantAmount = projectParticipantRepository.countByProjectIdAndJob(project.getId(), applyJob);
+        if (recruitAmount <= participantAmount) {
             throw new BizException(ErrorCode.RECRUIT_COMPLETED_APPLY_JOB);
         }
     }

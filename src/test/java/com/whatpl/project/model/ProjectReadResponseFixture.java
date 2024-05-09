@@ -36,15 +36,15 @@ public class ProjectReadResponseFixture {
                 .projectJobParticipants(List.of(
                         ProjectJobParticipantDto.builder()
                                 .job(Job.BACKEND_DEVELOPER)
-                                .totalAmount(10)
-                                .currentAmount(2)
+                                .recruitAmount(10)
+                                .participantAmount(2)
                                 .participants(List.of(
-                                        ProjectJobParticipantDto.Participant.builder()
+                                        ProjectJobParticipantDto.ParticipantDto.builder()
                                                 .memberId(1L)
                                                 .nickname("백엔드 참여자1")
                                                 .career(Career.FIVE)
                                                 .build(),
-                                        ProjectJobParticipantDto.Participant.builder()
+                                        ProjectJobParticipantDto.ParticipantDto.builder()
                                                 .memberId(2L)
                                                 .nickname("백엔드 참여자2")
                                                 .career(Career.NONE)
@@ -52,8 +52,8 @@ public class ProjectReadResponseFixture {
                                 .build(),
                         ProjectJobParticipantDto.builder()
                                 .job(Job.MOBILE_DEVELOPER)
-                                .totalAmount(2)
-                                .currentAmount(0)
+                                .recruitAmount(2)
+                                .participantAmount(0)
                                 .participants(Collections.emptyList())
                                 .build()
                         ))

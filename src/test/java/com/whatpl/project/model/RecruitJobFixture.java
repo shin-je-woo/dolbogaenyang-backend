@@ -5,19 +5,10 @@ import com.whatpl.project.domain.RecruitJob;
 
 public class RecruitJobFixture {
 
-    public static RecruitJob notFull(Job job) {
+    public static RecruitJob create(Job job) {
         return RecruitJob.builder()
                 .job(job)
-                .totalAmount(10)
-                .currentAmount(0)
-                .build();
-    }
-
-    public static RecruitJob full(Job job) {
-        return RecruitJob.builder()
-                .job(job)
-                .totalAmount(10)
-                .currentAmount(10)
+                .recruitAmount(10)
                 .build();
     }
 }
