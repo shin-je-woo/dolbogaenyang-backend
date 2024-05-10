@@ -17,7 +17,7 @@ public class ProjectCreateRequestFixture {
     public static ProjectCreateRequest create() {
         return ProjectCreateRequest.builder()
                 .title("테스트 타이틀")
-                .subjects(Set.of(Subject.SOCIAL_MEDIA, Subject.HEALTH))
+                .subject(Subject.SOCIAL_MEDIA)
                 .recruitJobs(Set.of(
                         new ProjectCreateRequest.RecruitJobField(Job.BACKEND_DEVELOPER, 5),
                         new ProjectCreateRequest.RecruitJobField(Job.DESIGNER, 3),

@@ -23,8 +23,7 @@ public class ProjectCreateRequest {
     private String title;
 
     @NotNull(message = "프로젝트의 도메인은 필수 입력 항목입니다.")
-    @Size(min = 1, max = 3, message = "프로젝트 도메인은 1~3개 입력 가능합니다.")
-    private Set<Subject> subjects;
+    private Subject subject;
 
     @Valid
     @NotNull(message = "모집직군은 필수 입력 항목입니다.")

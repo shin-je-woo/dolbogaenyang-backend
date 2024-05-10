@@ -28,6 +28,7 @@ public final class ProjectModelConverter {
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .status(ProjectStatus.RECRUITING)
+                .subject(request.getSubject())
                 .meetingType(request.getMeetingType())
                 .content(request.getContent())
                 .build();
@@ -46,12 +47,6 @@ public final class ProjectModelConverter {
                         .recruitAmount(recruitJobField.getRecruitAmount())
                         .build())
                 .forEach(project::addRecruitJob);
-
-        // ProjectSubject 추가
-        Optional.ofNullable(request.getSubjects())
-                .orElseGet(Collections::emptySet).stream()
-                .map(ProjectSubject::new)
-                .forEach(project::addProjectSubject);
 
         // 대표이미지, 작성자 추가
         project.addRepresentImageAndWriter(representImage, writer);
@@ -69,6 +64,7 @@ public final class ProjectModelConverter {
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .status(ProjectStatus.RECRUITING)
+                .subject(request.getSubject())
                 .meetingType(request.getMeetingType())
                 .content(request.getContent())
                 .build();
@@ -88,12 +84,6 @@ public final class ProjectModelConverter {
                         .build())
                 .forEach(project::addRecruitJob);
 
-        // ProjectSubject 추가
-        Optional.ofNullable(request.getSubjects())
-                .orElseGet(Collections::emptySet).stream()
-                .map(ProjectSubject::new)
-                .forEach(project::addProjectSubject);
-
         // 대표이미지, 작성자 추가
         project.addRepresentImageAndWriter(null, writer);
 
@@ -105,9 +95,7 @@ public final class ProjectModelConverter {
                 .projectId(project.getId())
                 .title(project.getTitle())
                 .projectStatus(project.getStatus())
-                .subjects(project.getProjectSubjects().stream()
-                        .map(ProjectSubject::getSubject)
-                        .toList())
+                .subject(project.getSubject())
                 .meetingType(project.getMeetingType())
                 .views(project.getViews())
                 .likes(likes)
