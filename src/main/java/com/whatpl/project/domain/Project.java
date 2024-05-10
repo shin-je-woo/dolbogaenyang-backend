@@ -2,6 +2,7 @@ package com.whatpl.project.domain;
 
 import com.whatpl.attachment.domain.Attachment;
 import com.whatpl.global.common.BaseTimeEntity;
+import com.whatpl.global.common.domain.enums.Subject;
 import com.whatpl.member.domain.Member;
 import com.whatpl.project.domain.enums.MeetingType;
 import com.whatpl.project.domain.enums.ProjectStatus;
@@ -37,13 +38,13 @@ public class Project extends BaseTimeEntity {
     private ProjectStatus status;
 
     @Enumerated(EnumType.STRING)
+    private Subject subject;
+
+    @Enumerated(EnumType.STRING)
     private MeetingType meetingType;
 
     @Column(columnDefinition = "TEXT")
     private String content;
-
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProjectSubject> projectSubjects = new HashSet<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProjectSkill> projectSkills = new HashSet<>();
@@ -60,14 +61,15 @@ public class Project extends BaseTimeEntity {
     private Member writer;
 
     @Builder
-    public Project(String title, Boolean profitable, LocalDate startDate,
-                   LocalDate endDate, ProjectStatus status, MeetingType meetingType,
+    public Project(String title, Boolean profitable, LocalDate startDate, LocalDate endDate,
+                   Subject subject, ProjectStatus status, MeetingType meetingType,
                    String content, Attachment representImage) {
         this.title = title;
         this.profitable = profitable;
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
+        this.subject = subject;
         this.meetingType = meetingType;
         this.content = content;
         this.representImage = representImage;
@@ -75,14 +77,6 @@ public class Project extends BaseTimeEntity {
     }
 
     //==연관관계 메서드==//
-    public void addProjectSubject(ProjectSubject projectSubject) {
-        if (projectSubject == null) {
-            return;
-        }
-        this.projectSubjects.add(projectSubject);
-        projectSubject.setProject(this);
-    }
-
     public void addProjectSkill(ProjectSkill projectSkill) {
         if (projectSkill == null) {
             return;
