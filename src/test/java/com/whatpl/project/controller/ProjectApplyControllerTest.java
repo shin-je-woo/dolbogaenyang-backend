@@ -187,13 +187,15 @@ class ProjectApplyControllerTest extends BaseSecurityWebMvcTest {
                 .andDo(print())
                 .andDo(document("update-project-apply-status",
                         resourceDetails().tag(ApiDocTag.PROJECT.getTag())
-                                .summary("프로젝트 지원서 승인/거절")
+                                .summary("프로젝트 지원 또는 참여 제안 승인/거절")
                                 .description("""
                                         프로젝트 지원서를 승인/거절합니다.
-                                                                                
-                                        프로젝트의 모집자만 승인/거절 가능합니다.
-                                                                                
+                                        
                                         승인 대기 상태로는 변경할 수 없습니다. (승인/거절만 가능)
+                                        
+                                        [권한]
+                                        - 지원일 경우 프로젝트 등록자
+                                        - 참여제안일 경우 프로젝트 지원자
                                         """),
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("AccessToken")

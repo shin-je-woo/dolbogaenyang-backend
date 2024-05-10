@@ -5,6 +5,7 @@ import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.project.domain.Apply;
 import com.whatpl.project.domain.Project;
+import com.whatpl.project.domain.enums.ApplyType;
 import com.whatpl.project.repository.ApplyRepository;
 import com.whatpl.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,12 +51,15 @@ public class ApplyPermissionManager implements WhatplPermissionManager {
 
     /**
      * 프로젝트 지원 상태 변경 권한 (지원 수락/거절 use-case)
-     * 프로젝트 등록자
+     * 지원일 경우 프로젝트 등록자
+     * 참여 제안일 경우 프로젝트 지원자
      */
     private boolean hasStatusPrivilege(MemberPrincipal memberPrincipal, Long applyId) {
         Apply apply = applyRepository.findWithProjectAndApplicantById(applyId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_APPLY));
 
-        return apply.getProject().getWriter().getId().equals(memberPrincipal.getId());
+        return ApplyType.APPLY.equals(apply.getType()) ?
+                apply.getProject().getWriter().getId().equals(memberPrincipal.getId()) :
+                apply.getApplicant().getId().equals(memberPrincipal.getId());
     }
 }
