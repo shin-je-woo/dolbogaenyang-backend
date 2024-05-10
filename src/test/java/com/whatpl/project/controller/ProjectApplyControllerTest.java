@@ -76,7 +76,7 @@ class ProjectApplyControllerTest extends BaseSecurityWebMvcTest {
                 )
                 .andDo(print())
                 .andDo(document("project-apply",
-                        resourceDetails().tag(ApiDocTag.PROJECT.getTag())
+                        resourceDetails().tag(ApiDocTag.PROJECT_APPLY.getTag())
                                 .summary("프로젝트 지원 또는 참여 제안")
                                 .description("""
                                         프로젝트에 지원 또는 참여 제안 API입니다.
@@ -145,8 +145,27 @@ class ProjectApplyControllerTest extends BaseSecurityWebMvcTest {
                 )
                 .andDo(print())
                 .andDo(document("project-offer",
-                        resourceDetails().tag(ApiDocTag.PROJECT.getTag())
-                                .summary("프로젝트 참여 제안"),
+                        resourceDetails().tag(ApiDocTag.PROJECT_APPLY.getTag())
+                                .summary("프로젝트 지원 또는 참여 제안")
+                                .description("""
+                                        프로젝트에 지원 또는 참여 제안 API입니다.
+                                        
+                                        [API 요구사항]
+                                        - 지원일 경우 요청 body의 applyType 값을 "APPLY"로 요청합니다.
+                                        - 참여 제안일 경우 요청 body의 applyType 값을 "OFFER"로 요청합니다.
+                                        - 요청 body의 applicantId는 참여 제안 요청에서 사용됩니다. 지원 요청에서는 사용되지 않습니다.
+                                        
+                                        [유효성 검증]
+                                        - 삭제된 프로젝트는 지원(참여 제안) 불가
+                                        - 모집완료된 프로젝트는 지원(참여 제안) 불가
+                                        - 프로젝트 등록자는 본인이 등록한 프로젝트에 지원(참여 제안) 불가
+                                        - 모집직군에 지원(참여 제안)하는 직무가 없을 경우, 모집직군에 지원하는 직무가 마감된 경우 지원(참여 제안) 불가
+                                        - 이미 지원(참여 제안)한 프로젝트는 지원(참여 제안) 불가
+                                        
+                                        [권한]
+                                        - 지원 - 인증된 모든 사용자
+                                        - 참여 제안 - 프로젝트 등록자
+                                        """),
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("AccessToken")
                         ),
@@ -186,7 +205,7 @@ class ProjectApplyControllerTest extends BaseSecurityWebMvcTest {
                 )
                 .andDo(print())
                 .andDo(document("update-project-apply-status",
-                        resourceDetails().tag(ApiDocTag.PROJECT.getTag())
+                        resourceDetails().tag(ApiDocTag.PROJECT_APPLY.getTag())
                                 .summary("프로젝트 지원 또는 참여 제안 승인/거절")
                                 .description("""
                                         프로젝트 지원서를 승인/거절합니다.

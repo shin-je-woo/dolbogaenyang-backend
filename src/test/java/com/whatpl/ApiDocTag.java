@@ -12,6 +12,7 @@ public enum ApiDocTag {
     PROJECT("Projects"),
     PROJECT_COMMENT("Project Comments"),
     PROJECT_LIKE("Project Likes"),
+    PROJECT_APPLY("Project Apply"),
     ATTACHMENT("Attachments"),
     CHAT("Chats"),
     DOMAIN("Domains");
