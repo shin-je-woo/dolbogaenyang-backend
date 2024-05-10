@@ -39,7 +39,7 @@ public enum ErrorCode {
     NOT_MATCH_PROJECT_LIKE("PRJ13", 400, "프로젝트 ID와 좋아요 ID가 일치하지 않습니다."),
 
     // APPLY
-    NOT_FOUND_APPLY("APL1", 404, "지원서를 찾을 수 없습니다."),
+    NOT_FOUND_APPLY("APL1", 404, "지원정보를 찾을 수 없습니다."),
 
     // FILE
     NOT_FOUND_FILE("FILE1", 404, "파일을 찾을 수 없습니다."),

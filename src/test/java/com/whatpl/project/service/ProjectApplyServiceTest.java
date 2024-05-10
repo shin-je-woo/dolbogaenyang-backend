@@ -15,6 +15,7 @@ import com.whatpl.project.domain.enums.ApplyType;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.dto.ProjectApplyRequest;
 import com.whatpl.project.model.ApplyFixture;
+import com.whatpl.project.model.ProjectApplyRequestFixture;
 import com.whatpl.project.model.ProjectFixture;
 import com.whatpl.project.model.RecruitJobFixture;
 import com.whatpl.project.repository.ApplyRepository;
@@ -59,7 +60,7 @@ class ProjectApplyServiceTest {
         Project project = ProjectFixture.create();
         Member writer = MemberFixture.onlyRequired();
         project.setStatus(ProjectStatus.DELETED);
-        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
+        ProjectApplyRequest request = ProjectApplyRequestFixture.apply();
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
@@ -78,7 +79,7 @@ class ProjectApplyServiceTest {
         Project project = ProjectFixture.create();
         Member writer = MemberFixture.onlyRequired();
         project.setStatus(ProjectStatus.COMPLETED);
-        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
+        ProjectApplyRequest request = ProjectApplyRequestFixture.apply();
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
@@ -97,7 +98,7 @@ class ProjectApplyServiceTest {
         Member writer = MemberFixture.onlyRequired();
         project.addRepresentImageAndWriter(null, writer);
         project.setStatus(ProjectStatus.RECRUITING);
-        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
+        ProjectApplyRequest request = ProjectApplyRequestFixture.apply();
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
@@ -118,7 +119,7 @@ class ProjectApplyServiceTest {
         project.setStatus(ProjectStatus.RECRUITING);
         project.addRecruitJob(new RecruitJob(Job.DESIGNER, 5));
 
-        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
+        ProjectApplyRequest request = ProjectApplyRequestFixture.apply();
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
@@ -140,7 +141,7 @@ class ProjectApplyServiceTest {
         project.setStatus(ProjectStatus.RECRUITING);
         project.addRecruitJob(new RecruitJob(Job.BACKEND_DEVELOPER, recruitAmount));
 
-        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
+        ProjectApplyRequest request = ProjectApplyRequestFixture.apply();
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
@@ -163,7 +164,7 @@ class ProjectApplyServiceTest {
         project.setStatus(ProjectStatus.RECRUITING);
         project.addRecruitJob(new RecruitJob(Job.BACKEND_DEVELOPER, 5));
 
-        ProjectApplyRequest request = new ProjectApplyRequest(Job.BACKEND_DEVELOPER, "test content", ApplyType.APPLY);
+        ProjectApplyRequest request = ProjectApplyRequestFixture.apply();
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
