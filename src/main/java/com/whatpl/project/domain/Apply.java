@@ -61,7 +61,7 @@ public class Apply extends BaseTimeEntity {
 
     //==비즈니스 로직==//
     public void changeStatus(ApplyStatus status) {
-        if (!ApplyStatus.WAITING.equals(getStatus())) {
+        if (!ApplyStatus.WAITING.equals(getStatus()) && !ApplyStatus.EXCLUDED.equals(status)) {
             // 이미 처리된 지원서는 수정 불가
             throw new BizException(ErrorCode.ALREADY_PROCESSED_APPLY);
         }

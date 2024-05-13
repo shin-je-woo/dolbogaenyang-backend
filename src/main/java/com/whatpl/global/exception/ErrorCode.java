@@ -37,6 +37,9 @@ public enum ErrorCode {
     NOT_FOUND_PARENT_PROJECT_COMMENT("PRJ11", 404, "상위 댓글을 찾을 수 없습니다."),
     NOT_FOUND_PROJECT_COMMENT("PRJ12", 404, "댓글을 찾을 수 없습니다."),
     NOT_MATCH_PROJECT_LIKE("PRJ13", 400, "프로젝트 ID와 좋아요 ID가 일치하지 않습니다."),
+    NOT_FOUND_PROJECT_PARTICIPANT("PRJ14", 404, "프로젝트 참여자를 찾을 수 없습니다."),
+    NOT_MATCH_PROJECT_PARTICIPANT("PRJ15", 400, "프로젝트 ID와 참여자 ID가 일치하지 않습니다."),
+    CANT_PROCESS_EXCLUDED("PRJ16", 400, "프로젝트 지원서를 제외 상태로 변경할 수 없습니다."),
 
     // APPLY
     NOT_FOUND_APPLY("APL1", 404, "지원정보를 찾을 수 없습니다."),
