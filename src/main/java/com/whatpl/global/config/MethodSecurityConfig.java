@@ -21,6 +21,7 @@ public class MethodSecurityConfig {
     private final ApplyPermissionManager applyPermissionManager;
     private final ProjectCommentPermissionManager projectCommentPermissionManager;
     private final ProjectLikePermissionManager projectLikePermissionManager;
+    private final ParticipantPermissionManager participantPermissionManager;
     private final ChatMessagePermissionManager chatMessagePermissionManager;
 
     @Bean
@@ -29,6 +30,7 @@ public class MethodSecurityConfig {
         whatplPermissionEvaluatorMap.put("APPLY", applyPermissionManager);
         whatplPermissionEvaluatorMap.put("PROJECT_COMMENT", projectCommentPermissionManager);
         whatplPermissionEvaluatorMap.put("PROJECT_LIKE", projectLikePermissionManager);
+        whatplPermissionEvaluatorMap.put("PARTICIPANT", participantPermissionManager);
         whatplPermissionEvaluatorMap.put("CHAT_MESSAGE", chatMessagePermissionManager);
 
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();

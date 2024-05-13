@@ -47,6 +47,9 @@ public class ProjectApplyController {
         if (ApplyStatus.WAITING.equals(request.getApplyStatus())) {
             throw new BizException(ErrorCode.CANT_PROCESS_WAITING);
         }
+        if (ApplyStatus.EXCLUDED.equals(request.getApplyStatus())) {
+            throw new BizException(ErrorCode.CANT_PROCESS_EXCLUDED);
+        }
         projectApplyService.status(projectId, applyId, request.getApplyStatus());
 
         return ResponseEntity.noContent().build();

@@ -71,6 +71,9 @@ public abstract class BaseSecurityWebMvcTest {
     @MockBean
     protected ChatService chatService;
 
+    @MockBean
+    protected ProjectParticipantService projectParticipantService;
+
     @BeforeEach
     protected void init() {
         when(jwtProperties.getTokenType()).thenReturn("Bearer");
