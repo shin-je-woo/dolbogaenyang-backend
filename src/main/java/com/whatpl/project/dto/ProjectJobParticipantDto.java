@@ -22,7 +22,8 @@ public class ProjectJobParticipantDto {
     @Builder
     @RequiredArgsConstructor
     public static class ParticipantDto {
-        private final Long memberId;
+        private final long participantId;
+        private final long memberId;
         private final String nickname;
         private final Career career;
     }

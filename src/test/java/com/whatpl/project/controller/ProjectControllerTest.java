@@ -114,12 +114,16 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.projectJobParticipants[0].job").value(response.getProjectJobParticipants().get(0).getJob().getValue()),
                         jsonPath("$.projectJobParticipants[0].recruitAmount").value(response.getProjectJobParticipants().get(0).getRecruitAmount()),
                         jsonPath("$.projectJobParticipants[0].participantAmount").value(response.getProjectJobParticipants().get(0).getParticipantAmount()),
+                        jsonPath("$.projectJobParticipants[0].participants[0].participantId")
+                                                        .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getParticipantId()),
                         jsonPath("$.projectJobParticipants[0].participants[0].memberId")
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getMemberId()),
                         jsonPath("$.projectJobParticipants[0].participants[0].nickname")
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getNickname()),
                         jsonPath("$.projectJobParticipants[0].participants[0].career")
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getCareer().getValue()),
+                        jsonPath("$.projectJobParticipants[0].participants[1].participantId")
+                                                        .value(response.getProjectJobParticipants().get(0).getParticipants().get(1).getParticipantId()),
                         jsonPath("$.projectJobParticipants[0].participants[1].memberId")
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(1).getMemberId()),
                         jsonPath("$.projectJobParticipants[0].participants[1].nickname")
@@ -160,7 +164,8 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("projectJobParticipants[].recruitAmount").type(JsonFieldType.NUMBER).description("모집 인원수"),
                                 fieldWithPath("projectJobParticipants[].participantAmount").type(JsonFieldType.NUMBER).description("참여자 인원수"),
                                 fieldWithPath("projectJobParticipants[].participants").type(JsonFieldType.ARRAY).description("참여자"),
-                                fieldWithPath("projectJobParticipants[].participants[].memberId").type(JsonFieldType.NUMBER).description("참여자 ID"),
+                                fieldWithPath("projectJobParticipants[].participants[].participantId").type(JsonFieldType.NUMBER).description("참여 ID = 테이블 PK"),
+                                fieldWithPath("projectJobParticipants[].participants[].memberId").type(JsonFieldType.NUMBER).description("참여자 ID = 멤버 ID"),
                                 fieldWithPath("projectJobParticipants[].participants[].nickname").type(JsonFieldType.STRING).description("닉네임"),
                                 fieldWithPath("projectJobParticipants[].participants[].career").type(JsonFieldType.STRING).description("경력")
                         )

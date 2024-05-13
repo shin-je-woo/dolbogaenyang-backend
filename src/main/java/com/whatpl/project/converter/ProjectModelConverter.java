@@ -133,6 +133,7 @@ public final class ProjectModelConverter {
         return projectParticipants.stream()
                 .filter(projectParticipant -> projectParticipant.getJob().equals(job))
                 .map(projectParticipant -> ProjectJobParticipantDto.ParticipantDto.builder()
+                        .participantId(projectParticipant.getId())
                         .memberId(projectParticipant.getParticipant().getId())
                         .nickname(projectParticipant.getParticipant().getNickname())
                         .career(projectParticipant.getParticipant().getCareer())
