@@ -32,7 +32,7 @@ public class Apply extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ApplyType type;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applicant_id")
     private Member applicant;
 
