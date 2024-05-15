@@ -1,12 +1,20 @@
 package com.whatpl.project.controller;
 
+import com.whatpl.global.exception.BizException;
+import com.whatpl.global.exception.ErrorCode;
+import com.whatpl.global.pagination.SliceResponse;
 import com.whatpl.global.security.domain.MemberPrincipal;
+import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.dto.ProjectCreateRequest;
+import com.whatpl.project.dto.ProjectInfo;
 import com.whatpl.project.dto.ProjectReadResponse;
+import com.whatpl.project.dto.ProjectSearchCondition;
 import com.whatpl.project.service.ProjectReadService;
 import com.whatpl.project.service.ProjectWriteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -34,5 +42,16 @@ public class ProjectController {
     public ResponseEntity<ProjectReadResponse> read(@PathVariable Long projectId) {
         ProjectReadResponse projectReadResponse = projectReadService.readProject(projectId);
         return ResponseEntity.ok(projectReadResponse);
+    }
+
+    @PostMapping("/projects/search")
+    public ResponseEntity<SliceResponse<ProjectInfo>> search(Pageable pageable,
+                                                             @RequestBody ProjectSearchCondition searchCondition) {
+        // 프로젝트 검색조건의 프로젝트 상태는 모집중만 가능
+        if (searchCondition.getStatus() != null && !ProjectStatus.RECRUITING.equals(searchCondition.getStatus())) {
+            throw new BizException(ErrorCode.PROJECT_STATUS_NOT_VALID);
+        }
+        Slice<ProjectInfo> projects = projectReadService.searchProjectList(pageable, searchCondition);
+        return ResponseEntity.ok(new SliceResponse<>(projects));
     }
 }

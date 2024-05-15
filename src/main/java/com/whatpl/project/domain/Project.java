@@ -52,6 +52,15 @@ public class Project extends BaseTimeEntity {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RecruitJob> recruitJobs = new HashSet<>();
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProjectComment> projectComments = new HashSet<>();
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProjectLike> projectLikes = new HashSet<>();
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProjectParticipant> projectParticipants = new HashSet<>();
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "represent_image_id")
     private Attachment representImage;
