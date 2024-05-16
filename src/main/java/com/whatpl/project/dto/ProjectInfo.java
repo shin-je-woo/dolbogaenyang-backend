@@ -6,7 +6,6 @@ import com.whatpl.global.pagination.SliceElement;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -19,14 +18,14 @@ public class ProjectInfo implements SliceElement {
     private ProjectStatus status;
     private Subject subject;
     @Setter
-    private List<Skill> skills = new ArrayList<>();
+    private List<Skill> skills;
     @Setter
-    private List<RemainedJobDto> remainedJobs = new ArrayList<>();
+    private List<RemainedJobDto> remainedJobs;
     private boolean profitable;
-    private long views;
+    private int views;
     @Setter
-    private long likes;
+    private int likes;
     @Setter
-    private long comments;
+    private int comments;
     private String representImageUri;
 }

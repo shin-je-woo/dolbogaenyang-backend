@@ -2,19 +2,26 @@ package com.whatpl.project.controller;
 
 import com.whatpl.ApiDocTag;
 import com.whatpl.BaseSecurityWebMvcTest;
+import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.domain.enums.Skill;
+import com.whatpl.global.common.domain.enums.Subject;
 import com.whatpl.global.security.model.WithMockWhatplMember;
-import com.whatpl.project.dto.ProjectCreateRequest;
-import com.whatpl.project.dto.ProjectReadResponse;
+import com.whatpl.project.domain.enums.ProjectStatus;
+import com.whatpl.project.dto.*;
 import com.whatpl.project.model.ProjectCreateRequestFixture;
 import com.whatpl.project.model.ProjectReadResponseFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
+
+import java.util.List;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
@@ -25,8 +32,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -115,7 +121,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.projectJobParticipants[0].recruitAmount").value(response.getProjectJobParticipants().get(0).getRecruitAmount()),
                         jsonPath("$.projectJobParticipants[0].participantAmount").value(response.getProjectJobParticipants().get(0).getParticipantAmount()),
                         jsonPath("$.projectJobParticipants[0].participants[0].participantId")
-                                                        .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getParticipantId()),
+                                .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getParticipantId()),
                         jsonPath("$.projectJobParticipants[0].participants[0].memberId")
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getMemberId()),
                         jsonPath("$.projectJobParticipants[0].participants[0].nickname")
@@ -123,7 +129,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.projectJobParticipants[0].participants[0].career")
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getCareer().getValue()),
                         jsonPath("$.projectJobParticipants[0].participants[1].participantId")
-                                                        .value(response.getProjectJobParticipants().get(0).getParticipants().get(1).getParticipantId()),
+                                .value(response.getProjectJobParticipants().get(0).getParticipants().get(1).getParticipantId()),
                         jsonPath("$.projectJobParticipants[0].participants[1].memberId")
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(1).getMemberId()),
                         jsonPath("$.projectJobParticipants[0].participants[1].nickname")
@@ -168,6 +174,109 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("projectJobParticipants[].participants[].memberId").type(JsonFieldType.NUMBER).description("참여자 ID = 멤버 ID"),
                                 fieldWithPath("projectJobParticipants[].participants[].nickname").type(JsonFieldType.STRING).description("닉네임"),
                                 fieldWithPath("projectJobParticipants[].participants[].career").type(JsonFieldType.STRING).description("경력")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockWhatplMember
+    @DisplayName("프로젝트 리스트 검색 API Docs")
+    void search() throws Exception {
+        // given
+        int page = 1;
+        int size = 2;
+        ProjectInfo projectInfo = ProjectInfo.builder()
+                .projectId(1L)
+                .title("테스트 프로젝트 1")
+                .status(ProjectStatus.RECRUITING)
+                .subject(Subject.SOCIAL_MEDIA)
+                .skills(List.of(Skill.JAVA, Skill.FIGMA))
+                .remainedJobs(List.of(RemainedJobDto.builder()
+                        .job(Job.BACKEND_DEVELOPER)
+                        .recruitAmount(5)
+                        .remainedAmount(2)
+                        .build()))
+                .profitable(false)
+                .views(100)
+                .likes(20)
+                .comments(5)
+                .representImageUri("/images/default?type=project")
+                .build();
+        SliceImpl<ProjectInfo> projectInfos = new SliceImpl<>(List.of(projectInfo));
+        ProjectSearchCondition searchCondition = ProjectSearchCondition.builder()
+                .subject(Subject.SOCIAL_MEDIA)
+                .status(ProjectStatus.RECRUITING)
+                .skill(Skill.JAVA)
+                .job(Job.BACKEND_DEVELOPER)
+                .profitable(false)
+                .keyword("테스트")
+                .build();
+        when(projectReadService.searchProjectList(any(Pageable.class), any(ProjectSearchCondition.class))).thenReturn(projectInfos);
+
+        // expected
+        mockMvc.perform(post("/projects/search")
+                        .param("page", String.valueOf(page))
+                        .param("size", String.valueOf(size))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(searchCondition))
+                )
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON_VALUE),
+                        jsonPath("$.list[*].projectId").value(Long.valueOf(projectInfo.getProjectId()).intValue()),
+                        jsonPath("$.list[*].title").value(projectInfo.getTitle()),
+                        jsonPath("$.list[*].status").value(projectInfo.getStatus().getValue()),
+                        jsonPath("$.list[*].skills").exists(),
+                        jsonPath("$.list[*].remainedJobs").exists(),
+                        jsonPath("$.list[*].profitable").value(projectInfo.isProfitable()),
+                        jsonPath("$.list[*].views").value(projectInfo.getViews()),
+                        jsonPath("$.list[*].likes").value(projectInfo.getLikes()),
+                        jsonPath("$.list[*].comments").value(projectInfo.getComments()),
+                        jsonPath("$.list[*].representImageUri").value(projectInfo.getRepresentImageUri())
+                )
+                .andDo(print())
+                .andDo(document("search-project-list",
+                        resourceDetails().tag(ApiDocTag.PROJECT.getTag())
+                                .summary("프로젝트 리스트 검색")
+                                .description("""
+                                        프로젝트 리스트를 검색합니다.
+                                                                                
+                                        [유효성 검증]
+                                        - 요청 필드의 상태(status)값은 "모집중"만 지원합니다. (아닐 시 400 에러) (status 필드가 없으면 전체 상태 검색)
+                                        """),
+                        queryParameters(
+                                parameterWithName("page").description("페이지 번호"),
+                                parameterWithName("size").description("페이지 사이즈")
+                        ),
+                        requestFields(
+                                fieldWithPath("subject").type(JsonFieldType.STRING).description("프로젝트 도메인"),
+                                fieldWithPath("job").type(JsonFieldType.STRING).description("직무"),
+                                fieldWithPath("skill").type(JsonFieldType.STRING).description("기술 스택"),
+                                fieldWithPath("status").type(JsonFieldType.STRING).description("프로젝트 상태"),
+                                fieldWithPath("profitable").type(JsonFieldType.BOOLEAN).description("수익화 여부"),
+                                fieldWithPath("keyword").type(JsonFieldType.STRING).description("검색어")
+                        ),
+                        responseFields(
+                                fieldWithPath("list").type(JsonFieldType.ARRAY).description("프로젝트 리스트"),
+                                fieldWithPath("list[].projectId").type(JsonFieldType.NUMBER).description("프로젝트 ID"),
+                                fieldWithPath("list[].title").type(JsonFieldType.STRING).description("프로젝트 제목"),
+                                fieldWithPath("list[].status").type(JsonFieldType.STRING).description("프로젝트 상태"),
+                                fieldWithPath("list[].subject").type(JsonFieldType.STRING).description("프로젝트 도메인"),
+                                fieldWithPath("list[].skills").type(JsonFieldType.ARRAY).description("프로젝트 기술 스택"),
+                                fieldWithPath("list[].remainedJobs").type(JsonFieldType.ARRAY).description("남은 모집 직무(아직 모집 중인 직무)"),
+                                fieldWithPath("list[].remainedJobs[].job").type(JsonFieldType.STRING).description("직무"),
+                                fieldWithPath("list[].remainedJobs[].recruitAmount").type(JsonFieldType.NUMBER).description("총 모집 인원"),
+                                fieldWithPath("list[].remainedJobs[].remainedAmount").type(JsonFieldType.NUMBER).description("남은 모집 인원"),
+                                fieldWithPath("list[].profitable").type(JsonFieldType.BOOLEAN).description("수익화 여부"),
+                                fieldWithPath("list[].views").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("list[].likes").type(JsonFieldType.NUMBER).description("좋아요 갯수"),
+                                fieldWithPath("list[].comments").type(JsonFieldType.NUMBER).description("댓글 갯수"),
+                                fieldWithPath("list[].representImageUri").type(JsonFieldType.STRING).description("대표 이미지 URI"),
+                                fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
+                                fieldWithPath("pageSize").type(JsonFieldType.NUMBER).description("페이지 사이즈"),
+                                fieldWithPath("first").type(JsonFieldType.BOOLEAN).description("첫 페이지 여부"),
+                                fieldWithPath("last").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
+                                fieldWithPath("empty").type(JsonFieldType.BOOLEAN).description("빈 리스트 여부")
                         )
                 ));
     }
