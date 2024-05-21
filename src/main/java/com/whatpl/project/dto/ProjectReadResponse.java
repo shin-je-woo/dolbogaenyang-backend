@@ -32,4 +32,5 @@ public class ProjectReadResponse {
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final List<ProjectJobParticipantDto> projectJobParticipants;
+    private final boolean myLike;
 }

@@ -15,4 +15,6 @@ public interface ProjectLikeRepository extends JpaRepository<ProjectLike, Long> 
     Optional<ProjectLike> findWithMemberById(Long memberId);
 
     long countByProject(Project project);
+
+    boolean existsByProjectIdAndMemberId(Long projectId, Long memberId);
 }

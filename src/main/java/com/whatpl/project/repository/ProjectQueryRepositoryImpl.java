@@ -27,6 +27,7 @@ import java.util.*;
 
 import static com.querydsl.core.types.Projections.fields;
 import static com.querydsl.jpa.JPAExpressions.select;
+import static com.querydsl.jpa.JPAExpressions.selectFrom;
 import static com.whatpl.attachment.domain.QAttachment.attachment;
 import static com.whatpl.member.domain.QMember.member;
 import static com.whatpl.project.domain.QProject.project;
@@ -104,9 +105,10 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                         project.subject.as("subject"),
                         project.profitable.as("profitable"),
                         project.views.as("vies"),
-                        buildRepresentImageUri()
+                        buildRepresentImageUri(),
+                        myLikeExists(searchCondition).as("myLike")
                 ))
-                .from(project, project)
+                .from(project)
                 .where(subjectEq(searchCondition.getSubject()),
                         jobEq(searchCondition.getJob(), searchCondition.getStatus()),
                         skillEq(searchCondition.getSkill()),
@@ -230,5 +232,12 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
 
     private BooleanExpression titleLike(String keyword) {
         return StringUtils.hasText(keyword) ? project.title.contains(keyword) : null;
+    }
+
+    private BooleanExpression myLikeExists(ProjectSearchCondition searchCondition) {
+        return selectFrom(projectLike)
+                .where(projectLike.project.eq(project),
+                        projectLike.member.id.eq(searchCondition.getLonginMemberId()))
+                .exists();
     }
 }

@@ -95,7 +95,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
         // given
         long projectId = 1L;
         ProjectReadResponse response = ProjectReadResponseFixture.from(projectId);
-        when(projectReadService.readProject(projectId))
+        when(projectReadService.readProject(anyLong(), anyLong()))
                 .thenReturn(response);
 
         // expected
@@ -117,6 +117,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.skills[1]").value(response.getSkills().get(1).getValue()),
                         jsonPath("$.startDate").value(response.getStartDate().toString()),
                         jsonPath("$.endDate").value(response.getEndDate().toString()),
+                        jsonPath("$.myLike").value(response.isMyLike()),
                         jsonPath("$.projectJobParticipants[0].job").value(response.getProjectJobParticipants().get(0).getJob().getValue()),
                         jsonPath("$.projectJobParticipants[0].recruitAmount").value(response.getProjectJobParticipants().get(0).getRecruitAmount()),
                         jsonPath("$.projectJobParticipants[0].participantAmount").value(response.getProjectJobParticipants().get(0).getParticipantAmount()),
@@ -165,6 +166,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("skills").type(JsonFieldType.ARRAY).description("사용 기술 스택"),
                                 fieldWithPath("startDate").type(JsonFieldType.STRING).description("시작 일자"),
                                 fieldWithPath("endDate").type(JsonFieldType.STRING).description("종료 일자"),
+                                fieldWithPath("myLike").type(JsonFieldType.BOOLEAN).description("좋아요 여부"),
                                 fieldWithPath("projectJobParticipants").type(JsonFieldType.ARRAY).description("직무별 참여자 (팀원 구성)"),
                                 fieldWithPath("projectJobParticipants[].job").type(JsonFieldType.STRING).description("직무"),
                                 fieldWithPath("projectJobParticipants[].recruitAmount").type(JsonFieldType.NUMBER).description("모집 인원수"),
@@ -202,6 +204,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                 .likes(20)
                 .comments(5)
                 .representImageUri("/images/default?type=project")
+                .myLike(true)
                 .build();
         SliceImpl<ProjectInfo> projectInfos = new SliceImpl<>(List.of(projectInfo));
         ProjectSearchCondition searchCondition = ProjectSearchCondition.builder()
@@ -234,7 +237,8 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.list[*].views").value(projectInfo.getViews()),
                         jsonPath("$.list[*].likes").value(projectInfo.getLikes()),
                         jsonPath("$.list[*].comments").value(projectInfo.getComments()),
-                        jsonPath("$.list[*].representImageUri").value(projectInfo.getRepresentImageUri())
+                        jsonPath("$.list[*].representImageUri").value(projectInfo.getRepresentImageUri()),
+                        jsonPath("$.list[*].myLike").value(projectInfo.isMyLike())
                 )
                 .andDo(print())
                 .andDo(document("search-project-list",
@@ -280,6 +284,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("list[].likes").type(JsonFieldType.NUMBER).description("좋아요 갯수"),
                                 fieldWithPath("list[].comments").type(JsonFieldType.NUMBER).description("댓글 갯수"),
                                 fieldWithPath("list[].representImageUri").type(JsonFieldType.STRING).description("대표 이미지 URI"),
+                                fieldWithPath("list[].myLike").type(JsonFieldType.BOOLEAN).description("좋아요 여부"),
                                 fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
                                 fieldWithPath("pageSize").type(JsonFieldType.NUMBER).description("페이지 사이즈"),
                                 fieldWithPath("first").type(JsonFieldType.BOOLEAN).description("첫 페이지 여부"),

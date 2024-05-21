@@ -17,6 +17,7 @@ public class ProjectInfo implements SliceElement {
     private String title;
     private ProjectStatus status;
     private Subject subject;
+    private boolean myLike;
     @Setter
     private List<Skill> skills;
     @Setter

@@ -59,6 +59,7 @@ public class ProjectReadResponseFixture {
                                 .participants(Collections.emptyList())
                                 .build()
                         ))
+                .myLike(true)
                 .build();
     }
 }
