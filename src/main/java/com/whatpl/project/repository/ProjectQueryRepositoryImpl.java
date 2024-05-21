@@ -1,5 +1,7 @@
 package com.whatpl.project.repository;
 
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.StringExpression;
@@ -17,12 +19,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static com.querydsl.core.types.Projections.fields;
 import static com.querydsl.jpa.JPAExpressions.select;
@@ -55,7 +56,6 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
 
     @Override
     public Slice<ProjectInfo> search(Pageable pageable, ProjectSearchCondition searchCondition) {
-        int pageSize = pageable.getPageSize();
         // Project (루트) 조회
         List<ProjectInfo> projectInfos = findProjectInfos(pageable, searchCondition);
         List<Long> projectIds = toProjectIds(projectInfos);
@@ -116,8 +116,29 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
-                .orderBy(project.createdAt.desc())
+                .orderBy(projectOrderBy(pageable))
                 .fetch();
+    }
+
+    private OrderSpecifier<?>[] projectOrderBy(Pageable pageable) {
+        List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+        for (Sort.Order order : pageable.getSort()) {
+            switch (order.getProperty().toLowerCase()) {
+                case "latest" -> { // 최신순
+                    OrderSpecifier<LocalDateTime> latest = new OrderSpecifier<>(Order.DESC, project.createdAt);
+                    orderSpecifiers.add(latest);
+                }
+                case "popular" -> { // 인기순
+                    OrderSpecifier<Long> popular = new OrderSpecifier<>(Order.DESC, project.views);
+                    orderSpecifiers.add(popular);
+                }
+                default -> {
+                    OrderSpecifier<LocalDateTime> latest = new OrderSpecifier<>(Order.DESC, project.createdAt);
+                    orderSpecifiers.add(latest);
+                }
+            }
+        }
+        return orderSpecifiers.toArray(new OrderSpecifier[0]);
     }
 
     private Map<Long, List<ProjectSkill>> findProjectSkillMap(List<Long> projectIds) {

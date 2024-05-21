@@ -185,6 +185,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
         // given
         int page = 1;
         int size = 2;
+        String sort = "popular";
         ProjectInfo projectInfo = ProjectInfo.builder()
                 .projectId(1L)
                 .title("테스트 프로젝트 1")
@@ -217,6 +218,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
         mockMvc.perform(post("/projects/search")
                         .param("page", String.valueOf(page))
                         .param("size", String.valueOf(size))
+                        .param("sort", sort)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(searchCondition))
                 )
@@ -243,10 +245,16 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                                                                 
                                         [유효성 검증]
                                         - 요청 필드의 상태(status)값은 "모집중"만 지원합니다. (아닐 시 400 에러) (status 필드가 없으면 전체 상태 검색)
+                                        
+                                        [정렬]
+                                        - 정렬은 queryParameter의 sort값을 지정해야 합니다. 아래 2가지 정렬을 지원합니다.
+                                        - popular : 인기순
+                                        - latest : 최신순
                                         """),
                         queryParameters(
                                 parameterWithName("page").description("페이지 번호"),
-                                parameterWithName("size").description("페이지 사이즈")
+                                parameterWithName("size").description("페이지 사이즈"),
+                                parameterWithName("sort").description("정렬 기준")
                         ),
                         requestFields(
                                 fieldWithPath("subject").type(JsonFieldType.STRING).description("프로젝트 도메인"),
