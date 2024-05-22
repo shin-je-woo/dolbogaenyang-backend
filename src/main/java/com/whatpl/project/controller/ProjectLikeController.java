@@ -19,7 +19,7 @@ public class ProjectLikeController {
     private final ProjectLikeService projectLikeService;
 
     @PutMapping("/projects/{projectId}/likes")
-    public ResponseEntity<?> putLike(@PathVariable long projectId,
+    public ResponseEntity<ProjectLikeResponse> putLike(@PathVariable long projectId,
                                      @AuthenticationPrincipal MemberPrincipal principal) {
         long likeId = projectLikeService.putLike(projectId, principal.getId());
         return ResponseEntity.ok(ProjectLikeResponse.builder()

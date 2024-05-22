@@ -5,7 +5,6 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.member.domain.Member;
 import com.whatpl.member.model.MemberFixture;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +16,6 @@ class MemberQueryRepositoryImplTest extends BaseRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
-
-    @Autowired
-    EntityManager em;
 
     @Test
     @DisplayName("Member를 조회할 때 기술스택, 포트폴리오, 참고링크, 관심주제 모두 조회(Fetch Join)")

@@ -90,7 +90,7 @@ public final class ProjectModelConverter {
         return project;
     }
 
-    public static ProjectReadResponse toProjectReadResponse(Project project, List<ProjectParticipant> projectParticipants, long likes) {
+    public static ProjectReadResponse toProjectReadResponse(Project project, List<ProjectParticipant> projectParticipants, long likes, boolean myLike) {
         return ProjectReadResponse.builder()
                 .projectId(project.getId())
                 .title(project.getTitle())
@@ -117,6 +117,7 @@ public final class ProjectModelConverter {
                                 .build()
                         )
                         .toList())
+                .myLike(myLike)
                 .build();
     }
 

@@ -1,16 +1,14 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
+    url: jdbc:h2:mem:test_db;MODE=MYSQL;DATABASE_TO_LOWER=TRUE
+    username: test_user
     password:
+    driver-class-name: org.h2.Driver
 
   jpa:
-    open-in-view: true
     hibernate:
-      ddl-auto: create-drop
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
     show-sql: true
     properties:
-      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
-    database: h2
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
