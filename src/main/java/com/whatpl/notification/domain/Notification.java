@@ -24,14 +24,21 @@ public class Notification extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member receiver;
 
+    private String relatedUri;
+
     @Builder
-    public Notification(NotificationType type, Boolean isRead, Member receiver) {
+    public Notification(NotificationType type, Member receiver, String relatedUri) {
         this.type = type;
-        this.isRead = isRead != null && isRead;
+        this.isRead = false;
         this.receiver = receiver;
+        this.relatedUri = relatedUri;
     }
 
-    public static Notification of(NotificationType type, Member receiver) {
-        return new Notification(type, false, receiver);
+    public static Notification of(NotificationType type, Member receiver, String relatedUri) {
+        return Notification.builder()
+                .type(type)
+                .receiver(receiver)
+                .relatedUri(relatedUri)
+                .build();
     }
 }

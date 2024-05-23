@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum NotificationType {
 
-    PROJECT_APPLY,
-    PROJECT_OFFER
+    PROJECT_APPLY(""),
+    PROJECT_OFFER;
+
+    private final String getUri;
 }

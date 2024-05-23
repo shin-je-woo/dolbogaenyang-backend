@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -29,9 +28,8 @@ public class NotificationController {
     }
 
     @GetMapping("/notifications/test")
-    public void test(@AuthenticationPrincipal MemberPrincipal principal,
-                     @RequestParam String content) {
-        NotificationEvent event = NotificationEvent.of(content, NotificationType.PROJECT_APPLY);
-        notificationService.notify(1L, event);
+    public void test(@AuthenticationPrincipal MemberPrincipal principal) {
+        NotificationEvent event = NotificationEvent.of(1L, NotificationType.PROJECT_APPLY, 1L);
+        notificationService.notify(event);
     }
 }

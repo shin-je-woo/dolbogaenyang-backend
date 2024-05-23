@@ -7,19 +7,22 @@ import lombok.Getter;
 @Getter
 public class NotificationEvent {
 
-    private final String title;
+    private final long receiverId;
     private final NotificationType notificationType;
+    private final long relatedId;
 
     @Builder
-    public NotificationEvent(String title, NotificationType notificationType) {
-        this.title = title;
+    public NotificationEvent(long receiverId, NotificationType notificationType, long relatedId) {
+        this.receiverId = receiverId;
         this.notificationType = notificationType;
+        this.relatedId = relatedId;
     }
 
-    public static NotificationEvent of(String title, NotificationType notificationType) {
+    public static NotificationEvent of(long receiverId, NotificationType notificationType, long relatedId) {
         return NotificationEvent.builder()
-                .title(title)
+                .receiverId(receiverId)
                 .notificationType(notificationType)
+                .relatedId(relatedId)
                 .build();
     }
 }
