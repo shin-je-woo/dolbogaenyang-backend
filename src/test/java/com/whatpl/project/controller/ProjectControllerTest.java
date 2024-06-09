@@ -80,9 +80,8 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("skills").type(JsonFieldType.ARRAY).description("기술스택"),
                                 fieldWithPath("content").type(JsonFieldType.STRING).description("프로젝트 설명"),
                                 fieldWithPath("profitable").type(JsonFieldType.BOOLEAN).description("수익화 여부"),
-                                fieldWithPath("meetingType").type(JsonFieldType.STRING).description("모임방식"),
-                                fieldWithPath("startDate").type(JsonFieldType.STRING).description("프로젝트 진행 기간 - 시작일자 yyyy-MM-dd"),
-                                fieldWithPath("endDate").type(JsonFieldType.STRING).description("프로젝트 진행 기간 - 종료일자 yyyy-MM-dd"),
+                                fieldWithPath("meetingType").type(JsonFieldType.STRING).description("모임방식 [online, offline, any]"),
+                                fieldWithPath("term").type(JsonFieldType.NUMBER).description("프로젝트 진행 기간"),
                                 fieldWithPath("representImageId").type(JsonFieldType.NUMBER).description("대표이미지 ID").optional()
                         )
                 ));
@@ -115,8 +114,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.subject").value(response.getSubject().getValue()),
                         jsonPath("$.skills[0]").value(response.getSkills().get(0).getValue()),
                         jsonPath("$.skills[1]").value(response.getSkills().get(1).getValue()),
-                        jsonPath("$.startDate").value(response.getStartDate().toString()),
-                        jsonPath("$.endDate").value(response.getEndDate().toString()),
+                        jsonPath("$.term").value(response.getTerm()),
                         jsonPath("$.myLike").value(response.isMyLike()),
                         jsonPath("$.projectJobParticipants[0].job").value(response.getProjectJobParticipants().get(0).getJob().getValue()),
                         jsonPath("$.projectJobParticipants[0].recruitAmount").value(response.getProjectJobParticipants().get(0).getRecruitAmount()),
@@ -164,8 +162,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("profitable").type(JsonFieldType.BOOLEAN).description("수익화 여부"),
                                 fieldWithPath("subject").type(JsonFieldType.STRING).description("도메인(관심 주제)"),
                                 fieldWithPath("skills").type(JsonFieldType.ARRAY).description("사용 기술 스택"),
-                                fieldWithPath("startDate").type(JsonFieldType.STRING).description("시작 일자"),
-                                fieldWithPath("endDate").type(JsonFieldType.STRING).description("종료 일자"),
+                                fieldWithPath("term").type(JsonFieldType.NUMBER).description("프로젝트 진행 기간"),
                                 fieldWithPath("myLike").type(JsonFieldType.BOOLEAN).description("좋아요 여부"),
                                 fieldWithPath("projectJobParticipants").type(JsonFieldType.ARRAY).description("직무별 참여자 (팀원 구성)"),
                                 fieldWithPath("projectJobParticipants[].job").type(JsonFieldType.STRING).description("직무"),

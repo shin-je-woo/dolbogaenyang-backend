@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,8 +28,7 @@ public class ProjectReadResponse {
     private final LocalDateTime createdAt;
     private final String content;
     private final List<Skill> skills;
-    private final LocalDate startDate;
-    private final LocalDate endDate;
+    private final int term;
     private final List<ProjectJobParticipantDto> projectJobParticipants;
     private final boolean myLike;
 }

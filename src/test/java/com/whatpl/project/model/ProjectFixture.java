@@ -5,8 +5,6 @@ import com.whatpl.project.domain.Project;
 import com.whatpl.project.domain.RecruitJob;
 import com.whatpl.project.domain.enums.MeetingType;
 
-import java.time.LocalDate;
-
 public class ProjectFixture {
 
     public static Project create() {
@@ -16,8 +14,7 @@ public class ProjectFixture {
                 .content("<p>테스트 콘텐츠 HTML<p>")
                 .profitable(false)
                 .meetingType(MeetingType.ONLINE)
-                .startDate(LocalDate.of(2024, 4, 1))
-                .endDate(LocalDate.of(2024, 6, 30))
+                .term(10)
                 .build();
     }
 

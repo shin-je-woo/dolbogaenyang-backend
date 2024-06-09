@@ -31,8 +31,7 @@ public class ProjectReadResponseFixture {
                 .content("<p>테스트 콘텐츠 HTML<p>")
                 .subject(Subject.SOCIAL_MEDIA)
                 .skills(List.of(Skill.JAVA, Skill.JAVA_SCRIPT))
-                .startDate(LocalDate.of(2024, 4, 15))
-                .endDate(LocalDate.of(2024, 4, 30))
+                .term(10)
                 .projectJobParticipants(List.of(
                         ProjectJobParticipantDto.builder()
                                 .job(Job.BACKEND_DEVELOPER)
