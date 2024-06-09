@@ -13,13 +13,12 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum Job {
 
-    PLANNER("기획자"),
-    DESIGNER("UX/UI 디자이너"),
-    WEB_DEVELOPER("웹 개발자"),
-    MOBILE_DEVELOPER("모바일 개발자"),
-    BACKEND_DEVELOPER("백엔드 개발자"),
-    DEVOPS_DEVELOPER("DevOps 개발자"),
-    DATA_SCIENTIST("데이터 사이언티스트");
+    PLANNER("기획"),
+    DESIGNER("디자인"),
+    FRONTEND_DEVELOPER("프론트엔드"),
+    BACKEND_DEVELOPER("백엔드"),
+    ANDROID_DEVELOPER("Android"),
+    IOS_DEVELOPER("iOS");
 
     @JsonValue
     private final String value;

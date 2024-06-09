@@ -9,7 +9,6 @@ import com.whatpl.project.domain.enums.ProjectStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,9 +26,7 @@ public class Project extends BaseTimeEntity {
 
     private Boolean profitable;
 
-    private LocalDate startDate;
-
-    private LocalDate endDate;
+    private Integer term;
 
     private Long views;
 
@@ -70,13 +67,12 @@ public class Project extends BaseTimeEntity {
     private Member writer;
 
     @Builder
-    public Project(String title, Boolean profitable, LocalDate startDate, LocalDate endDate,
+    public Project(String title, Boolean profitable, Integer term,
                    Subject subject, ProjectStatus status, MeetingType meetingType,
                    String content, Attachment representImage) {
         this.title = title;
         this.profitable = profitable;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.term = term;
         this.status = status;
         this.subject = subject;
         this.meetingType = meetingType;

@@ -9,8 +9,8 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.validator.constraints.Range;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -41,11 +41,9 @@ public class ProjectCreateRequest {
     @NotNull(message = "모임 방식은 필수 입력 항목입니다.")
     private MeetingType meetingType;
 
-    @NotNull(message = "프로젝트 시작 일자는 필수 입력 항목입니다.")
-    private LocalDate startDate;
-
-    @NotNull(message = "프로젝트 종료 일자는 필수 입력 항목입니다.")
-    private LocalDate endDate;
+    @NotNull(message = "기간은 필수 입력 항목입니다.")
+    @Range(min = 1, max = 30, message = "기간은 1 ~ 30까지 입력 가능합니다.")
+    private Integer term;
 
     private Long representImageId;
 

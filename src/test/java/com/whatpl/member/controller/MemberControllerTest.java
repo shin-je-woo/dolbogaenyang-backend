@@ -129,7 +129,7 @@ class MemberControllerTest extends BaseSecurityWebMvcTest {
                 .nickname("닉네임")
                 .job(Job.BACKEND_DEVELOPER)
                 .career(Career.THREE)
-                .skills(Set.of(Skill.JAVA, Skill.SQL))
+                .skills(Set.of(Skill.JAVA, Skill.MYSQL))
                 .profileOpen(true)
                 .build();
         doNothing().when(memberProfileService).updateRequiredProfile(any(ProfileRequiredRequest.class), any(Long.class));

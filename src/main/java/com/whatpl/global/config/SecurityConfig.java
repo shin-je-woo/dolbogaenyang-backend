@@ -29,7 +29,8 @@ import org.springframework.security.web.context.*;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String[] WEB_SECURITY_WHITE_LIST = {"/", "/login/**", "/oauth2/**", "/error/**", "/token/**", "/docs/**", "/health-check/**"};
+    private static final String[] WEB_SECURITY_WHITE_LIST = {"/", "/login/**", "/oauth2/**", "/error/**", "/token/**", "/docs/**", "/health-check/**",
+            "/images/**"};
 
     /*
      * 일반적인 정적자원들의 보안설정 해제
@@ -47,7 +48,6 @@ public class SecurityConfig {
                         .requestMatchers(WEB_SECURITY_WHITE_LIST).permitAll()
                         .requestMatchers(HttpMethod.GET, "/attachments/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/projects/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/projects/search/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo

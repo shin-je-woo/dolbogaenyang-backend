@@ -46,15 +46,15 @@ public class ProjectController {
         return ResponseEntity.ok(projectReadResponse);
     }
 
-    @PostMapping("/projects/search")
+    @GetMapping("/projects")
     public ResponseEntity<SliceResponse<ProjectInfo>> search(Pageable pageable,
-                                                             @RequestBody ProjectSearchCondition searchCondition,
+                                                             @ModelAttribute ProjectSearchCondition searchCondition,
                                                              @AuthenticationPrincipal MemberPrincipal principal) {
         // 프로젝트 검색조건의 프로젝트 상태는 모집중만 가능
         if (searchCondition.getStatus() != null && !ProjectStatus.RECRUITING.equals(searchCondition.getStatus())) {
             throw new BizException(ErrorCode.PROJECT_STATUS_NOT_VALID);
         }
-        searchCondition.setLonginMemberId(principal != null ? principal.getId() : Long.MIN_VALUE);
+        searchCondition.assignLoginMember(principal);
         Slice<ProjectInfo> projects = projectReadService.searchProjectList(pageable, searchCondition);
         return ResponseEntity.ok(new SliceResponse<>(projects));
     }
