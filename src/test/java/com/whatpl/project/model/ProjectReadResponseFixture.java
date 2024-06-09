@@ -53,7 +53,7 @@ public class ProjectReadResponseFixture {
                                                 .build()))
                                 .build(),
                         ProjectJobParticipantDto.builder()
-                                .job(Job.MOBILE_DEVELOPER)
+                                .job(Job.FRONTEND_DEVELOPER)
                                 .recruitAmount(2)
                                 .participantAmount(0)
                                 .participants(Collections.emptyList())

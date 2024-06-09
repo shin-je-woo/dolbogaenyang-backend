@@ -84,7 +84,7 @@ class MemberProfileServiceTest {
                 .profileOpen(false)
                 .job(Job.BACKEND_DEVELOPER)
                 .career(Career.FIVE)
-                .skills(Set.of(Skill.PYTHON, Skill.SQL))
+                .skills(Set.of(Skill.PYTHON, Skill.MYSQL))
                 .build();
 
         // when
@@ -98,7 +98,7 @@ class MemberProfileServiceTest {
         assertTrue(member.getMemberSkills().stream()
                 .map(MemberSkill::getSkill)
                 .collect(Collectors.toSet())
-                .containsAll(Set.of(Skill.PYTHON, Skill.SQL)));
+                .containsAll(Set.of(Skill.PYTHON, Skill.MYSQL)));
     }
 
     @Test
