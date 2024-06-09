@@ -93,6 +93,12 @@ jwt:
   access-expiration-time: 1_800_000 # 30min
   refresh-expiration-time: 1_209_600_000 # 2weeks
 
+default-image:
+  cache-days: 30d
+  prefix:
+    project: DEFAULT_IMAGE_PROJECT
+    skill: DEFAULT_IMAGE_SKILL
+
 # 운영 prod
 ---
 spring:

@@ -16,7 +16,8 @@ public enum ApiDocTag {
     PROJECT_PARTICIPANT("Project Participants"),
     ATTACHMENT("Attachments"),
     CHAT("Chats"),
-    DOMAIN("Domains");
+    DOMAIN("Domains"),
+    IMAGE("Images");
 
     private final String tag;
 }

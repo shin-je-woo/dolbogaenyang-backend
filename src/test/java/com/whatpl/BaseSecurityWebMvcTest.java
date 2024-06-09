@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatpl.attachment.service.AttachmentService;
 import com.whatpl.chat.service.ChatService;
 import com.whatpl.global.config.SecurityConfig;
+import com.whatpl.global.image.ImageProperties;
 import com.whatpl.global.jwt.JwtProperties;
 import com.whatpl.global.jwt.JwtService;
 import com.whatpl.global.upload.S3Uploader;
@@ -73,6 +74,9 @@ public abstract class BaseSecurityWebMvcTest {
 
     @MockBean
     protected ProjectParticipantService projectParticipantService;
+
+    @MockBean
+    protected ImageProperties imageProperties;
 
     @BeforeEach
     protected void init() {
