@@ -215,12 +215,16 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
         when(projectReadService.searchProjectList(any(Pageable.class), any(ProjectSearchCondition.class))).thenReturn(projectInfos);
 
         // expected
-        mockMvc.perform(post("/projects/search")
+        mockMvc.perform(get("/projects")
                         .param("page", String.valueOf(page))
                         .param("size", String.valueOf(size))
                         .param("sort", sort)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(searchCondition))
+                        .param("subject", searchCondition.getSubject().getValue())
+                        .param("status", searchCondition.getStatus().getValue())
+                        .param("skill", searchCondition.getSkill().getValue())
+                        .param("job", searchCondition.getJob().getValue())
+                        .param("profitable", searchCondition.getProfitable().toString())
+                        .param("keyword", searchCondition.getKeyword())
                 )
                 .andExpectAll(
                         status().isOk(),
@@ -246,7 +250,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                                                                 
                                         [유효성 검증]
                                         - 요청 필드의 상태(status)값은 "모집중"만 지원합니다. (아닐 시 400 에러) (status 필드가 없으면 전체 상태 검색)
-                                        
+                                                                                
                                         [정렬]
                                         - 정렬은 queryParameter의 sort값을 지정해야 합니다. 아래 2가지 정렬을 지원합니다.
                                         - popular : 인기순
@@ -255,15 +259,13 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         queryParameters(
                                 parameterWithName("page").description("페이지 번호"),
                                 parameterWithName("size").description("페이지 사이즈"),
-                                parameterWithName("sort").description("정렬 기준")
-                        ),
-                        requestFields(
-                                fieldWithPath("subject").type(JsonFieldType.STRING).description("프로젝트 도메인"),
-                                fieldWithPath("job").type(JsonFieldType.STRING).description("직무"),
-                                fieldWithPath("skill").type(JsonFieldType.STRING).description("기술 스택"),
-                                fieldWithPath("status").type(JsonFieldType.STRING).description("프로젝트 상태"),
-                                fieldWithPath("profitable").type(JsonFieldType.BOOLEAN).description("수익화 여부"),
-                                fieldWithPath("keyword").type(JsonFieldType.STRING).description("검색어")
+                                parameterWithName("sort").description("정렬 기준"),
+                                parameterWithName("subject").description("프로젝트 도메인"),
+                                parameterWithName("job").description("직무"),
+                                parameterWithName("skill").description("기술 스택"),
+                                parameterWithName("status").description("프로젝트 상태"),
+                                parameterWithName("profitable").description("수익화 여부"),
+                                parameterWithName("keyword").description("검색어")
                         ),
                         responseFields(
                                 fieldWithPath("list").type(JsonFieldType.ARRAY).description("프로젝트 리스트"),

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -78,11 +79,22 @@ public class ExceptionControllerAdvice {
                 .map(error -> DetailErrorResponse.DetailError.builder()
                         .field(error.getField())
                         .value(error.getRejectedValue())
-                        .reason(error.getDefaultMessage())
+                        .reason(buildReason(error))
                         .build())
                 .toList();
 
         return new ResponseEntity<>(new DetailErrorResponse(errorResponse, detailErrors), errorResponse.getStatus());
+    }
+
+    /**
+     * FieldError 가 BindingFailure 이면 type-mismatch 와 같은 에러
+     * 아니면 validation 에러
+     * (like a type mismatch); else, it is a validation failure
+     *
+     * @param fieldError the filedError
+     */
+    private String buildReason(FieldError fieldError) {
+        return fieldError.isBindingFailure() ? "입력 값을 확인해 주세요." : fieldError.getDefaultMessage();
     }
 
     /**

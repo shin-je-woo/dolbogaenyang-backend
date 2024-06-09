@@ -237,7 +237,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
     private BooleanExpression myLikeExists(ProjectSearchCondition searchCondition) {
         return selectFrom(projectLike)
                 .where(projectLike.project.eq(project),
-                        projectLike.member.id.eq(searchCondition.getLonginMemberId()))
+                        projectLike.member.id.eq(Objects.requireNonNullElse(searchCondition.getLonginMemberId(), Long.MIN_VALUE)))
                 .exists();
     }
 }
