@@ -6,6 +6,7 @@ import com.whatpl.global.common.domain.enums.Skill;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +29,7 @@ public class ProfileRequiredRequest {
     private Career career;
 
     @NotNull(message = "기술스택은 필수 입력 항목입니다.")
-    @NotEmpty(message = "기술스택은 필수 입력 항목입니다.")
+    @Size(min = 1, max = 10, message = "기술스택은 1 ~ 10개 입력 가능합니다.")
     private Set<Skill> skills;
 
     private boolean profileOpen;
