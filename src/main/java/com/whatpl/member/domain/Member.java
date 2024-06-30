@@ -11,7 +11,6 @@ import lombok.*;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -139,23 +138,11 @@ public class Member extends BaseTimeEntity {
      * memberSkills를 추가/삭제한다.
      */
     public void modifyMemberSkills(Set<Skill> skills) {
-        // skills 비어있을 경우 -> 전부 삭제
         if (CollectionUtils.isEmpty(skills)) {
-            memberSkills.clear();
-            return;
+            throw new IllegalStateException("skills cannot be empty");
         }
-
-        // member에 있던 skill이 skills에 존재하지 않는 경우 -> 삭제
-        memberSkills.stream()
-                .filter(memberSkill -> !skills.contains(memberSkill.getSkill()))
-                .forEach(removeSkill -> memberSkills.remove(removeSkill));
-
-        // member에 없던 skill이 skills에 존재하는 경우 -> 추가
-        Set<Skill> exSkills = memberSkills.stream()
-                .map(MemberSkill::getSkill)
-                .collect(Collectors.toSet());
+        memberSkills.clear();
         skills.stream()
-                .filter(skill -> !exSkills.contains(skill))
                 .map(MemberSkill::new)
                 .forEach(this::addMemberSkill);
     }
@@ -164,23 +151,11 @@ public class Member extends BaseTimeEntity {
      * memberSubjects를 추가/삭제한다.
      */
     public void modifyMemberSubject(Set<Subject> subjects) {
-        // subjects가 비어있을 경우 -> 전부 삭제
         if (CollectionUtils.isEmpty(subjects)) {
-            memberSubjects.clear();
-            return;
+            throw new IllegalStateException("subjects cannot be empty");
         }
-
-        // member에 있던 subject가 subjects에 존재하지 않는 경우 -> 삭제
-        memberSubjects.stream()
-                .filter(memberSubject -> !subjects.contains(memberSubject.getSubject()))
-                .forEach(removeSubject -> memberSubjects.remove(removeSubject));
-
-        // member에 없던 subject가 subjects에 존재하는 경우 -> 추가
-        Set<Subject> exSubjects = memberSubjects.stream()
-                .map(MemberSubject::getSubject)
-                .collect(Collectors.toSet());
+        memberSubjects.clear();
         subjects.stream()
-                .filter(subject -> !exSubjects.contains(subject))
                 .map(MemberSubject::new)
                 .forEach(this::addMemberSubject);
     }
@@ -189,23 +164,9 @@ public class Member extends BaseTimeEntity {
      * memberReferences를 추가/삭제한다.
      */
     public void modifyMemberReference(Set<String> references) {
-        // references 비어있을 경우 -> 전부 삭제
-        if (CollectionUtils.isEmpty(references)) {
-            memberReferences.clear();
-            return;
-        }
-
-        // member에 있던 reference가 references에 존재하지 않는 경우 -> 삭제
-        memberReferences.stream()
-                .filter(memberReference -> !references.contains(memberReference.getReference()))
-                .forEach(removeReference -> memberReferences.remove(removeReference));
-
-        // member에 없던 reference가 references에 존재하는 경우 -> 추가
-        Set<String> exReferences = memberReferences.stream()
-                .map(MemberReference::getReference)
-                .collect(Collectors.toSet());
-        references.stream()
-                .filter(reference -> !exReferences.contains(reference))
+        memberReferences.clear();
+        Optional.ofNullable(references)
+                .orElseGet(Collections::emptySet).stream()
                 .map(MemberReference::new)
                 .forEach(this::addMemberReference);
     }
