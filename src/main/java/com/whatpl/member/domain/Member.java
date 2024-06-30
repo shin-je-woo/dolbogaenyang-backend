@@ -74,6 +74,9 @@ public class Member extends BaseTimeEntity {
         if (memberSkill == null) {
             return;
         }
+        if (memberSkills.size() >= 10) {
+            throw new BizException(ErrorCode.MAX_SKILL_SIZE_EXCEED);
+        }
         this.memberSkills.add(memberSkill);
         memberSkill.setMember(this);
     }
@@ -82,7 +85,7 @@ public class Member extends BaseTimeEntity {
         if (memberSubject == null) {
             return;
         }
-        if (memberReferences.size() >= 5) {
+        if (memberReferences.size() >= 6) {
             throw new BizException(ErrorCode.MAX_SUBJECT_SIZE_EXCEED);
         }
         this.memberSubjects.add(memberSubject);
@@ -93,7 +96,7 @@ public class Member extends BaseTimeEntity {
         if (memberReference == null) {
             return;
         }
-        if (memberReferences.size() >= 3) {
+        if (memberReferences.size() >= 5) {
             throw new BizException(ErrorCode.MAX_REFERENCE_SIZE_EXCEED);
         }
         this.memberReferences.add(memberReference);

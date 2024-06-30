@@ -20,8 +20,9 @@ public enum ErrorCode {
     NO_AUTHORIZATION("MBR4", 403, "접근권한이 없습니다."),
     HAS_NO_PROFILE("MBR5", 401, "프로필이 작성되지 않은 사용자입니다."),
     MAX_PORTFOLIO_SIZE_EXCEED("MBR6", 400, "포트폴리오는 최대 5개 첨부 가능합니다."),
-    MAX_REFERENCE_SIZE_EXCEED("MBR7", 400, "참고링크는 최대 3개 첨부 가능합니다."),
-    MAX_SUBJECT_SIZE_EXCEED("MBR8", 400, "관심주제는 최대 5개 입력 가능합니다."),
+    MAX_REFERENCE_SIZE_EXCEED("MBR7", 400, "참고링크는 최대 5개 첨부 가능합니다."),
+    MAX_SUBJECT_SIZE_EXCEED("MBR8", 400, "관심주제는 최대 6개 입력 가능합니다."),
+    MAX_SKILL_SIZE_EXCEED("MBR9", 400, "기술스택은 최대 10개 입력 가능합니다."),
 
     // PROJECT
     NOT_FOUND_PROJECT("PRJ1", 404, "프로젝트를 찾을 수 없습니다."),
