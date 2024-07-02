@@ -1,10 +1,11 @@
 package com.whatpl.global.listener;
 
+import com.whatpl.global.aop.annotation.DistributedLock;
 import com.whatpl.global.common.domain.enums.Career;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.common.domain.enums.Skill;
 import com.whatpl.global.common.domain.enums.WorkTime;
-import com.whatpl.member.domain.*;
+import com.whatpl.member.domain.Member;
 import com.whatpl.member.domain.enums.SocialType;
 import com.whatpl.member.repository.MemberRepository;
 import jakarta.annotation.Nonnull;
@@ -27,6 +28,7 @@ public class InitDataLoader implements ApplicationListener<ApplicationReadyEvent
     private final MemberRepository memberRepository;
 
     @Override
+    @DistributedLock(name = "app:init")
     @Transactional
     public void onApplicationEvent(@Nonnull ApplicationReadyEvent event) {
         log.info("===== Application 로딩 후 DATA 초기화 작업을 시작합니다. =====");
