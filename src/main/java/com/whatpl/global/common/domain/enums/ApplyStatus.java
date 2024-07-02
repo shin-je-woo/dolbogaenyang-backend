@@ -1,4 +1,4 @@
-package com.whatpl.project.domain.enums;
+package com.whatpl.global.common.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
-public enum ApplyStatus {
+public enum ApplyStatus implements WhatplGlobalDomain {
 
     WAITING("승인 대기"),
     ACCEPTED("승인 완료"),

@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
-public enum Job {
+public enum Job implements WhatplGlobalDomain {
 
     PLANNER("기획"),
     PM("PM"),

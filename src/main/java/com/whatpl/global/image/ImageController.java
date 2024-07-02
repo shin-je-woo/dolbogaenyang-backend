@@ -29,8 +29,7 @@ public class ImageController {
     }
 
     @GetMapping("/images/skill/{skillName}")
-    public ResponseEntity<Resource> skillImage(@PathVariable String skillName) {
-        Skill skill = Skill.from(skillName);
+    public ResponseEntity<Resource> skillImage(@PathVariable(name = "skillName") Skill skill) {
         Resource resource = s3Uploader.download(String.format("%s_%s", imageProperties.getPrefix().getSkill(), skill.name().toUpperCase()));
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, "image/svg+xml")

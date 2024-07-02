@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
-public enum WorkTime {
+public enum WorkTime implements WhatplGlobalDomain {
 
     LESS_THAN_TEN("10시간 미만"),
     TEN_TO_TWENTY("10시간 이상 20시간 미만"),

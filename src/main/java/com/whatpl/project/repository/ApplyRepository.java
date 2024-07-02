@@ -3,7 +3,7 @@ package com.whatpl.project.repository;
 import com.whatpl.member.domain.Member;
 import com.whatpl.project.domain.Apply;
 import com.whatpl.project.domain.Project;
-import com.whatpl.project.domain.enums.ApplyStatus;
+import com.whatpl.global.common.domain.enums.ApplyStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

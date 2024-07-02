@@ -5,7 +5,7 @@ import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.member.domain.Member;
-import com.whatpl.project.domain.enums.ApplyStatus;
+import com.whatpl.global.common.domain.enums.ApplyStatus;
 import com.whatpl.project.domain.enums.ApplyType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

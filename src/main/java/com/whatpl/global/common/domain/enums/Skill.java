@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
-public enum Skill {
+public enum Skill implements WhatplGlobalDomain {
 
     JAVA_SCRIPT("JavaScript"),
     TYPE_SCRIPT("TypeScript"),

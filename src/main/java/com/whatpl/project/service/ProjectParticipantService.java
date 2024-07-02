@@ -4,7 +4,7 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.domain.ProjectParticipant;
-import com.whatpl.project.domain.enums.ApplyStatus;
+import com.whatpl.global.common.domain.enums.ApplyStatus;
 import com.whatpl.project.repository.ApplyRepository;
 import com.whatpl.project.repository.ProjectParticipantRepository;
 import com.whatpl.project.repository.ProjectRepository;
