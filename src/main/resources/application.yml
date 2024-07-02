@@ -40,7 +40,7 @@ spring:
       region:
         static: ap-northeast-2
       s3:
-        bucket: whatpl-bucket
+        bucket: whatpl
 
   # 아래 정보는 ClientRegistration 에 저장됨
   security:
