@@ -9,8 +9,8 @@ import com.whatpl.project.domain.enums.ProjectStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -44,19 +44,20 @@ public class Project extends BaseTimeEntity {
     private String content;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProjectSkill> projectSkills = new HashSet<>();
+    private List<ProjectSkill> projectSkills = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RecruitJob> recruitJobs = new HashSet<>();
+    private List<RecruitJob> recruitJobs = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProjectComment> projectComments = new HashSet<>();
+    private List<ProjectComment> projectComments = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProjectLike> projectLikes = new HashSet<>();
+    private List<ProjectLike> projectLikes = new ArrayList<>();
 
+    @OrderBy("createdAt asc")
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProjectParticipant> projectParticipants = new HashSet<>();
+    private List<ProjectParticipant> projectParticipants = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "represent_image_id")

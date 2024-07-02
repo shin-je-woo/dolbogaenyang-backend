@@ -18,6 +18,7 @@ public class ProjectReadResponseFixture {
     public static ProjectReadResponse from(final Long projectId) {
         return ProjectReadResponse.builder()
                 .projectId(projectId)
+                .representImageId(1L)
                 .title("테스트 프로젝트")
                 .projectStatus(ProjectStatus.RECRUITING)
                 .meetingType(MeetingType.ONLINE)
@@ -42,11 +43,13 @@ public class ProjectReadResponseFixture {
                                                 .participantId(1L)
                                                 .memberId(11L)
                                                 .nickname("백엔드 참여자1")
+                                                .job(Job.BACKEND_DEVELOPER)
                                                 .career(Career.FIVE)
                                                 .build(),
                                         ProjectJobParticipantDto.ParticipantDto.builder()
                                                 .participantId(2L)
                                                 .memberId(22L)
+                                                .job(Job.BACKEND_DEVELOPER)
                                                 .nickname("백엔드 참여자2")
                                                 .career(Career.NONE)
                                                 .build()))

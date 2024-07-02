@@ -103,6 +103,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.projectId").value(response.getProjectId()),
+                        jsonPath("$.representImageId").value(response.getRepresentImageId()),
                         jsonPath("$.title").value(response.getTitle()),
                         jsonPath("$.projectStatus").value(response.getProjectStatus().getValue()),
                         jsonPath("$.meetingType").value(response.getMeetingType().getValue()),
@@ -123,6 +124,8 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getParticipantId()),
                         jsonPath("$.projectJobParticipants[0].participants[0].memberId")
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getMemberId()),
+                        jsonPath("$.projectJobParticipants[0].participants[0].job")
+                                .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getJob().getValue()),
                         jsonPath("$.projectJobParticipants[0].participants[0].nickname")
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(0).getNickname()),
                         jsonPath("$.projectJobParticipants[0].participants[0].career")
@@ -131,6 +134,8 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(1).getParticipantId()),
                         jsonPath("$.projectJobParticipants[0].participants[1].memberId")
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(1).getMemberId()),
+                        jsonPath("$.projectJobParticipants[0].participants[1].job")
+                                .value(response.getProjectJobParticipants().get(0).getParticipants().get(1).getJob().getValue()),
                         jsonPath("$.projectJobParticipants[0].participants[1].nickname")
                                 .value(response.getProjectJobParticipants().get(0).getParticipants().get(1).getNickname()),
                         jsonPath("$.projectJobParticipants[0].participants[1].career")
@@ -151,6 +156,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         ),
                         responseFields(
                                 fieldWithPath("projectId").type(JsonFieldType.NUMBER).description("프로젝트 ID"),
+                                fieldWithPath("representImageId").type(JsonFieldType.NUMBER).description("대표이미지 ID"),
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("프로젝트 제목"),
                                 fieldWithPath("projectStatus").type(JsonFieldType.STRING).description("프로젝트 상태"),
                                 fieldWithPath("meetingType").type(JsonFieldType.STRING).description("모임 방식"),
@@ -171,6 +177,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("projectJobParticipants[].participants").type(JsonFieldType.ARRAY).description("참여자"),
                                 fieldWithPath("projectJobParticipants[].participants[].participantId").type(JsonFieldType.NUMBER).description("참여 ID = 테이블 PK"),
                                 fieldWithPath("projectJobParticipants[].participants[].memberId").type(JsonFieldType.NUMBER).description("참여자 ID = 멤버 ID"),
+                                fieldWithPath("projectJobParticipants[].participants[].job").type(JsonFieldType.STRING).description("참여자 직무"),
                                 fieldWithPath("projectJobParticipants[].participants[].nickname").type(JsonFieldType.STRING).description("닉네임"),
                                 fieldWithPath("projectJobParticipants[].participants[].career").type(JsonFieldType.STRING).description("경력")
                         )

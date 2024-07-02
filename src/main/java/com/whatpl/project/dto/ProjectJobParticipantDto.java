@@ -24,6 +24,7 @@ public class ProjectJobParticipantDto {
     public static class ParticipantDto {
         private final long participantId;
         private final long memberId;
+        private final Job job;
         private final String nickname;
         private final Career career;
     }

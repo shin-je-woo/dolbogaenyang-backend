@@ -35,10 +35,10 @@ public class ProjectLikeService {
     }
 
     @Transactional
-    public void deleteLike(final long projectId, final long likeId) {
+    public void deleteLike(final long projectId, final long memberId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
-        ProjectLike projectLike = projectLikeRepository.findById(likeId)
+        ProjectLike projectLike = projectLikeRepository.findByProjectIdAndMemberId(projectId, memberId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_DATA));
         if (!Objects.equals(projectLike.getProject().getId(), project.getId())) {
             throw new BizException(ErrorCode.NOT_MATCH_PROJECT_LIKE);

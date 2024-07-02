@@ -14,6 +14,7 @@ import java.util.Arrays;
 public enum Job {
 
     PLANNER("기획"),
+    PM("PM"),
     DESIGNER("디자인"),
     FRONTEND_DEVELOPER("프론트엔드"),
     BACKEND_DEVELOPER("백엔드"),

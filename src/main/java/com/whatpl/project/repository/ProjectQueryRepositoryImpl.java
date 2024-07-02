@@ -10,6 +10,7 @@ import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.common.domain.enums.Skill;
 import com.whatpl.global.common.domain.enums.Subject;
 import com.whatpl.global.util.PaginationUtils;
+import com.whatpl.member.domain.QMember;
 import com.whatpl.project.domain.*;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.dto.ProjectInfo;
@@ -44,12 +45,13 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<Project> findProjectWithAllById(Long id) {
+    public Optional<Project> findProjectWithParticipantsById(Long id) {
+        QMember participant = new QMember("participant");
         Project resultProject = queryFactory.selectFrom(project)
-                .leftJoin(project.projectSkills, projectSkill).fetchJoin()
-                .leftJoin(project.recruitJobs, recruitJob).fetchJoin()
                 .leftJoin(project.representImage, attachment).fetchJoin()
                 .leftJoin(project.writer, member).fetchJoin()
+                .leftJoin(project.projectParticipants, projectParticipant).fetchJoin()
+                .leftJoin(projectParticipant.participant, participant).fetchJoin()
                 .where(project.id.eq(id))
                 .fetchOne();
         return Optional.ofNullable(resultProject);
