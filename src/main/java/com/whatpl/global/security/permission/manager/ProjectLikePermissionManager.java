@@ -8,6 +8,8 @@ import com.whatpl.project.repository.ProjectLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class ProjectLikePermissionManager implements WhatplPermissionManager{
@@ -26,10 +28,10 @@ public class ProjectLikePermissionManager implements WhatplPermissionManager{
      * 프로젝트 좋아요 삭제 권한
      * 좋아요 등록한 사용자
      */
-    private boolean hasDeletePrivilege(MemberPrincipal memberPrincipal, Long likeId) {
-        ProjectLike projectLike = projectLikeRepository.findWithMemberById(likeId)
+    private boolean hasDeletePrivilege(MemberPrincipal memberPrincipal, Long projectId) {
+        ProjectLike projectLike = projectLikeRepository.findByProjectIdAndMemberId(projectId, memberPrincipal.getId())
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_DATA));
 
-        return projectLike.getMember().getId().equals(memberPrincipal.getId());
+        return Objects.equals(memberPrincipal.getId(), projectLike.getMember().getId());
     }
 }

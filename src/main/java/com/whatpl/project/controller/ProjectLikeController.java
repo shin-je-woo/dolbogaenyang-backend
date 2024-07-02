@@ -20,7 +20,7 @@ public class ProjectLikeController {
 
     @PutMapping("/projects/{projectId}/likes")
     public ResponseEntity<ProjectLikeResponse> putLike(@PathVariable long projectId,
-                                     @AuthenticationPrincipal MemberPrincipal principal) {
+                                                       @AuthenticationPrincipal MemberPrincipal principal) {
         long likeId = projectLikeService.putLike(projectId, principal.getId());
         return ResponseEntity.ok(ProjectLikeResponse.builder()
                 .likeId(likeId)
@@ -29,11 +29,11 @@ public class ProjectLikeController {
                 .build());
     }
 
-    @PreAuthorize("hasPermission(#likeId, 'PROJECT_LIKE', 'DELETE')")
-    @DeleteMapping("/projects/{projectId}/likes/{likeId}")
+    @PreAuthorize("hasPermission(#projectId, 'PROJECT_LIKE', 'DELETE')")
+    @DeleteMapping("/projects/{projectId}/likes")
     public ResponseEntity<Void> deleteLike(@PathVariable long projectId,
-                                           @PathVariable long likeId) {
-        projectLikeService.deleteLike(projectId, likeId);
+                                           @AuthenticationPrincipal MemberPrincipal principal) {
+        projectLikeService.deleteLike(projectId, principal.getId());
         return ResponseEntity.noContent().build();
     }
 }

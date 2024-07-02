@@ -81,7 +81,7 @@ class ProjectLikeControllerTest extends BaseSecurityWebMvcTest {
         doNothing().when(projectLikeService).deleteLike(anyLong(), anyLong());
 
         // expected
-        mockMvc.perform(delete("/projects/{projectId}/likes/{likeId}", 1L, 1L)
+        mockMvc.perform(delete("/projects/{projectId}/likes", 1L, 1L)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer {AccessToken}"))
                 .andExpectAll(
                         status().isNoContent()
