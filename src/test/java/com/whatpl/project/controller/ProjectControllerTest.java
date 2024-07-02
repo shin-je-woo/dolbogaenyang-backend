@@ -103,6 +103,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.projectId").value(response.getProjectId()),
+                        jsonPath("$.representImageId").value(response.getRepresentImageId()),
                         jsonPath("$.title").value(response.getTitle()),
                         jsonPath("$.projectStatus").value(response.getProjectStatus().getValue()),
                         jsonPath("$.meetingType").value(response.getMeetingType().getValue()),
@@ -155,6 +156,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         ),
                         responseFields(
                                 fieldWithPath("projectId").type(JsonFieldType.NUMBER).description("프로젝트 ID"),
+                                fieldWithPath("representImageId").type(JsonFieldType.NUMBER).description("대표이미지 ID"),
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("프로젝트 제목"),
                                 fieldWithPath("projectStatus").type(JsonFieldType.STRING).description("프로젝트 상태"),
                                 fieldWithPath("meetingType").type(JsonFieldType.STRING).description("모임 방식"),

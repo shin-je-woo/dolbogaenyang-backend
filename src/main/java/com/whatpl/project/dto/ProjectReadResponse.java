@@ -17,6 +17,7 @@ import java.util.List;
 public class ProjectReadResponse {
 
     private final long projectId;
+    private final Long representImageId;
     private final String title;
     private final ProjectStatus projectStatus;
     private final Subject subject;

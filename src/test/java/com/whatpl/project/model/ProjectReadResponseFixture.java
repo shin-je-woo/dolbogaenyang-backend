@@ -18,6 +18,7 @@ public class ProjectReadResponseFixture {
     public static ProjectReadResponse from(final Long projectId) {
         return ProjectReadResponse.builder()
                 .projectId(projectId)
+                .representImageId(1L)
                 .title("테스트 프로젝트")
                 .projectStatus(ProjectStatus.RECRUITING)
                 .meetingType(MeetingType.ONLINE)

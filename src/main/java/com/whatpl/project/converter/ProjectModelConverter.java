@@ -95,6 +95,7 @@ public final class ProjectModelConverter {
     public static ProjectReadResponse toProjectReadResponse(Project project, long likes, boolean myLike) {
         return ProjectReadResponse.builder()
                 .projectId(project.getId())
+                .representImageId(project.getRepresentImage() != null ? project.getRepresentImage().getId() : null)
                 .title(project.getTitle())
                 .projectStatus(project.getStatus())
                 .subject(project.getSubject())
