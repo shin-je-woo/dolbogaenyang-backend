@@ -3,7 +3,10 @@ package com.whatpl.project.converter;
 import com.whatpl.attachment.domain.Attachment;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.member.domain.Member;
-import com.whatpl.project.domain.*;
+import com.whatpl.project.domain.Project;
+import com.whatpl.project.domain.ProjectParticipant;
+import com.whatpl.project.domain.ProjectSkill;
+import com.whatpl.project.domain.RecruitJob;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.dto.ProjectCreateRequest;
 import com.whatpl.project.dto.ProjectJobParticipantDto;
@@ -12,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,7 +92,7 @@ public final class ProjectModelConverter {
         return project;
     }
 
-    public static ProjectReadResponse toProjectReadResponse(Project project, List<ProjectParticipant> projectParticipants, long likes, boolean myLike) {
+    public static ProjectReadResponse toProjectReadResponse(Project project, long likes, boolean myLike) {
         return ProjectReadResponse.builder()
                 .projectId(project.getId())
                 .title(project.getTitle())
@@ -106,13 +110,8 @@ public final class ProjectModelConverter {
                         .toList())
                 .term(project.getTerm())
                 .projectJobParticipants(project.getRecruitJobs().stream()
-                        .map(recruitJob -> ProjectJobParticipantDto.builder()
-                                .job(recruitJob.getJob())
-                                .recruitAmount(recruitJob.getRecruitAmount())
-                                .participantAmount(countParticipants(projectParticipants, recruitJob))
-                                .participants(getJobMatchedParticipants(recruitJob.getJob(), projectParticipants))
-                                .build()
-                        )
+                        .map(recruitJob -> buildJobParticipant(recruitJob, project.getProjectParticipants()))
+                        .sorted(Comparator.comparingInt(recruitJob -> recruitJob.getJob().ordinal()))
                         .toList())
                 .myLike(myLike)
                 .build();
@@ -130,7 +129,26 @@ public final class ProjectModelConverter {
         }
         return projectParticipants.stream()
                 .filter(projectParticipant -> projectParticipant.getJob().equals(job))
-                .map(ProjectJobParticipantDto.ParticipantDto::from)
+                .map(ProjectModelConverter::buildParticipant)
                 .toList();
+    }
+
+    private static ProjectJobParticipantDto buildJobParticipant(RecruitJob recruitJob, List<ProjectParticipant> projectParticipants) {
+        return ProjectJobParticipantDto.builder()
+                .job(recruitJob.getJob())
+                .recruitAmount(recruitJob.getRecruitAmount())
+                .participantAmount(countParticipants(projectParticipants, recruitJob))
+                .participants(getJobMatchedParticipants(recruitJob.getJob(), projectParticipants))
+                .build();
+    }
+
+    private static ProjectJobParticipantDto.ParticipantDto buildParticipant(ProjectParticipant projectParticipant) {
+        return ProjectJobParticipantDto.ParticipantDto.builder()
+                .participantId(projectParticipant.getId())
+                .memberId(projectParticipant.getParticipant().getId())
+                .job(projectParticipant.getParticipant().getJob())
+                .nickname(projectParticipant.getParticipant().getNickname())
+                .career(projectParticipant.getParticipant().getCareer())
+                .build();
     }
 }

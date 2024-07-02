@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ProjectQueryRepository {
 
-    Optional<Project> findProjectWithAllById(Long id);
+    Optional<Project> findProjectWithParticipantsById(Long id);
 
     Slice<ProjectInfo> search(Pageable pageable, ProjectSearchCondition searchCondition);
 }
