@@ -9,17 +9,13 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.common.domain.enums.Skill;
 import com.whatpl.global.common.domain.enums.Subject;
-import com.whatpl.global.util.PaginationUtils;
 import com.whatpl.member.domain.QMember;
 import com.whatpl.project.domain.*;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.dto.ProjectInfo;
 import com.whatpl.project.dto.ProjectSearchCondition;
-import com.whatpl.project.dto.RemainedJobDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 
@@ -58,48 +54,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
     }
 
     @Override
-    public Slice<ProjectInfo> search(Pageable pageable, ProjectSearchCondition searchCondition) {
-        // Project (루트) 조회
-        List<ProjectInfo> projectInfos = findProjectInfos(pageable, searchCondition);
-        List<Long> projectIds = toProjectIds(projectInfos);
-        // ProjectSkill (1:N) 조회
-        Map<Long, List<ProjectSkill>> projectSkillMap = findProjectSkillMap(projectIds);
-        // RecruitJob (1:N) 조회
-        Map<Long, List<RecruitJob>> recruitJobMap = findRecruitJobMap(projectIds);
-        // ProjectParticipant (1:N) 조회
-        Map<Long, List<ProjectParticipant>> participantMap = findParticipantMap(projectIds);
-        // ProjectLike (1:N) 조회
-        Map<Long, List<ProjectLike>> projectLikeMap = findProjectLikeMap(projectIds);
-        // ProjectComment (1:N) 조회
-        Map<Long, List<ProjectComment>> projectCommentMap = findProjectCommentMap(projectIds);
-
-        projectInfos.forEach(projectInfo -> {
-            long projectId = projectInfo.getProjectId();
-            // 기술 스택 추가
-            projectInfo.setSkills(projectSkillMap.get(projectId).stream()
-                    .map(ProjectSkill::getSkill).toList());
-            // 모집이 완료되지 않은 직무 추가
-            List<RecruitJob> recruitJobs = recruitJobMap.get(projectId);
-            List<ProjectParticipant> participants = Optional.ofNullable(participantMap.get(projectId)).orElseGet(Collections::emptyList);
-            List<RemainedJobDto> remainedJobs = recruitJobs.stream()
-                    .map(recruitJob -> RemainedJobDto.builder()
-                            .job(recruitJob.getJob())
-                            .recruitAmount(recruitJob.getRecruitAmount())
-                            .remainedAmount(recruitJobs.size() - participants.size())
-                            .build())
-                    .filter(remainedJob -> remainedJob.getRemainedAmount() != 0)
-                    .toList();
-            projectInfo.setRemainedJobs(remainedJobs);
-            // 좋아요 갯수 추가
-            projectInfo.setLikes(Optional.ofNullable(projectLikeMap.get(projectId)).orElseGet(Collections::emptyList).size());
-            // 댓글 갯수 추가
-            projectInfo.setComments(Optional.ofNullable(projectCommentMap.get(projectId)).orElseGet(Collections::emptyList).size());
-        });
-
-        return new SliceImpl<>(projectInfos, pageable, PaginationUtils.hasNext(projectInfos, pageable.getPageSize()));
-    }
-
-    private List<ProjectInfo> findProjectInfos(Pageable pageable, ProjectSearchCondition searchCondition) {
+    public List<ProjectInfo> findProjectInfos(Pageable pageable, ProjectSearchCondition searchCondition) {
         return queryFactory.select(fields(ProjectInfo.class,
                         project.id.as("projectId"),
                         project.title.as("title"),
@@ -145,7 +100,8 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
         return orderSpecifiers.toArray(new OrderSpecifier[0]);
     }
 
-    private Map<Long, List<ProjectSkill>> findProjectSkillMap(List<Long> projectIds) {
+    @Override
+    public Map<Long, List<ProjectSkill>> findProjectSkillMap(List<Long> projectIds) {
         List<ProjectSkill> projectSkills = queryFactory.selectFrom(projectSkill)
                 .where(projectSkill.project.id.in(projectIds))
                 .fetch();
@@ -153,7 +109,8 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 .collect(groupingBy(projectSkill -> projectSkill.getProject().getId()));
     }
 
-    private Map<Long, List<RecruitJob>> findRecruitJobMap(List<Long> projectIds) {
+    @Override
+    public Map<Long, List<RecruitJob>> findRecruitJobMap(List<Long> projectIds) {
         List<RecruitJob> recruitJobs = queryFactory.selectFrom(recruitJob)
                 .where(recruitJob.project.id.in(projectIds))
                 .fetch();
@@ -161,7 +118,8 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 .collect(groupingBy(recruitJob -> recruitJob.getProject().getId()));
     }
 
-    private Map<Long, List<ProjectParticipant>> findParticipantMap(List<Long> projectIds) {
+    @Override
+    public Map<Long, List<ProjectParticipant>> findParticipantMap(List<Long> projectIds) {
         List<ProjectParticipant> projectParticipants = queryFactory.selectFrom(projectParticipant)
                 .where(projectParticipant.project.id.in(projectIds))
                 .fetch();
@@ -169,7 +127,8 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 .collect(groupingBy(participant -> participant.getProject().getId()));
     }
 
-    private Map<Long, List<ProjectLike>> findProjectLikeMap(List<Long> projectIds) {
+    @Override
+    public Map<Long, List<ProjectLike>> findProjectLikeMap(List<Long> projectIds) {
         List<ProjectLike> projectLikes = queryFactory.selectFrom(projectLike)
                 .where(projectLike.project.id.in(projectIds))
                 .fetch();
@@ -177,7 +136,8 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 .collect(groupingBy(projectLike -> projectLike.getProject().getId()));
     }
 
-    private Map<Long, List<ProjectComment>> findProjectCommentMap(List<Long> projectIds) {
+    @Override
+    public Map<Long, List<ProjectComment>> findProjectCommentMap(List<Long> projectIds) {
         List<ProjectComment> projectComments = queryFactory.selectFrom(projectComment)
                 .where(projectComment.project.id.in(projectIds))
                 .fetch();
@@ -215,7 +175,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                                     recruitJob.project.eq(project)));
         } else if (job != null && status == null) {
             // 전체 직무
-            project.recruitJobs.any().job.eq(job);
+            return project.recruitJobs.any().job.eq(job);
         }
         return null;
     }

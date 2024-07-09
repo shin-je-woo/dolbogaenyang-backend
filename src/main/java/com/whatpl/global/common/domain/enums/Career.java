@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
-public enum Career {
+public enum Career implements WhatplGlobalDomain {
 
     NONE("취업 준비중"),
     ONE("1년차"),

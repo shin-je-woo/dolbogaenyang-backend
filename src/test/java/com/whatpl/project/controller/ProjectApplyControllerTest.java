@@ -3,7 +3,7 @@ package com.whatpl.project.controller;
 import com.whatpl.ApiDocTag;
 import com.whatpl.BaseSecurityWebMvcTest;
 import com.whatpl.global.security.model.WithMockWhatplMember;
-import com.whatpl.project.domain.enums.ApplyStatus;
+import com.whatpl.global.common.domain.enums.ApplyStatus;
 import com.whatpl.project.dto.ApplyResponse;
 import com.whatpl.project.dto.ProjectApplyRequest;
 import com.whatpl.project.dto.ProjectApplyStatusRequest;

@@ -6,7 +6,7 @@ import com.whatpl.member.model.MemberFixture;
 import com.whatpl.project.domain.Apply;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.domain.ProjectParticipant;
-import com.whatpl.project.domain.enums.ApplyStatus;
+import com.whatpl.global.common.domain.enums.ApplyStatus;
 import com.whatpl.project.model.ApplyFixture;
 import com.whatpl.project.model.ProjectFixture;
 import com.whatpl.project.repository.ApplyRepository;

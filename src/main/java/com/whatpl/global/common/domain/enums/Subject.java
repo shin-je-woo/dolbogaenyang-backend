@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
-public enum Subject {
+public enum Subject implements WhatplGlobalDomain {
 
     INTERIOR("홈/인테리어"),
     SOCIAL_MEDIA("소셜 미디어"),
