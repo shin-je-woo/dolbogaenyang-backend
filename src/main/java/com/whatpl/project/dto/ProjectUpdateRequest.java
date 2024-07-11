@@ -17,7 +17,7 @@ import java.util.Set;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ProjectCreateRequest {
+public class ProjectUpdateRequest {
 
     @NotBlank(message = "제목은 필수 입력 항목입니다.")
     @Size(max = 30, message = "제목은 최대 30자까지 입력 가능합니다.")

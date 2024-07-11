@@ -4,10 +4,7 @@ import com.whatpl.global.common.BaseTimeEntity;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.member.domain.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Entity
@@ -22,6 +19,7 @@ public class ProjectParticipant extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Job job;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;

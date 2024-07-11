@@ -5,6 +5,7 @@ import com.whatpl.global.common.domain.enums.Skill;
 import com.whatpl.global.common.domain.enums.Subject;
 import com.whatpl.project.domain.enums.MeetingType;
 import com.whatpl.project.dto.ProjectCreateRequest;
+import com.whatpl.project.dto.RecruitJobField;
 
 import java.util.Set;
 
@@ -18,9 +19,9 @@ public class ProjectCreateRequestFixture {
                 .title("테스트 타이틀")
                 .subject(Subject.SOCIAL_MEDIA)
                 .recruitJobs(Set.of(
-                        new ProjectCreateRequest.RecruitJobField(Job.BACKEND_DEVELOPER, 5),
-                        new ProjectCreateRequest.RecruitJobField(Job.DESIGNER, 3),
-                        new ProjectCreateRequest.RecruitJobField(Job.FRONTEND_DEVELOPER, 1)
+                        new RecruitJobField(Job.BACKEND_DEVELOPER, 5),
+                        new RecruitJobField(Job.DESIGNER, 3),
+                        new RecruitJobField(Job.FRONTEND_DEVELOPER, 1)
                 ))
                 .skills(Set.of(Skill.JAVA, Skill.FIGMA, Skill.PYTHON))
                 .content("<p>테스트 콘텐츠 HTML<p>")

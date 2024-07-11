@@ -57,41 +57,6 @@ public final class ProjectModelConverter {
         return project;
     }
 
-    public static Project toProject(final ProjectCreateRequest request, final Member writer) {
-        if (request == null || writer == null) {
-            throw new IllegalStateException("convert failed!");
-        }
-        Project project = Project.builder()
-                .title(request.getTitle())
-                .profitable(request.getProfitable())
-                .term(request.getTerm())
-                .status(ProjectStatus.RECRUITING)
-                .subject(request.getSubject())
-                .meetingType(request.getMeetingType())
-                .content(request.getContent())
-                .build();
-
-        // ProjectSkill 추가
-        Optional.ofNullable(request.getSkills())
-                .orElseGet(Collections::emptySet).stream()
-                .map(ProjectSkill::new)
-                .forEach(project::addProjectSkill);
-
-        // RecruitJob 추가
-        Optional.ofNullable(request.getRecruitJobs())
-                .orElseGet(Collections::emptySet).stream()
-                .map(recruitJobField -> RecruitJob.builder()
-                        .job(recruitJobField.getJob())
-                        .recruitAmount(recruitJobField.getRecruitAmount())
-                        .build())
-                .forEach(project::addRecruitJob);
-
-        // 대표이미지, 작성자 추가
-        project.addRepresentImageAndWriter(null, writer);
-
-        return project;
-    }
-
     public static ProjectReadResponse toProjectReadResponse(Project project, long likes, boolean myLike) {
         return ProjectReadResponse.builder()
                 .projectId(project.getId())
