@@ -5,6 +5,8 @@
 - 간단한 가입 및 참여 신청 절차
 - 유저들의 실력을 확인할 수 있는 방법 제공
 
+### 📌 [백엔드 API DOCS 보러가기](https://jewoos.site/docs/api)
+
 # Architecture
 
 ![image](https://github.com/shin-je-woo/whatpl-backend/assets/39439576/2a40a651-7796-4ac0-9443-2d412d1aab34)
@@ -14,6 +16,10 @@
 ![image](https://github.com/shin-je-woo/whatpl-backend/assets/39439576/cf2930f2-5156-48b4-a0bc-51b227edea6d)
 
 # Issue
+
+- [컬렉션 페이징 성능개선 (feat. 비동기)](https://github.com/shin-je-woo/TIL/blob/main/JPA/%EC%BB%AC%EB%A0%89%EC%85%98%20%ED%8E%98%EC%9D%B4%EC%A7%95%20%EC%84%B1%EB%8A%A5%EA%B0%9C%EC%84%A0%20(feat.%20%EB%B9%84%EB%8F%99%EA%B8%B0).md)
+
+- [AOP 분산락 구현 (feat. Redisson)](https://github.com/shin-je-woo/TIL/blob/main/Spring/AOP%20%EB%B6%84%EC%82%B0%EB%9D%BD%20%EA%B5%AC%ED%98%84%20(feat.%20Redisson).md)
 
 - [스프링 시큐리티는 인증된 사용자를 어떻게 기억할까?](https://github.com/shin-je-woo/TIL/blob/main/Spring%20Security/%EC%8A%A4%ED%94%84%EB%A7%81%20%EC%8B%9C%ED%81%90%EB%A6%AC%ED%8B%B0%EB%8A%94%20%EC%9D%B8%EC%A6%9D%EB%90%9C%20%EC%82%AC%EC%9A%A9%EC%9E%90%EB%A5%BC%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%EA%B8%B0%EC%96%B5%ED%95%A0%EA%B9%8C%3F.md)
 
