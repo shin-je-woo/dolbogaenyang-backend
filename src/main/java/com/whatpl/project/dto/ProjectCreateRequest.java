@@ -1,14 +1,14 @@
 package com.whatpl.project.dto;
 
-import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.common.domain.enums.Skill;
 import com.whatpl.global.common.domain.enums.Subject;
 import com.whatpl.project.domain.enums.MeetingType;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Range;
 
@@ -49,16 +49,4 @@ public class ProjectCreateRequest {
     private Integer term;
 
     private Long representImageId;
-
-    @Getter
-    @AllArgsConstructor
-    @EqualsAndHashCode(of = "job")
-    public static class RecruitJobField {
-        @NotNull(message = "직무는 필수 입력 항목입니다.")
-        private Job job;
-        @NotNull(message = "모집인원은 필수 입력 항목입니다.")
-        @Min(value = 1, message = "모집인원은 최소 1명 이상 입력 가능합니다.")
-        @Max(value = 5, message = "모집인원은 최소 5명 이하 입력 가능합니다.")
-        private Integer recruitAmount;
-    }
 }
