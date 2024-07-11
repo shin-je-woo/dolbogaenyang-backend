@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Range;
 
@@ -27,9 +28,11 @@ public class ProjectCreateRequest {
 
     @Valid
     @NotNull(message = "모집직군은 필수 입력 항목입니다.")
+    @Size(min = 1, message = "모집직군은 1개 이상 입력 가능합니다. ")
     private Set<RecruitJobField> recruitJobs;
 
     @NotNull(message = "기술 스택은 필수 입력 항목입니다.")
+    @Size(min = 1, max = 15, message = "기술스택은 1 ~ 15까지 입력 가능합니다.")
     private Set<Skill> skills;
 
     @NotBlank(message = "프로젝트 설명은 필수 입력 항목입니다.")
@@ -49,12 +52,13 @@ public class ProjectCreateRequest {
 
     @Getter
     @AllArgsConstructor
+    @EqualsAndHashCode(of = "job")
     public static class RecruitJobField {
         @NotNull(message = "직무는 필수 입력 항목입니다.")
         private Job job;
         @NotNull(message = "모집인원은 필수 입력 항목입니다.")
         @Min(value = 1, message = "모집인원은 최소 1명 이상 입력 가능합니다.")
-        @Max(value = 10, message = "모집인원은 최소 10명 이하 입력 가능합니다.")
+        @Max(value = 5, message = "모집인원은 최소 5명 이하 입력 가능합니다.")
         private Integer recruitAmount;
     }
 }
