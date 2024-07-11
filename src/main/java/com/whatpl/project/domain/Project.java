@@ -172,7 +172,7 @@ public class Project extends BaseTimeEntity {
 
     /**
      * 모집직군의 모집인원을 수정합니다.
-     * 참여자 수는 모집인원보다 적을 수 없습니다.
+     * 모집인원은 프로젝트 참여자 수보다 적을 수 없습니다.
      */
     private void modifyRecruitJobAmount(Collection<RecruitJobField> recruitJobFields) {
         List<RecruitJob> modifyRecruitJobs = this.recruitJobs.stream()
@@ -181,14 +181,14 @@ public class Project extends BaseTimeEntity {
                         .anyMatch(recruitJobField -> recruitJobField.getJob().equals(recruitJob.getJob())))
                 .toList();
 
-        modifyRecruitJobs.forEach(recruitJob -> {
-            Optional.ofNullable(recruitJobFields)
-                    .orElseGet(Collections::emptyList).forEach(recruitJobField -> {
-                        if (recruitJobField.getJob().equals(recruitJob.getJob())) {
-                            recruitJob.changeRecruitAmount(recruitJobField.getRecruitAmount());
-                        }
-                    });
-        });
+        modifyRecruitJobs.forEach(recruitJob -> Optional.ofNullable(recruitJobFields)
+                .orElseGet(Collections::emptyList)
+                .forEach(recruitJobField -> {
+                    if (recruitJobField.getJob().equals(recruitJob.getJob())) {
+                        recruitJob.changeRecruitAmount(recruitJobField.getRecruitAmount());
+                    }
+                })
+        );
 
         modifyRecruitJobs.forEach(recruitJob -> {
             int participantAmount = this.projectParticipants.stream()

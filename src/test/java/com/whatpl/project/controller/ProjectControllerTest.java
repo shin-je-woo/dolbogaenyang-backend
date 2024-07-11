@@ -10,6 +10,7 @@ import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.dto.*;
 import com.whatpl.project.model.ProjectCreateRequestFixture;
 import com.whatpl.project.model.ProjectReadResponseFixture;
+import com.whatpl.project.model.ProjectUpdateRequestFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,11 +27,9 @@ import java.util.List;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -296,6 +295,60 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("first").type(JsonFieldType.BOOLEAN).description("첫 페이지 여부"),
                                 fieldWithPath("last").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
                                 fieldWithPath("empty").type(JsonFieldType.BOOLEAN).description("빈 리스트 여부")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockWhatplMember
+    @DisplayName("프로젝트 수정 API Docs")
+    void modify() throws Exception {
+        // given
+        ProjectUpdateRequest projectUpdateRequest = ProjectUpdateRequestFixture.create();
+        String requestJson = objectMapper.writeValueAsString(projectUpdateRequest);
+        Long projectId = 1L;
+        doNothing().when(projectWriteService)
+                .modifyProject(anyLong(), any(ProjectUpdateRequest.class));
+
+        // expected
+        mockMvc.perform(put("/projects/{projectId}", projectId)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer {AccessToken}")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestJson))
+                .andExpectAll(
+                        status().isNoContent()
+                )
+                .andDo(print())
+                .andDo(document("update-project",
+                        resourceDetails().tag(ApiDocTag.PROJECT.getTag())
+                                .summary("프로젝트 수정")
+                                .description("""
+                                        프로젝트를 수정합니다.
+                                        
+                                        [유효성 검증]
+                                        
+                                        - 참여자가 존재하는 모집직군은 삭제할 수 없습니다. (code: PRJ17)
+                                        - 모집인원은 프로젝트 참여자 수보다 적을 수 없습니다. (code: PRJ18)
+                                        
+                                        [권한]
+                                        
+                                        - 프로젝트 등록자
+                                        """),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("AccessToken")
+                        ),
+                        requestFields(
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
+                                fieldWithPath("subject").type(JsonFieldType.STRING).description("도메인(관심주제)"),
+                                fieldWithPath("recruitJobs").type(JsonFieldType.ARRAY).description("모집직군"),
+                                fieldWithPath("recruitJobs[].job").type(JsonFieldType.STRING).description("직무"),
+                                fieldWithPath("recruitJobs[].recruitAmount").type(JsonFieldType.NUMBER).description("모집 인원수"),
+                                fieldWithPath("skills").type(JsonFieldType.ARRAY).description("기술스택"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("프로젝트 설명"),
+                                fieldWithPath("profitable").type(JsonFieldType.BOOLEAN).description("수익화 여부"),
+                                fieldWithPath("meetingType").type(JsonFieldType.STRING).description("모임방식 [online, offline, any]"),
+                                fieldWithPath("term").type(JsonFieldType.NUMBER).description("프로젝트 진행 기간"),
+                                fieldWithPath("representImageId").type(JsonFieldType.NUMBER).description("대표이미지 ID").optional()
                         )
                 ));
     }
