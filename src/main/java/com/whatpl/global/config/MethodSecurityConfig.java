@@ -18,6 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MethodSecurityConfig {
 
+    private final ProjectPermissionManager projectPermissionManager;
     private final ApplyPermissionManager applyPermissionManager;
     private final ProjectCommentPermissionManager projectCommentPermissionManager;
     private final ProjectLikePermissionManager projectLikePermissionManager;
@@ -27,6 +28,7 @@ public class MethodSecurityConfig {
     @Bean
     public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
         Map<String, WhatplPermissionManager> whatplPermissionEvaluatorMap = new HashMap<>();
+        whatplPermissionEvaluatorMap.put("PROJECT", projectPermissionManager);
         whatplPermissionEvaluatorMap.put("APPLY", applyPermissionManager);
         whatplPermissionEvaluatorMap.put("PROJECT_COMMENT", projectCommentPermissionManager);
         whatplPermissionEvaluatorMap.put("PROJECT_LIKE", projectLikePermissionManager);

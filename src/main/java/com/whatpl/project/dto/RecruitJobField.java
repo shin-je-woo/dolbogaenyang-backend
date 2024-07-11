@@ -16,6 +16,6 @@ public class RecruitJobField {
     private Job job;
     @NotNull(message = "모집인원은 필수 입력 항목입니다.")
     @Min(value = 1, message = "모집인원은 최소 1명 이상 입력 가능합니다.")
-    @Max(value = 5, message = "모집인원은 최소 5명 이하 입력 가능합니다.")
+    @Max(value = 5, message = "모집인원은 최대 5명 이하 입력 가능합니다.")
     private Integer recruitAmount;
 }

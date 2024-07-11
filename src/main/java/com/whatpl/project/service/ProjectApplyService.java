@@ -1,6 +1,7 @@
 package com.whatpl.project.service;
 
 import com.whatpl.chat.service.ChatService;
+import com.whatpl.global.aop.annotation.DistributedLock;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
@@ -63,6 +64,7 @@ public class ProjectApplyService {
     }
 
     @Transactional
+    @DistributedLock(name = "project:modify")
     public void status(final long projectId, final long applyId, final ApplyStatus applyStatus) {
         Project project = projectRepository.findWithRecruitJobsById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));

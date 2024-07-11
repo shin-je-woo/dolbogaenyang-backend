@@ -2,6 +2,7 @@ package com.whatpl.project.service;
 
 import com.whatpl.attachment.domain.Attachment;
 import com.whatpl.attachment.repository.AttachmentRepository;
+import com.whatpl.global.aop.annotation.DistributedLock;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.util.FileUtils;
@@ -10,6 +11,7 @@ import com.whatpl.member.repository.MemberRepository;
 import com.whatpl.project.converter.ProjectModelConverter;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.dto.ProjectCreateRequest;
+import com.whatpl.project.dto.ProjectUpdateRequest;
 import com.whatpl.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,15 @@ public class ProjectWriteService {
 
         Project savedProject = projectRepository.save(project);
         return savedProject.getId();
+    }
+
+    @Transactional
+    @DistributedLock(name = "project:modify")
+    public void modifyProject(final Long projectId, final ProjectUpdateRequest request) {
+        Attachment representImage = getRepresentImage(request.getRepresentImageId());
+        Project project = projectRepository.findWithRecruitJobsById(projectId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
+        project.modify(request, representImage);
     }
 
     private Attachment getRepresentImage(final Long representImageId) {

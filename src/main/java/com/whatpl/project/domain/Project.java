@@ -2,15 +2,19 @@ package com.whatpl.project.domain;
 
 import com.whatpl.attachment.domain.Attachment;
 import com.whatpl.global.common.BaseTimeEntity;
+import com.whatpl.global.common.domain.enums.Skill;
 import com.whatpl.global.common.domain.enums.Subject;
+import com.whatpl.global.exception.BizException;
+import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.member.domain.Member;
 import com.whatpl.project.domain.enums.MeetingType;
 import com.whatpl.project.domain.enums.ProjectStatus;
+import com.whatpl.project.dto.ProjectUpdateRequest;
+import com.whatpl.project.dto.RecruitJobField;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Entity
@@ -99,6 +103,14 @@ public class Project extends BaseTimeEntity {
         recruitJob.setProject(this);
     }
 
+    public void addProjectParticipant(ProjectParticipant projectParticipant) {
+        if (projectParticipant == null) {
+            return;
+        }
+        this.projectParticipants.add(projectParticipant);
+        projectParticipant.setProject(this);
+    }
+
     public void addRepresentImageAndWriter(Attachment representImage, Member writer) {
         this.representImage = representImage;
         this.writer = writer;
@@ -110,5 +122,108 @@ public class Project extends BaseTimeEntity {
             this.views = 0L;
         }
         this.views++;
+    }
+
+    /**
+     * 프로젝트를 수정합니다.
+     */
+    public void modify(@NonNull ProjectUpdateRequest request, Attachment representImage) {
+        this.title = request.getTitle();
+        this.subject = request.getSubject();
+        this.content = request.getContent();
+        this.profitable = request.getProfitable();
+        this.meetingType = request.getMeetingType();
+        this.term = request.getTerm();
+        this.representImage = representImage;
+
+        clearAndAddSkills(request.getSkills());
+        compareAndModifyRecruitJobs(request.getRecruitJobs());
+    }
+
+    /**
+     * 모집직군(RecruitJobs) 과 프로젝트 참여자(ProjectParticipants) 를 비교하고 수정합니다.
+     */
+    private void compareAndModifyRecruitJobs(Collection<RecruitJobField> recruitJobFields) {
+        deleteRecruitJobs(recruitJobFields);
+        modifyRecruitJobAmount(recruitJobFields);
+        mergeRecruitJobs(recruitJobFields);
+    }
+
+    /**
+     * 모집직군을 삭제합니다.
+     * 삭제하려는 모집직군에 참여자가 존재하면 삭제할 수 없습니다.
+     */
+    private void deleteRecruitJobs(Collection<RecruitJobField> recruitJobFields) {
+        List<RecruitJob> deleteRecruitJobs = this.recruitJobs.stream()
+                .filter(recruitJob -> Optional.ofNullable(recruitJobFields)
+                        .orElseGet(Collections::emptyList).stream()
+                        .noneMatch(recruitJobField -> recruitJobField.getJob().equals(recruitJob.getJob())))
+                .toList();
+        deleteRecruitJobs.forEach(recruitJob -> {
+            int participantAmount = this.projectParticipants.stream()
+                    .filter(participant -> participant.getJob().equals(recruitJob.getJob()))
+                    .toList().size();
+            if (participantAmount > 0) {
+                throw new BizException(ErrorCode.CANT_DELETE_RECRUIT_JOB_EXISTS_PARTICIPANT);
+            }
+        });
+        this.recruitJobs.removeAll(deleteRecruitJobs);
+    }
+
+    /**
+     * 모집직군의 모집인원을 수정합니다.
+     * 참여자 수는 모집인원보다 적을 수 없습니다.
+     */
+    private void modifyRecruitJobAmount(Collection<RecruitJobField> recruitJobFields) {
+        List<RecruitJob> modifyRecruitJobs = this.recruitJobs.stream()
+                .filter(recruitJob -> Optional.ofNullable(recruitJobFields)
+                        .orElseGet(Collections::emptyList).stream()
+                        .anyMatch(recruitJobField -> recruitJobField.getJob().equals(recruitJob.getJob())))
+                .toList();
+
+        modifyRecruitJobs.forEach(recruitJob -> {
+            Optional.ofNullable(recruitJobFields)
+                    .orElseGet(Collections::emptyList).forEach(recruitJobField -> {
+                        if (recruitJobField.getJob().equals(recruitJob.getJob())) {
+                            recruitJob.changeRecruitAmount(recruitJobField.getRecruitAmount());
+                        }
+                    });
+        });
+
+        modifyRecruitJobs.forEach(recruitJob -> {
+            int participantAmount = this.projectParticipants.stream()
+                    .filter(participant -> participant.getJob().equals(recruitJob.getJob()))
+                    .toList().size();
+            if (recruitJob.getRecruitAmount() < participantAmount) {
+                throw new BizException(ErrorCode.RECRUIT_AMOUNT_CANT_LESS_THEN_PARTICIPANT_AMOUNT);
+            }
+        });
+    }
+
+    /**
+     * 모집직군을 추가합니다.
+     * 기존에 존재하지 않던 모집직군만 추가합니다.
+     */
+    private void mergeRecruitJobs(Collection<RecruitJobField> recruitJobFields) {
+        Optional.ofNullable(recruitJobFields)
+                .orElseGet(Collections::emptyList).stream()
+                .filter(recruitJobField -> this.recruitJobs.stream()
+                        .noneMatch(recruitJob -> recruitJob.getJob().equals(recruitJobField.getJob())))
+                .map(recruitJobField -> RecruitJob.builder()
+                        .job(recruitJobField.getJob())
+                        .recruitAmount(recruitJobField.getRecruitAmount())
+                        .build())
+                .forEach(this::addRecruitJob);
+    }
+
+    /**
+     * ProjectSkills 를 비우고 새로운 ProjectSkills 를 추가 합니다.
+     */
+    private void clearAndAddSkills(Collection<Skill> skills) {
+        this.projectSkills.clear();
+        Optional.ofNullable(skills)
+                .orElseGet(Collections::emptyList).stream()
+                .map(ProjectSkill::new)
+                .forEach(this::addProjectSkill);
     }
 }

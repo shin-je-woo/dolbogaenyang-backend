@@ -5,10 +5,7 @@ import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.pagination.SliceResponse;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.project.domain.enums.ProjectStatus;
-import com.whatpl.project.dto.ProjectCreateRequest;
-import com.whatpl.project.dto.ProjectInfo;
-import com.whatpl.project.dto.ProjectReadResponse;
-import com.whatpl.project.dto.ProjectSearchCondition;
+import com.whatpl.project.dto.*;
 import com.whatpl.project.service.ProjectReadService;
 import com.whatpl.project.service.ProjectWriteService;
 import jakarta.validation.Valid;
@@ -16,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,5 +55,13 @@ public class ProjectController {
         searchCondition.assignLoginMember(principal);
         Slice<ProjectInfo> projects = projectReadService.searchProjectList(pageable, searchCondition);
         return ResponseEntity.ok(new SliceResponse<>(projects));
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'PROJECT', 'UPDATE')")
+    @PutMapping("/projects/{projectId}")
+    public ResponseEntity<Void> modify(@PathVariable Long projectId,
+                                       @Valid @RequestBody ProjectUpdateRequest request) {
+        projectWriteService.modifyProject(projectId, request);
+        return ResponseEntity.noContent().build();
     }
 }

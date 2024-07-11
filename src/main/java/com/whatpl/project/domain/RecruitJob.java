@@ -25,8 +25,18 @@ public class RecruitJob {
     private Project project;
 
     @Builder
-    public RecruitJob(Job job, Integer recruitAmount) {
+    public RecruitJob(Job job, int recruitAmount) {
+        if(recruitAmount < 1 || recruitAmount > 5) {
+            throw new IllegalArgumentException("recruitAmount must be between 1 and 5");
+        }
         this.job = job;
+        this.recruitAmount = recruitAmount;
+    }
+
+    public void changeRecruitAmount(int recruitAmount) {
+        if(recruitAmount < 1 || recruitAmount > 5) {
+            throw new IllegalArgumentException("recruitAmount must be between 1 and 5");
+        }
         this.recruitAmount = recruitAmount;
     }
 }
