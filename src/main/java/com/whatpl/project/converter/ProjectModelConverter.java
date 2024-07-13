@@ -23,7 +23,7 @@ import java.util.Optional;
 public final class ProjectModelConverter {
 
     public static Project toProject(final ProjectCreateRequest request, final Member writer, final Attachment representImage) {
-        if (request == null || writer == null || representImage == null) {
+        if (request == null || writer == null) {
             throw new IllegalStateException("convert failed!");
         }
         Project project = Project.builder()
