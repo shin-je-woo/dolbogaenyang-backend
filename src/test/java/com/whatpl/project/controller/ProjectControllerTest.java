@@ -326,16 +326,17 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                         프로젝트를 수정합니다.
                                         
                                         [유효성 검증]
-                                        
                                         - 참여자가 존재하는 모집직군은 삭제할 수 없습니다. (code: PRJ17)
                                         - 모집인원은 프로젝트 참여자 수보다 적을 수 없습니다. (code: PRJ18)
                                         
                                         [권한]
-                                        
                                         - 프로젝트 등록자
                                         """),
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("AccessToken")
+                        ),
+                        pathParameters(
+                                parameterWithName("projectId").description("프로젝트 ID")
                         ),
                         requestFields(
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
@@ -349,6 +350,40 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("meetingType").type(JsonFieldType.STRING).description("모임방식 [online, offline, any]"),
                                 fieldWithPath("term").type(JsonFieldType.NUMBER).description("프로젝트 진행 기간"),
                                 fieldWithPath("representImageId").type(JsonFieldType.NUMBER).description("대표이미지 ID").optional()
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockWhatplMember
+    @DisplayName("프로젝트 삭제 API Docs")
+    void deleteProject() throws Exception {
+        // given
+        long projectId = 1L;
+        doNothing().when(projectWriteService)
+                .deleteProject(anyLong());
+
+        // expected
+        mockMvc.perform(delete("/projects/{projectId}", projectId)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer {AccessToken}"))
+                .andExpectAll(
+                        status().isNoContent()
+                )
+                .andDo(print())
+                .andDo(document("delete-project",
+                        resourceDetails().tag(ApiDocTag.PROJECT.getTag())
+                                .summary("프로젝트 삭제")
+                                .description("""
+                                        프로젝트를 삭제합니다.
+                                        
+                                        [권한]
+                                        - 프로젝트 등록자
+                                        """),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("AccessToken")
+                        ),
+                        pathParameters(
+                                parameterWithName("projectId").description("프로젝트 ID")
                         )
                 ));
     }
