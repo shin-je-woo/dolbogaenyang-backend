@@ -22,6 +22,7 @@ public class ProjectPermissionManager implements WhatplPermissionManager {
     public boolean hasPrivilege(MemberPrincipal memberPrincipal, Long targetId, String permission) {
         return switch (permission) {
             case "UPDATE" -> hasUpdatePrivilege(memberPrincipal, targetId);
+            case "DELETE" -> hasDeletePrivilege(memberPrincipal, targetId);
             default -> false;
         };
     }
@@ -31,6 +32,16 @@ public class ProjectPermissionManager implements WhatplPermissionManager {
      * 프로젝트 모집자(등록자)
      */
     private boolean hasUpdatePrivilege(MemberPrincipal memberPrincipal, Long projectId) {
+        Project project = projectRepository.findWithWriterById(projectId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
+        return Objects.equals(project.getWriter().getId(), memberPrincipal.getId());
+    }
+
+    /**
+     * 프로젝트 삭제 권한
+     * 프로젝트 모집자(등록자)
+     */
+    private boolean hasDeletePrivilege(MemberPrincipal memberPrincipal, Long projectId) {
         Project project = projectRepository.findWithWriterById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
         return Objects.equals(project.getWriter().getId(), memberPrincipal.getId());

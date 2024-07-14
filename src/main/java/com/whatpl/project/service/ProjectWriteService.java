@@ -56,4 +56,11 @@ public class ProjectWriteService {
         FileUtils.validateImageFile(representImage.getMimeType());
         return representImage;
     }
+
+    @Transactional
+    public void deleteProject(final Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
+        projectRepository.delete(project);
+    }
 }
