@@ -1,5 +1,6 @@
 package com.whatpl.project.domain;
 
+import com.whatpl.global.common.BaseTimeEntity;
 import com.whatpl.global.common.domain.enums.Job;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,7 +9,7 @@ import lombok.*;
 @Entity
 @Table(name = "recruit_job")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RecruitJob {
+public class RecruitJob extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

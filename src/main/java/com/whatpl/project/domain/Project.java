@@ -13,6 +13,8 @@ import com.whatpl.project.dto.ProjectUpdateRequest;
 import com.whatpl.project.dto.RecruitJobField;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.*;
 
@@ -20,6 +22,8 @@ import java.util.*;
 @Entity
 @Table(name = "project")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "update project set status = 'DELETED' where id = ?")
+@Where(clause = "status != 'DELETED'")
 public class Project extends BaseTimeEntity {
 
     @Id
@@ -47,20 +51,20 @@ public class Project extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST)
     private List<ProjectSkill> projectSkills = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST)
     private List<RecruitJob> recruitJobs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST)
     private List<ProjectComment> projectComments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST)
     private List<ProjectLike> projectLikes = new ArrayList<>();
 
     @OrderBy("createdAt asc")
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST)
     private List<ProjectParticipant> projectParticipants = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)

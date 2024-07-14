@@ -64,4 +64,11 @@ public class ProjectController {
         projectWriteService.modifyProject(projectId, request);
         return ResponseEntity.noContent().build();
     }
+
+    @PreAuthorize("hasPermission(#projectId, 'PROJECT', 'DELETE')")
+    @DeleteMapping("/projects/{projectId}")
+    public ResponseEntity<Void> delete(@PathVariable Long projectId) {
+        projectWriteService.deleteProject(projectId);
+        return ResponseEntity.noContent().build();
+    }
 }

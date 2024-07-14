@@ -20,8 +20,8 @@ public class ProjectCommentModelConverter {
                         .writerNickname(comment.getWriter().getNickname())
                         .content(comment.getContent())
                         .createdAt(comment.getCreatedAt())
-                        .isModified(comment.getIsModified())
-                        .isDeleted(comment.getIsDeleted())
+                        .isModified(comment.getModified())
+                        .isDeleted(comment.getDeleted())
                         .parentId(comment.getParent().getId())
                         .build()
                 ).toList();
@@ -32,8 +32,8 @@ public class ProjectCommentModelConverter {
                 .writerNickname(projectComment.getWriter().getNickname())
                 .content(projectComment.getContent())
                 .createdAt(projectComment.getCreatedAt())
-                .isModified(projectComment.getIsModified())
-                .isDeleted(projectComment.getIsDeleted())
+                .isModified(projectComment.getModified())
+                .isDeleted(projectComment.getDeleted())
                 .subComments(subComments)
                 .build();
     }
