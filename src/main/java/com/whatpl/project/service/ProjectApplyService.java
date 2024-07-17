@@ -1,7 +1,8 @@
 package com.whatpl.project.service;
 
-import com.whatpl.chat.service.ChatService;
+import com.whatpl.chat.service.ChatRoomService;
 import com.whatpl.global.aop.annotation.DistributedLock;
+import com.whatpl.global.common.domain.enums.ApplyStatus;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
@@ -11,7 +12,6 @@ import com.whatpl.project.domain.Apply;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.domain.ProjectParticipant;
 import com.whatpl.project.domain.RecruitJob;
-import com.whatpl.global.common.domain.enums.ApplyStatus;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.dto.ApplyResponse;
 import com.whatpl.project.dto.ProjectApplyRequest;
@@ -30,7 +30,7 @@ public class ProjectApplyService {
     private final ProjectRepository projectRepository;
     private final ApplyRepository applyRepository;
     private final ProjectParticipantRepository projectParticipantRepository;
-    private final ChatService chatService;
+    private final ChatRoomService chatRoomService;
 
     @Transactional
     public ApplyResponse apply(final ProjectApplyRequest request, final long projectId, final long applicantId) {
@@ -54,7 +54,7 @@ public class ProjectApplyService {
         Apply savedApply = applyRepository.save(apply);
 
         // 지원 쪽지 발송
-        long chatRoomId = chatService.createChatRoom(apply, request.getContent());
+        long chatRoomId = chatRoomService.createChatRoom(apply, request.getContent());
 
         return ApplyResponse.builder()
                 .applyId(savedApply.getId())

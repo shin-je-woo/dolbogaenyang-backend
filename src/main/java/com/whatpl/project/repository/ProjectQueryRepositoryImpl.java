@@ -62,7 +62,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                         project.subject.as("subject"),
                         project.profitable.as("profitable"),
                         project.views.as("vies"),
-                        buildRepresentImageUri(),
+                        buildRepresentImageUri().as("representImageUri"),
                         myLikeExists(searchCondition).as("myLike")
                 ))
                 .from(project)
@@ -149,7 +149,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
         return new CaseBuilder()
                 .when(project.representImage.isNull())
                 .then("/images/default?type=project")
-                .otherwise(project.representImage.id.stringValue().prepend("/attachments/").concat("/images")).as("representImageUri");
+                .otherwise(project.representImage.id.stringValue().prepend("/attachments/").concat("/images"));
     }
 
     private List<Long> toProjectIds(List<ProjectInfo> projectInfos) {

@@ -2,7 +2,8 @@ package com.whatpl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatpl.attachment.service.AttachmentService;
-import com.whatpl.chat.service.ChatService;
+import com.whatpl.chat.service.ChatMessageService;
+import com.whatpl.chat.service.ChatRoomService;
 import com.whatpl.global.config.SecurityConfig;
 import com.whatpl.global.image.ImageProperties;
 import com.whatpl.global.jwt.JwtProperties;
@@ -70,7 +71,10 @@ public abstract class BaseSecurityWebMvcTest {
     protected ProjectLikeService projectLikeService;
 
     @MockBean
-    protected ChatService chatService;
+    protected ChatRoomService chatRoomService;
+
+    @MockBean
+    protected ChatMessageService chatMessageService;
 
     @MockBean
     protected ProjectParticipantService projectParticipantService;
