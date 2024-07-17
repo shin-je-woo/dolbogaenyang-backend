@@ -60,7 +60,7 @@ class ChatMessageControllerTest extends BaseSecurityWebMvcTest {
                 )
                 .andDo(print())
                 .andDo(document("send-message",
-                        resourceDetails().tag(ApiDocTag.CHAT.getTag())
+                        resourceDetails().tag(ApiDocTag.CHAT_MESSAGE.getTag())
                                 .summary("메시지 발송")
                                 .description("""
                                         메시지를 발송합니다.
@@ -128,7 +128,7 @@ class ChatMessageControllerTest extends BaseSecurityWebMvcTest {
                 )
                 .andDo(print())
                 .andDo(document("read-message-list",
-                        resourceDetails().tag(ApiDocTag.CHAT.getTag())
+                        resourceDetails().tag(ApiDocTag.CHAT_MESSAGE.getTag())
                                 .summary("메시지 리스트 조회")
                                 .description("""
                                         메시지 리스트를 조회합니다.

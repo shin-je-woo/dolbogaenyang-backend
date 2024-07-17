@@ -152,12 +152,6 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 .otherwise(project.representImage.id.stringValue().prepend("/attachments/").concat("/images"));
     }
 
-    private List<Long> toProjectIds(List<ProjectInfo> projectInfos) {
-        return projectInfos.stream()
-                .map(ProjectInfo::getProjectId)
-                .toList();
-    }
-
     private BooleanExpression subjectEq(Subject subject) {
         return subject != null ? project.subject.eq(subject) : null;
     }
