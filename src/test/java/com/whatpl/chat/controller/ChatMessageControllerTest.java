@@ -37,14 +37,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureRestDocs
 @ExtendWith(RestDocumentationExtension.class)
-class ChatControllerTest extends BaseSecurityWebMvcTest {
+class ChatMessageControllerTest extends BaseSecurityWebMvcTest {
 
     @Test
     @WithMockWhatplMember
     @DisplayName("메시지 발송 API Docs")
     void writeMessage() throws Exception {
         // given
-        doNothing().when(chatService).sendMessage(anyLong(), anyLong(), anyString());
+        doNothing().when(chatMessageService).sendMessage(anyLong(), anyLong(), anyString());
         ChatMessageCreateRequest request = ChatMessageCreateRequest.builder()
                 .content("메시지 내용")
                 .build();
@@ -60,7 +60,7 @@ class ChatControllerTest extends BaseSecurityWebMvcTest {
                 )
                 .andDo(print())
                 .andDo(document("send-message",
-                        resourceDetails().tag(ApiDocTag.CHAT.getTag())
+                        resourceDetails().tag(ApiDocTag.CHAT_MESSAGE.getTag())
                                 .summary("메시지 발송")
                                 .description("""
                                         메시지를 발송합니다.
@@ -102,7 +102,7 @@ class ChatControllerTest extends BaseSecurityWebMvcTest {
                         ZoneId.of("Asia/Seoul"))))
                 .build();
         SliceImpl<ChatMessageDto> chatMessageSlice = new SliceImpl<>(List.of(chatMessageDto));
-        when(chatService.readMessages(anyLong(), any(Pageable.class), anyLong()))
+        when(chatMessageService.readMessages(anyLong(), any(Pageable.class), anyLong()))
                 .thenReturn(chatMessageSlice);
 
         // expected
@@ -128,7 +128,7 @@ class ChatControllerTest extends BaseSecurityWebMvcTest {
                 )
                 .andDo(print())
                 .andDo(document("read-message-list",
-                        resourceDetails().tag(ApiDocTag.CHAT.getTag())
+                        resourceDetails().tag(ApiDocTag.CHAT_MESSAGE.getTag())
                                 .summary("메시지 리스트 조회")
                                 .description("""
                                         메시지 리스트를 조회합니다.

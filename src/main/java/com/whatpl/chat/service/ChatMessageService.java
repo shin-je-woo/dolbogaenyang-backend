@@ -9,8 +9,6 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.member.domain.Member;
 import com.whatpl.member.repository.MemberRepository;
-import com.whatpl.project.domain.Apply;
-import com.whatpl.project.domain.enums.ApplyType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -21,23 +19,11 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class ChatService {
+public class ChatMessageService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final MemberRepository memberRepository;
-
-    @Transactional
-    public long createChatRoom(final Apply apply, final String content) {
-        ChatRoom chatRoom = ChatRoom.from(apply);
-        chatRoomRepository.save(chatRoom);
-        // 메시지 발신자 = 프로젝트 지원일 경우 지원자 : 프로젝트 참여 제안일 경우 모집자
-        long senderId = apply.getType() == ApplyType.APPLY ?
-                apply.getApplicant().getId() : apply.getProject().getWriter().getId();
-        this.sendMessage(chatRoom.getId(), senderId, content);
-
-        return chatRoom.getId();
-    }
 
     @Transactional
     public void sendMessage(final Long chatRoomId, final Long senderId, final String content) {

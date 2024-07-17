@@ -15,7 +15,8 @@ public enum ApiDocTag {
     PROJECT_APPLY("Project Apply"),
     PROJECT_PARTICIPANT("Project Participants"),
     ATTACHMENT("Attachments"),
-    CHAT("Chats"),
+    CHAT_ROOM("Chat Rooms"),
+    CHAT_MESSAGE("Chat Messages"),
     DOMAIN("Domains"),
     IMAGE("Images");
 

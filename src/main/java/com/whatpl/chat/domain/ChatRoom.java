@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Entity
 @Table(name = "chat_room")
@@ -20,6 +22,9 @@ public class ChatRoom extends BaseTimeEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apply_id")
     private Apply apply;
+
+    @OneToMany(mappedBy = "chatRoom")
+    private List<ChatMessage> messages;
 
     public ChatRoom(Apply apply) {
         this.apply = apply;

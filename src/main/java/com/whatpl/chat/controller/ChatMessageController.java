@@ -2,7 +2,7 @@ package com.whatpl.chat.controller;
 
 import com.whatpl.chat.dto.ChatMessageCreateRequest;
 import com.whatpl.chat.dto.ChatMessageDto;
-import com.whatpl.chat.service.ChatService;
+import com.whatpl.chat.service.ChatMessageService;
 import com.whatpl.global.pagination.SliceResponse;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import jakarta.validation.Valid;
@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-public class ChatController {
+public class ChatMessageController {
 
-    private final ChatService chatService;
+    private final ChatMessageService chatMessageService;
 
     @PreAuthorize("hasPermission(#chatRoomId, 'CHAT_MESSAGE', 'CREATE')")
     @PostMapping("/chat/rooms/{chatRoomId}/messages")
     public ResponseEntity<Void> writeMessage(@PathVariable long chatRoomId,
                                              @Valid @RequestBody ChatMessageCreateRequest request,
                                              @AuthenticationPrincipal MemberPrincipal principal) {
-        chatService.sendMessage(chatRoomId, principal.getId(), request.getContent());
+        chatMessageService.sendMessage(chatRoomId, principal.getId(), request.getContent());
         return ResponseEntity.noContent().build();
     }
 
@@ -34,7 +34,7 @@ public class ChatController {
     public ResponseEntity<SliceResponse<ChatMessageDto>> readMessageList(@PathVariable long chatRoomId,
                                                                          Pageable pageable,
                                                                          @AuthenticationPrincipal MemberPrincipal principal) {
-        Slice<ChatMessageDto> chatMessageSlice = chatService.readMessages(chatRoomId, pageable, principal.getId());
+        Slice<ChatMessageDto> chatMessageSlice = chatMessageService.readMessages(chatRoomId, pageable, principal.getId());
         return ResponseEntity.ok(new SliceResponse<>(chatMessageSlice));
     }
 }
