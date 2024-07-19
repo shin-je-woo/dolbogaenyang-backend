@@ -33,6 +33,7 @@ public class ProjectApplyService {
     private final ChatRoomService chatRoomService;
 
     @Transactional
+    @DistributedLock(name = "'project:'.concat(#projectId)")
     public ApplyResponse apply(final ProjectApplyRequest request, final long projectId, final long applicantId) {
         Project project = projectRepository.findWithRecruitJobsById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
@@ -64,7 +65,7 @@ public class ProjectApplyService {
     }
 
     @Transactional
-    @DistributedLock(name = "project:modify")
+    @DistributedLock(name = "'project:'.concat(#projectId)")
     public void status(final long projectId, final long applyId, final ApplyStatus applyStatus) {
         Project project = projectRepository.findWithRecruitJobsById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));

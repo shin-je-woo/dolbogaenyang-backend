@@ -28,7 +28,7 @@ public class InitDataLoader implements ApplicationListener<ApplicationReadyEvent
     private final MemberRepository memberRepository;
 
     @Override
-    @DistributedLock(name = "app:init")
+    @DistributedLock(name = "'app:init'")
     @Transactional
     public void onApplicationEvent(@Nonnull ApplicationReadyEvent event) {
         log.info("===== Application 로딩 후 DATA 초기화 작업을 시작합니다. =====");
