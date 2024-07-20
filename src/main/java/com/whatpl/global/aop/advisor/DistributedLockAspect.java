@@ -11,6 +11,9 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.data.util.CastUtils;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -28,9 +31,10 @@ public class DistributedLockAspect {
      */
     @Around("@annotation(com.whatpl.global.aop.annotation.DistributedLock)")
     public Object execute(final ProceedingJoinPoint joinPoint) throws Throwable {
-        DistributedLock distributedLock = getDistributedLock(joinPoint);
+        MethodSignature signature = CastUtils.cast(joinPoint.getSignature());
+        DistributedLock distributedLock = signature.getMethod().getAnnotation(DistributedLock.class);
 
-        String name = REDISSON_LOCK_PREFIX + distributedLock.name();
+        String name = REDISSON_LOCK_PREFIX + getSpELValue(signature.getParameterNames(), joinPoint.getArgs(), distributedLock.name());
         RLock lock = redissonClient.getLock(name);
 
         try {
@@ -55,8 +59,14 @@ public class DistributedLockAspect {
         }
     }
 
-    private DistributedLock getDistributedLock(ProceedingJoinPoint joinPoint) {
-        MethodSignature signature = CastUtils.cast(joinPoint.getSignature());
-        return signature.getMethod().getAnnotation(DistributedLock.class);
+    private Object getSpELValue(String[] parameterNames, Object[] args, String key) {
+        ExpressionParser parser = new SpelExpressionParser();
+        StandardEvaluationContext context = new StandardEvaluationContext();
+
+        for (int i = 0; i < parameterNames.length; i++) {
+            context.setVariable(parameterNames[i], args[i]);
+        }
+
+        return parser.parseExpression(key).getValue(context, Object.class);
     }
 }

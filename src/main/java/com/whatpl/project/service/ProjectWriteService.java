@@ -38,7 +38,7 @@ public class ProjectWriteService {
     }
 
     @Transactional
-    @DistributedLock(name = "project:modify")
+    @DistributedLock(name = "'project:'.concat(#projectId)")
     public void modifyProject(final Long projectId, final ProjectUpdateRequest request) {
         Attachment representImage = getRepresentImage(request.getRepresentImageId());
         Project project = projectRepository.findWithRecruitJobsById(projectId)
@@ -58,6 +58,7 @@ public class ProjectWriteService {
     }
 
     @Transactional
+    @DistributedLock(name = "'project:'.concat(#projectId)")
     public void deleteProject(final Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));

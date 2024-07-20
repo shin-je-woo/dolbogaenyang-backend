@@ -1,5 +1,6 @@
 package com.whatpl.project.service;
 
+import com.whatpl.global.aop.annotation.DistributedLock;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.project.domain.Project;
@@ -21,6 +22,7 @@ public class ProjectParticipantService {
     private final ApplyRepository applyRepository;
 
     @Transactional
+    @DistributedLock(name = "'project:'.concat(#projectId)")
     public void deleteParticipant(final long projectId, final long participantId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
