@@ -1,21 +1,26 @@
-# Whatpl (2024.02 ~ ing)
+# Whatpl (2024.02 ~ 진행 중)
 
-왓플 - 개발자 사이드 프로젝트 커뮤니티
-- 내 관심사에 맞는 모집글 추천
-- 간단한 가입 및 참여 신청 절차
-- 유저들의 실력을 확인할 수 있는 방법 제공
+### ✋ 프로젝트 소개
 
-### 📌 [백엔드 API DOCS 보러가기](https://jewoos.site/docs/api)
+- 사이드 프로젝트 구인/구직 웹 서비스입니다.
+- 사용자가 모집자에게 프로젝트 참여 요청 후, 모집자가 승인할 경우 프로젝트의 일원이 됩니다.
 
-# Architecture
+**📌 [백엔드 API document 보러가기](https://jewoos.site/docs/api)**
 
-![image](https://github.com/shin-je-woo/whatpl-backend/assets/39439576/2a40a651-7796-4ac0-9443-2d412d1aab34)
+### 🛠️ Skills
 
-# DB Scheme
+- `Java17`
+- `Spring Boot`, `Spring Security`, `Spring Data JPA`, `Querydsl`
+- `MySQL`, `Redis`
+- `Nginx`, `Tomcat`
+- `Docker`
+- `AWS EC2`, `AWS RDS`, `AWS S3`
 
-![image](https://github.com/shin-je-woo/whatpl-backend/assets/39439576/cf2930f2-5156-48b4-a0bc-51b227edea6d)
+### 🤲 Architecture
 
-# Issue
+![image](https://github.com/user-attachments/assets/bf721f27-721b-49c7-90eb-006527511880)
+
+### 📝 Issue
 
 - [컬렉션 페이징 성능개선 (feat. 비동기)](https://github.com/shin-je-woo/TIL/blob/main/JPA/%EC%BB%AC%EB%A0%89%EC%85%98%20%ED%8E%98%EC%9D%B4%EC%A7%95%20%EC%84%B1%EB%8A%A5%EA%B0%9C%EC%84%A0%20(feat.%20%EB%B9%84%EB%8F%99%EA%B8%B0).md)
 
