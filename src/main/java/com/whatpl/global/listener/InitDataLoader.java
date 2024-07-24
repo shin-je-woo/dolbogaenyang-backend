@@ -24,8 +24,9 @@ import java.util.concurrent.atomic.AtomicLong;
 @RequiredArgsConstructor
 public class InitDataLoader implements ApplicationListener<ApplicationReadyEvent> {
 
-    private static final AtomicLong memberCount = new AtomicLong(0L);
     private final MemberRepository memberRepository;
+    private static final AtomicLong memberCount = new AtomicLong(0L);
+    private static final int INIT_MEMBER_AMOUNT = 20;
 
     @Override
     @DistributedLock(name = "'app:init'")
@@ -37,9 +38,9 @@ public class InitDataLoader implements ApplicationListener<ApplicationReadyEvent
     }
 
     private void setupInitMembers() {
-        createMemberIfNotFound(Set.of(Skill.JAVA, Skill.MYSQL));
-        createMemberIfNotFound(Set.of(Skill.FIGMA, Skill.KOTLIN));
-        createMemberIfNotFound(Set.of(Skill.PYTHON, Skill.TYPE_SCRIPT));
+        for (int i = 0; i < INIT_MEMBER_AMOUNT; i++) {
+            createMemberIfNotFound(Set.of(Skill.JAVA, Skill.MYSQL));
+        }
     }
 
     /**
