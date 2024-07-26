@@ -33,6 +33,7 @@ public class ChatMessageQueryRepositoryImpl implements ChatMessageQueryRepositor
                 ))
                 .from(chatMessage)
                 .leftJoin(chatMessage.sender, sender)
+                .where(chatMessage.chatRoom.id.eq(chatRoomId))
                 .orderBy(chatMessage.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageSize + 1)
