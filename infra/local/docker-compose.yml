@@ -1,9 +1,25 @@
-version: "3"
-
 services:
   redis:
     container_name: redis
-    image: redis:6
+    image: redis:7
     command: redis-server --requirepass localpassword
     ports:
       - 6379:6379
+    environment:
+      - TZ=Asia/Seoul # TimeZone 설정
+
+  mysql:
+    container_name: mysql
+    image: mysql:8.0.36
+    ports:
+      - 3306:3306
+    environment:
+      - TZ=Asia/Seoul # TimeZone 설정
+      - MYSQL_DATABASE=whatpl_local
+      - MYSQL_USER=local_user
+      - MYSQL_PASSWORD=local_password
+      - MYSQL_ROOT_PASSWORD=local_password
+      - character-set-server utf8mb4
+      - collation-server utf8mb4_general_ci
+      - default-character-set utf8mb4
+      - default-collation utf8mb4_general_ci
