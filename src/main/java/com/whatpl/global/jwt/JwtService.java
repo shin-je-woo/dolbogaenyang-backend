@@ -1,5 +1,7 @@
 package com.whatpl.global.jwt;
 
+import com.whatpl.global.common.domain.enums.Career;
+import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.redis.RedisService;
@@ -47,6 +49,8 @@ public class JwtService {
                 .subject(String.valueOf(principal.getId()))
                 .claim(WhatplClaim.NICKNAME.getKey(), principal.getUsername())
                 .claim(WhatplClaim.HAS_PROFILE.getKey(), principal.getHasProfile())
+                .claim(WhatplClaim.JOB.getKey(), principal.getJob() != null ? principal.getJob().getValue() : null)
+                .claim(WhatplClaim.CAREER.getKey(), principal.getCareer() != null ? principal.getCareer().getValue() : null)
                 .issuer("jewoos.site")
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.getAccessExpirationTime()))
                 .signWith(jwtProperties.getSecretKey())
@@ -111,9 +115,19 @@ public class JwtService {
 
     private MemberPrincipal getMemberPrincipal(Jws<Claims> claims) {
         long id = Long.parseLong(claims.getPayload().getSubject());
-        String nickname = claims.getPayload().get(WhatplClaim.NICKNAME.getKey()).toString();
-        boolean hasProfile = Boolean.parseBoolean(claims.getPayload().get(WhatplClaim.HAS_PROFILE.getKey()).toString());
-        return new MemberPrincipal(id, hasProfile, nickname, "", Collections.emptySet());
+        String nickname = getClaimValue(claims, WhatplClaim.NICKNAME);
+        boolean hasProfile = Boolean.parseBoolean(getClaimValue(claims, WhatplClaim.HAS_PROFILE));
+        Job job = Job.ifNotMatched(getClaimValue(claims, WhatplClaim.JOB), () -> null);
+        Career career = Career.ifNotMatched(getClaimValue(claims, WhatplClaim.CAREER), () -> null);
+        return MemberPrincipal.memberPrincipalBuilder()
+                .id(id)
+                .hasProfile(hasProfile)
+                .job(job)
+                .career(career)
+                .username(nickname)
+                .password("")
+                .authorities(Collections.emptySet())
+                .build();
     }
 
     private Jws<Claims> parseJwt(String jwt) {
@@ -131,5 +145,10 @@ public class JwtService {
         if (!redisService.exists(PREFIX_REFRESH_TOKEN + refreshToken))
             throw new BizException(ErrorCode.EXPIRED_TOKEN);
         return Long.parseLong(redisService.get(PREFIX_REFRESH_TOKEN + refreshToken));
+    }
+
+    private String getClaimValue(Jws<Claims> claims, WhatplClaim whatplClaim) {
+        Object claimValue = claims.getPayload().get(whatplClaim.getKey());
+        return claimValue != null ? claimValue.toString() : null;
     }
 }
