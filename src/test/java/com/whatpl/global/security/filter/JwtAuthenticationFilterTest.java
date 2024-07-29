@@ -1,6 +1,7 @@
 package com.whatpl.global.security.filter;
 
 import com.whatpl.BaseSecurityWebMvcTest;
+import com.whatpl.global.authentication.MemberPrincipalFixture;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ class JwtAuthenticationFilterTest extends BaseSecurityWebMvcTest {
         // given: 토큰이 유효한 경우로 세팅
         String tokenType = "Bearer";
         String validToken = "validToken";
-        var principal = new MemberPrincipal(1L, true, "test", "", Collections.emptySet());
+        MemberPrincipal principal = MemberPrincipalFixture.create();
         var authenticationToken = new UsernamePasswordAuthenticationToken(principal, "", Collections.emptySet());
         when(jwtService.resolveToken(any()))
                 .thenReturn(authenticationToken);

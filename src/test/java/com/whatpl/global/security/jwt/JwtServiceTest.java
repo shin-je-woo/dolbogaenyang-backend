@@ -1,5 +1,6 @@
 package com.whatpl.global.security.jwt;
 
+import com.whatpl.global.authentication.MemberPrincipalFixture;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.jwt.JwtProperties;
@@ -8,6 +9,7 @@ import com.whatpl.global.jwt.JwtService;
 import com.whatpl.global.redis.RedisService;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.member.domain.Member;
+import com.whatpl.member.model.MemberFixture;
 import com.whatpl.member.repository.MemberRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -24,10 +26,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
-import java.util.Collections;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,7 +53,7 @@ class JwtServiceTest {
     @DisplayName("accessToken 을 발급한다.")
     void createAccessToken() {
         // given
-        MemberPrincipal principal = new MemberPrincipal(1L, false, "testuser", "", Collections.emptySet());
+        MemberPrincipal principal = MemberPrincipalFixture.create();
         OAuth2AuthenticationToken oAuth2AuthenticationToken = new OAuth2AuthenticationToken(principal, null, "test");
 
         when(jwtProperties.getAccessExpirationTime())
@@ -163,12 +165,10 @@ class JwtServiceTest {
                 .thenReturn(true);
         when(redisService.get(any()))
                 .thenReturn(String.valueOf(memberId));
-        Member testMember = Member.builder()
-                .nickname("testMember")
-                .build();
+        Member testMember = MemberFixture.withAll();
         when(memberRepository.findMemberWithAllById(memberId))
                 .thenReturn(Optional.of(testMember));
-        MemberPrincipal expectedPrincipal = new MemberPrincipal(memberId, false, testMember.getNickname(), "", Collections.emptySet());
+        MemberPrincipal expectedPrincipal = MemberPrincipalFixture.create();
         MockedStatic<MemberPrincipal> memberPrincipalMock = mockStatic(MemberPrincipal.class);
         memberPrincipalMock.when(() -> MemberPrincipal.from(testMember))
                 .thenReturn(expectedPrincipal);

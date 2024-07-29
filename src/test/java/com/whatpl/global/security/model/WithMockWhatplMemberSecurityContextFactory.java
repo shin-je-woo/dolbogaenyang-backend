@@ -14,7 +14,15 @@ public class WithMockWhatplMemberSecurityContextFactory implements WithSecurityC
     @Override
     public SecurityContext createSecurityContext(WithMockWhatplMember whatplMember) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        MemberPrincipal principal = new MemberPrincipal(whatplMember.id(), whatplMember.hasProfile(), "왓플테스트유저", "", Collections.emptySet());
+        MemberPrincipal principal = MemberPrincipal.memberPrincipalBuilder()
+                .id(whatplMember.id())
+                .hasProfile(whatplMember.hasProfile())
+                .job(whatplMember.job())
+                .career(whatplMember.career())
+                .username("왓플테스트유저")
+                .password("")
+                .authorities(Collections.emptySet())
+                .build();
         Authentication auth = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities());
         context.setAuthentication(auth);
         return context;

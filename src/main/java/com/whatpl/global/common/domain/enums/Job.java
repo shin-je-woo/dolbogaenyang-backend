@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 @Getter
 @RequiredArgsConstructor
@@ -30,5 +31,12 @@ public enum Job implements WhatplGlobalDomain {
                 .filter(job -> job.getValue().equals(value))
                 .findFirst()
                 .orElseThrow(() -> new BizException(ErrorCode.JOB_NOT_VALID));
+    }
+
+    public static Job ifNotMatched(String value, Supplier<Job> jobSupplier) {
+        return Arrays.stream(Job.values())
+                .filter(job -> job.getValue().equals(value))
+                .findFirst()
+                .orElseGet(jobSupplier);
     }
 }

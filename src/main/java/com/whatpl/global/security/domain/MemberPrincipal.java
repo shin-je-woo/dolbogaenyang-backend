@@ -1,6 +1,9 @@
 package com.whatpl.global.security.domain;
 
+import com.whatpl.global.common.domain.enums.Career;
+import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.member.domain.Member;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -10,16 +13,21 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+@Getter
 public class MemberPrincipal extends User implements OAuth2User {
 
-    @Getter
     private final long id;
     private final boolean hasProfile;
+    private final Job job;
+    private final Career career;
 
-    public MemberPrincipal(long id, boolean hasProfile, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    @Builder(builderMethodName = "memberPrincipalBuilder")
+    public MemberPrincipal(long id, boolean hasProfile, Job job, Career career, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.id = id;
         this.hasProfile = hasProfile;
+        this.job = job;
+        this.career = career;
     }
 
     @Override
@@ -37,6 +45,14 @@ public class MemberPrincipal extends User implements OAuth2User {
     }
 
     public static MemberPrincipal from(Member member) {
-        return new MemberPrincipal(member.getId(), member.hasProfile(), member.getNickname(), "", Collections.emptySet());
+        return MemberPrincipal.memberPrincipalBuilder()
+                .id(member.getId())
+                .hasProfile(member.hasProfile())
+                .job(member.getJob())
+                .career(member.getCareer())
+                .username(member.getNickname())
+                .password("")
+                .authorities(Collections.emptySet())
+                .build();
     }
 }
