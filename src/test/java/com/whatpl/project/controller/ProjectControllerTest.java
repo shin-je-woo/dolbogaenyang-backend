@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -209,7 +208,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                 .representImageUri("/images/default?type=project")
                 .myLike(true)
                 .build();
-        SliceImpl<ProjectInfo> projectInfos = new SliceImpl<>(List.of(projectInfo));
+        List<ProjectInfo> projectInfos = List.of(projectInfo);
         ProjectSearchCondition searchCondition = ProjectSearchCondition.builder()
                 .subject(Subject.SOCIAL_MEDIA)
                 .status(ProjectStatus.RECRUITING)

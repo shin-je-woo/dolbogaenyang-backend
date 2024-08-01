@@ -40,4 +40,8 @@ public class RecruitJob extends BaseTimeEntity {
         }
         this.recruitAmount = recruitAmount;
     }
+
+    public boolean isJobMatched(ProjectParticipant participant) {
+        return this.getJob().equals(participant.getJob());
+    }
 }

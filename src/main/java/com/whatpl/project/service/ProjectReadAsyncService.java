@@ -49,12 +49,7 @@ public class ProjectReadAsyncService {
                         List<RecruitJob> recruitJobs = recruitJobMap.get(projectId);
                         List<ProjectParticipant> participants = Optional.ofNullable(participantMap.get(projectId)).orElseGet(Collections::emptyList);
                         List<RemainedJobDto> remainedJobs = recruitJobs.stream()
-                                .map(recruitJob -> RemainedJobDto.builder()
-                                        .job(recruitJob.getJob())
-                                        .recruitAmount(recruitJob.getRecruitAmount())
-                                        .remainedAmount(recruitJobs.size() - participants.size())
-                                        .build())
-                                .filter(remainedJob -> remainedJob.getRemainedAmount() != 0)
+                                .map(recruitJob -> RemainedJobDto.of(recruitJob, participants))
                                 .toList();
                         projectInfo.setRemainedJobs(remainedJobs);
                     });

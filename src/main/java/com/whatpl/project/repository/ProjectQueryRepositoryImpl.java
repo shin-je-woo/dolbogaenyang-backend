@@ -1,6 +1,5 @@
 package com.whatpl.project.repository;
 
-import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
@@ -16,10 +15,8 @@ import com.whatpl.project.dto.ProjectInfo;
 import com.whatpl.project.dto.ProjectSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.querydsl.core.types.Projections.fields;
@@ -79,24 +76,16 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 .fetch();
     }
 
+    /**
+     * 정렬 조건을 생성합니다.
+     * 정렬 조건은 최신순, 인기순을 지원합니다.
+     */
     private OrderSpecifier<?>[] projectOrderBy(Pageable pageable) {
         List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
-        for (Sort.Order order : pageable.getSort()) {
-            switch (order.getProperty().toLowerCase()) {
-                case "latest" -> { // 최신순
-                    OrderSpecifier<LocalDateTime> latest = new OrderSpecifier<>(Order.DESC, project.createdAt);
-                    orderSpecifiers.add(latest);
-                }
-                case "popular" -> { // 인기순
-                    OrderSpecifier<Long> popular = new OrderSpecifier<>(Order.DESC, project.views);
-                    orderSpecifiers.add(popular);
-                }
-                default -> {
-                    OrderSpecifier<LocalDateTime> latest = new OrderSpecifier<>(Order.DESC, project.createdAt);
-                    orderSpecifiers.add(latest);
-                }
-            }
-        }
+        pageable.getSort().forEach(order -> {
+            Arrays.stream(ProjectSearchCondition.OrderType.values())
+                    .forEach(orderType -> orderType.getOrderSpecifier(order).ifPresent(orderSpecifiers::add));
+        });
         return orderSpecifiers.toArray(new OrderSpecifier[0]);
     }
 

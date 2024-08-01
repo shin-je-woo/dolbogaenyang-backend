@@ -4,6 +4,7 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.pagination.SliceResponse;
 import com.whatpl.global.security.domain.MemberPrincipal;
+import com.whatpl.global.util.PaginationUtils;
 import com.whatpl.project.domain.enums.ProjectStatus;
 import com.whatpl.project.dto.*;
 import com.whatpl.project.service.ProjectReadService;
@@ -11,13 +12,14 @@ import com.whatpl.project.service.ProjectWriteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,8 +55,9 @@ public class ProjectController {
             throw new BizException(ErrorCode.PROJECT_STATUS_NOT_VALID);
         }
         searchCondition.assignLoginMember(principal);
-        Slice<ProjectInfo> projects = projectReadService.searchProjectList(pageable, searchCondition);
-        return ResponseEntity.ok(new SliceResponse<>(projects));
+        List<ProjectInfo> projectInfos = projectReadService.searchProjectList(pageable, searchCondition);
+        SliceImpl<ProjectInfo> result = new SliceImpl<>(projectInfos, pageable, PaginationUtils.hasNext(projectInfos, pageable.getPageSize()));
+        return ResponseEntity.ok(new SliceResponse<>(result));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'PROJECT', 'UPDATE')")
