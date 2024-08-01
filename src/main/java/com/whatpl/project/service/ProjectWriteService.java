@@ -14,6 +14,7 @@ import com.whatpl.project.dto.ProjectCreateRequest;
 import com.whatpl.project.dto.ProjectUpdateRequest;
 import com.whatpl.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class ProjectWriteService {
     private final ProjectRepository projectRepository;
 
     @Transactional
+    @CacheEvict(value = "projectList", allEntries = true)
     public Long createProject(final ProjectCreateRequest request, final Long memberId) {
         Member writer = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
@@ -39,6 +41,7 @@ public class ProjectWriteService {
 
     @Transactional
     @DistributedLock(name = "'project:'.concat(#projectId)")
+    @CacheEvict(value = "projectList", allEntries = true)
     public void modifyProject(final Long projectId, final ProjectUpdateRequest request) {
         Attachment representImage = getRepresentImage(request.getRepresentImageId());
         Project project = projectRepository.findWithRecruitJobsById(projectId)
@@ -59,6 +62,7 @@ public class ProjectWriteService {
 
     @Transactional
     @DistributedLock(name = "'project:'.concat(#projectId)")
+    @CacheEvict(value = "projectList", allEntries = true)
     public void deleteProject(final Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));

@@ -8,6 +8,7 @@ import com.whatpl.project.domain.enums.ProjectStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Builder
@@ -26,5 +27,13 @@ public class ProjectSearchCondition {
             return;
         }
         longinMemberId = principal != null ? principal.getId() : Long.MIN_VALUE;
+    }
+
+    public boolean isEmpty() {
+        return this.subject == null &&
+                this.job == null &&
+                this.skill == null &&
+                this.profitable == null &&
+                !StringUtils.hasText(this.keyword);
     }
 }

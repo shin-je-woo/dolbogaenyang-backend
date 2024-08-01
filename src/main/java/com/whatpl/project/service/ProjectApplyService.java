@@ -19,6 +19,7 @@ import com.whatpl.project.repository.ApplyRepository;
 import com.whatpl.project.repository.ProjectParticipantRepository;
 import com.whatpl.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,6 +67,8 @@ public class ProjectApplyService {
 
     @Transactional
     @DistributedLock(name = "'project:'.concat(#projectId)")
+    @CacheEvict(value = "projectList", allEntries = true,
+            condition = "T(com.whatpl.global.common.domain.enums.ApplyStatus).ACCEPTED.equals(#applyStatus)")
     public void status(final long projectId, final long applyId, final ApplyStatus applyStatus) {
         Project project = projectRepository.findWithRecruitJobsById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));

@@ -2,7 +2,6 @@ package com.whatpl.project.service;
 
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
-import com.whatpl.global.util.PaginationUtils;
 import com.whatpl.project.converter.ProjectModelConverter;
 import com.whatpl.project.domain.Project;
 import com.whatpl.project.dto.ProjectInfo;
@@ -11,9 +10,8 @@ import com.whatpl.project.dto.ProjectSearchCondition;
 import com.whatpl.project.repository.ProjectLikeRepository;
 import com.whatpl.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +39,10 @@ public class ProjectReadService {
     }
 
     @Transactional(readOnly = true)
-    public Slice<ProjectInfo> searchProjectList(Pageable pageable, ProjectSearchCondition searchCondition) {
+    @Cacheable(value = "projectList",
+            key = "T(com.whatpl.project.util.ProjectCacheUtils).buildListCacheKey(#searchCondition)",
+            condition = "T(com.whatpl.project.util.ProjectCacheUtils).isCacheable(#pageable, #searchCondition)")
+    public List<ProjectInfo> searchProjectList(Pageable pageable, ProjectSearchCondition searchCondition) {
         List<ProjectInfo> projectInfos = projectRepository.findProjectInfos(pageable, searchCondition);
         CompletableFuture.allOf(
                 projectReadAsyncService.mergeSkills(projectInfos),
@@ -50,6 +51,6 @@ public class ProjectReadService {
                 projectReadAsyncService.mergeComments(projectInfos)
         ).join();
 
-        return new SliceImpl<>(projectInfos, pageable, PaginationUtils.hasNext(projectInfos, pageable.getPageSize()));
+        return projectInfos;
     }
 }

@@ -14,6 +14,7 @@ import com.whatpl.project.dto.ProjectCommentUpdateRequest;
 import com.whatpl.project.repository.ProjectCommentRepository;
 import com.whatpl.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ public class ProjectCommentService {
     private final ProjectCommentRepository projectCommentRepository;
 
     @Transactional
+    @CacheEvict(value = "projectList", allEntries = true)
     public void createProjectComment(final ProjectCommentCreateRequest request, final long projectId, final long writerId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));

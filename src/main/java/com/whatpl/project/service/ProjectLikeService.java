@@ -9,6 +9,7 @@ import com.whatpl.project.domain.ProjectLike;
 import com.whatpl.project.repository.ProjectLikeRepository;
 import com.whatpl.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ public class ProjectLikeService {
     private final ProjectLikeRepository projectLikeRepository;
 
     @Transactional
+    @CacheEvict(value = "projectList", allEntries = true)
     public long putLike(final long projectId, final long memberId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
@@ -35,6 +37,7 @@ public class ProjectLikeService {
     }
 
     @Transactional
+    @CacheEvict(value = "projectList", allEntries = true)
     public void deleteLike(final long projectId, final long memberId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
