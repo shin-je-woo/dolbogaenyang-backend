@@ -15,7 +15,8 @@ public enum ProjectStatus {
 
     RECRUITING("모집중"),
     COMPLETED("모집완료"),
-    DELETED("삭제");
+    DELETED("삭제"),
+    ALL("전체");
 
     @JsonValue
     private final String value;

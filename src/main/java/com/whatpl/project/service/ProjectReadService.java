@@ -33,8 +33,8 @@ public class ProjectReadService {
         boolean myLike = projectLikeRepository.existsByProjectIdAndMemberId(projectId, memberId);
 
         long likes = projectLikeRepository.countByProject(project);
-        // 조회수 증가
         project.increaseViews();
+
         return ProjectModelConverter.toProjectReadResponse(project, likes, myLike);
     }
 

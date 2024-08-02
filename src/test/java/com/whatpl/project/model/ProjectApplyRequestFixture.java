@@ -6,9 +6,9 @@ import com.whatpl.project.dto.ProjectApplyRequest;
 
 public class ProjectApplyRequestFixture {
 
-    public static ProjectApplyRequest apply() {
+    public static ProjectApplyRequest apply(Job applyJob) {
         return ProjectApplyRequest.builder()
-                .applyJob(Job.BACKEND_DEVELOPER)
+                .applyJob(applyJob)
                 .content("test content")
                 .applyType(ApplyType.APPLY)
                 .build();
