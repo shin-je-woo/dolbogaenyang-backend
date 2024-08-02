@@ -2,6 +2,7 @@ package com.whatpl.project.domain;
 
 import com.whatpl.attachment.domain.Attachment;
 import com.whatpl.global.common.BaseTimeEntity;
+import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.common.domain.enums.Skill;
 import com.whatpl.global.common.domain.enums.Subject;
 import com.whatpl.global.exception.BizException;
@@ -63,6 +64,9 @@ public class Project extends BaseTimeEntity {
     @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST)
     private List<ProjectLike> projectLikes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST)
+    private List<Apply> applies = new ArrayList<>();
+
     @OrderBy("createdAt asc")
     @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST)
     private List<ProjectParticipant> projectParticipants = new ArrayList<>();
@@ -118,6 +122,14 @@ public class Project extends BaseTimeEntity {
     public void addRepresentImageAndWriter(Attachment representImage, Member writer) {
         this.representImage = representImage;
         this.writer = writer;
+    }
+
+    public void addApply(Apply apply) {
+        if (apply == null) {
+            return;
+        }
+        this.applies.add(apply);
+        apply.setProject(this);
     }
 
     //==비즈니스 로직==//
@@ -229,5 +241,55 @@ public class Project extends BaseTimeEntity {
                 .orElseGet(Collections::emptyList).stream()
                 .map(ProjectSkill::new)
                 .forEach(this::addProjectSkill);
+    }
+
+    /**
+     * 프로젝트가 지원 가능한 상태인지 검증합니다.
+     */
+    public void validateCanApply(final Member applicant, final Job applyJob) {
+        validateDeletedProject();
+        validateCompletedRecruitment();
+        validateWriter(applicant);
+        validateExistsRecruitJob(applyJob);
+        recruitJobs.forEach(RecruitJob::validateFullJob);
+        applies.forEach(apply -> apply.validateDuplicatedApply(applicant));
+    }
+
+    /**
+     * 삭제된 프로젝트인지 검증합니다.
+     */
+    private void validateDeletedProject() {
+        if (ProjectStatus.DELETED.equals(status)) {
+            throw new BizException(ErrorCode.DELETED_PROJECT);
+        }
+    }
+
+    /**
+     * 모집완료된 프로젝트인지 검증합니다.
+     */
+    private void validateCompletedRecruitment() {
+        if (ProjectStatus.COMPLETED.equals(status)) {
+            throw new BizException(ErrorCode.COMPLETED_RECRUITMENT);
+        }
+    }
+
+    /**
+     * 본인이 등록한 프로젝트인지 검증합니다.
+     */
+    private void validateWriter(Member applicant) {
+        if (writer.equals(applicant)) {
+            throw new BizException(ErrorCode.WRITER_NOT_APPLY);
+        }
+    }
+
+    /**
+     * 모집직군에 요청한 직군이 존재하는지 검증합니다.
+     */
+    private void validateExistsRecruitJob(Job job) {
+        boolean existsRecruitJob = recruitJobs.stream()
+                .anyMatch(recruitJob -> recruitJob.isJobMatched(job));
+        if (!existsRecruitJob) {
+            throw new BizException(ErrorCode.NOT_MATCH_APPLY_JOB_WITH_PROJECT);
+        }
     }
 }

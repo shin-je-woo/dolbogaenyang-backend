@@ -8,10 +8,7 @@ import com.whatpl.member.domain.Member;
 import com.whatpl.global.common.domain.enums.ApplyStatus;
 import com.whatpl.project.domain.enums.ApplyType;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Entity
@@ -36,6 +33,7 @@ public class Apply extends BaseTimeEntity {
     @JoinColumn(name = "applicant_id")
     private Member applicant;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
@@ -66,5 +64,41 @@ public class Apply extends BaseTimeEntity {
             throw new BizException(ErrorCode.ALREADY_PROCESSED_APPLY);
         }
         this.status = status;
+    }
+
+    /**
+     * 지원 요청을 처리합니다.
+     * 지원상태를 변경하고, 지원자를 참여시킬지 결정합니다.
+     */
+    public void processApply(final Project project, final ApplyStatus applyStatus) {
+        changeStatus(applyStatus);
+        if (applyStatus.equals(ApplyStatus.ACCEPTED)) {
+            participate(project, applicant);
+        }
+    }
+
+    /**
+     * 지원자를 프로젝트에 참여시킵니다.
+     */
+    private void participate(Project project, Member participant) {
+        project.getRecruitJobs().stream()
+                .filter(recruitJob -> recruitJob.getJob().equals(this.job))
+                .findFirst()
+                .ifPresent(RecruitJob::validateFullJob);
+        ProjectParticipant projectParticipant = ProjectParticipant.builder()
+                .project(project)
+                .participant(participant)
+                .job(job)
+                .build();
+        project.addProjectParticipant(projectParticipant);
+    }
+
+    /**
+     * 중복 지원인지 검증합니다.
+     */
+    public void validateDuplicatedApply(Member applicant) {
+        if (this.applicant.equals(applicant)) {
+            throw new BizException(ErrorCode.DUPLICATED_APPLY);
+        }
     }
 }

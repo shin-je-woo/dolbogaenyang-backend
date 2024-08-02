@@ -2,6 +2,7 @@ package com.whatpl.project.controller;
 
 import com.whatpl.ApiDocTag;
 import com.whatpl.BaseSecurityWebMvcTest;
+import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.security.model.WithMockWhatplMember;
 import com.whatpl.global.common.domain.enums.ApplyStatus;
 import com.whatpl.project.dto.ApplyResponse;
@@ -45,7 +46,7 @@ class ProjectApplyControllerTest extends BaseSecurityWebMvcTest {
     @DisplayName("프로젝트 지원 API Docs")
     void apply() throws Exception {
         // given
-        ProjectApplyRequest request = ProjectApplyRequestFixture.apply();
+        ProjectApplyRequest request = ProjectApplyRequestFixture.apply(Job.BACKEND_DEVELOPER);
         Map<String, Object> map = Map.of(
                 "applyJob", request.getApplyJob(),
                 "content", request.getContent(),
