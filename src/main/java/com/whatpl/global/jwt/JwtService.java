@@ -1,10 +1,10 @@
 package com.whatpl.global.jwt;
 
+import com.whatpl.global.cache.CacheOperator;
 import com.whatpl.global.common.domain.enums.Career;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
-import com.whatpl.global.redis.RedisService;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.member.domain.Member;
 import com.whatpl.member.repository.MemberRepository;
@@ -29,7 +29,7 @@ import java.util.UUID;
 public class JwtService {
 
     private final JwtProperties jwtProperties;
-    private final RedisService redisService;
+    private final CacheOperator cacheOperator;
     private final MemberRepository memberRepository;
     private static final String PREFIX_REFRESH_TOKEN = "refreshToken:";
 
@@ -59,14 +59,14 @@ public class JwtService {
 
     /**
      * refreshToken 을 발급한다.
-     * refreshToken 은 Redis 에 저장한다.
+     * refreshToken 은 Cache 저장소에 저장한다.
      *
      * @param id Member ID
      * @return 발급된 refreshToken
      */
     public String createRefreshToken(final long id) {
         String refreshToken = UUID.randomUUID().toString();
-        redisService.put(PREFIX_REFRESH_TOKEN + refreshToken, id, jwtProperties.getRefreshExpirationTime());
+        cacheOperator.put(PREFIX_REFRESH_TOKEN + refreshToken, id, jwtProperties.getRefreshExpirationTime());
         return refreshToken;
     }
 
@@ -76,17 +76,17 @@ public class JwtService {
      *
      * @param refreshToken 발급가능 여부를 판단할 refreshToken
      * @return 새로운 토큰객체
-     * @throws BizException refreshToken 저장소(Redis)에 refreshToken 이 존재하지 않을 경우 발생
+     * @throws BizException Cache 저장소에 refreshToken 이 존재하지 않을 경우 발생
      */
     public JwtResponse reIssueToken(final String refreshToken) {
         if (!StringUtils.hasText(refreshToken)) {
             throw new BizException(ErrorCode.INVALID_TOKEN);
         }
-        Long memberId = getMemberIdFromRedis(refreshToken);
+        Long memberId = getMemberId(refreshToken);
         UsernamePasswordAuthenticationToken authenticationToken = createAuthenticationToken(memberId);
         String accessToken = createAccessToken(authenticationToken);
         String reIssuedRefreshToken = createRefreshToken(memberId);
-        redisService.delete(PREFIX_REFRESH_TOKEN + refreshToken);
+        cacheOperator.delete(PREFIX_REFRESH_TOKEN + refreshToken);
 
         return JwtResponse.builder()
                 .accessToken(accessToken)
@@ -141,10 +141,10 @@ public class JwtService {
         return claims;
     }
 
-    private Long getMemberIdFromRedis(String refreshToken) {
-        if (!redisService.exists(PREFIX_REFRESH_TOKEN + refreshToken))
+    private Long getMemberId(String refreshToken) {
+        if (!cacheOperator.exists(PREFIX_REFRESH_TOKEN + refreshToken))
             throw new BizException(ErrorCode.EXPIRED_TOKEN);
-        return Long.parseLong(redisService.get(PREFIX_REFRESH_TOKEN + refreshToken));
+        return Long.parseLong(cacheOperator.get(PREFIX_REFRESH_TOKEN + refreshToken));
     }
 
     private String getClaimValue(Jws<Claims> claims, WhatplClaim whatplClaim) {

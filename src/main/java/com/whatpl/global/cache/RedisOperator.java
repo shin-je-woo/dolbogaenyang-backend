@@ -1,17 +1,15 @@
-package com.whatpl.global.redis;
+package com.whatpl.global.cache;
 
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-@Service
 @RequiredArgsConstructor
-public class RedisService {
+public class RedisOperator implements CacheOperator {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
