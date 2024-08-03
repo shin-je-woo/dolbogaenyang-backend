@@ -33,7 +33,7 @@ class ImageControllerTest extends BaseSecurityWebMvcTest {
     void setUp() throws IOException {
         when(imageProperties.getPrefix()).thenReturn(prefix);
         InputStreamResource resource = new InputStreamResource(createMockMultipartFile("file", "cat.jpg", IMAGE_JPEG_VALUE).getInputStream());
-        when(s3Uploader.download(any())).thenReturn(resource);
+        when(fileUploader.download(any())).thenReturn(resource);
     }
 
     @Test

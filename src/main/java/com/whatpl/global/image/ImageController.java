@@ -1,7 +1,7 @@
 package com.whatpl.global.image;
 
 import com.whatpl.global.common.domain.enums.Skill;
-import com.whatpl.global.upload.S3Uploader;
+import com.whatpl.global.upload.FileUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ImageController {
 
-    private final S3Uploader s3Uploader;
+    private final FileUploader fileUploader;
     private final ImageProperties imageProperties;
 
     @GetMapping("/images/project")
     public ResponseEntity<Resource> projectImage() {
-        Resource resource = s3Uploader.download(imageProperties.getPrefix().getProject());
+        Resource resource = fileUploader.download(imageProperties.getPrefix().getProject());
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_PNG_VALUE)
                 .cacheControl(CacheControl.maxAge(imageProperties.getCacheDays()).mustRevalidate())
@@ -30,7 +30,7 @@ public class ImageController {
 
     @GetMapping("/images/skill/{skillName}")
     public ResponseEntity<Resource> skillImage(@PathVariable(name = "skillName") Skill skill) {
-        Resource resource = s3Uploader.download(String.format("%s_%s", imageProperties.getPrefix().getSkill(), skill.name().toUpperCase()));
+        Resource resource = fileUploader.download(String.format("%s_%s", imageProperties.getPrefix().getSkill(), skill.name().toUpperCase()));
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, "image/svg+xml")
                 .cacheControl(CacheControl.maxAge(imageProperties.getCacheDays()).mustRevalidate())

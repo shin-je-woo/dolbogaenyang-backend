@@ -8,16 +8,14 @@ import io.awspring.cloud.s3.S3Template;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-@Service
 @RequiredArgsConstructor
-public class S3Uploader {
+public class S3Uploader implements FileUploader {
 
     private final S3Template s3Template;
 

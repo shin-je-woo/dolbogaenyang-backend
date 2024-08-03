@@ -1,12 +1,12 @@
 package com.whatpl.global.security.jwt;
 
 import com.whatpl.global.authentication.MemberPrincipalFixture;
+import com.whatpl.global.cache.CacheOperator;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.jwt.JwtProperties;
 import com.whatpl.global.jwt.JwtResponse;
 import com.whatpl.global.jwt.JwtService;
-import com.whatpl.global.redis.RedisService;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.member.domain.Member;
 import com.whatpl.member.model.MemberFixture;
@@ -44,7 +44,7 @@ class JwtServiceTest {
     JwtProperties jwtProperties;
 
     @Mock
-    RedisService redisService;
+    CacheOperator cacheOperator;
 
     @InjectMocks
     JwtService jwtService;
@@ -89,7 +89,7 @@ class JwtServiceTest {
         // then
         long countHyphen = refreshToken.chars().filter(c -> c == '-').count();
         assertEquals(4, countHyphen);
-        verify(redisService, times(1))
+        verify(cacheOperator, times(1))
                 .put(prefix + refreshToken, id, refreshTokenExpirationTime);
     }
 
@@ -146,7 +146,7 @@ class JwtServiceTest {
     void reIssueTokenNotFoundToken() {
         // given
         String refreshToken = "refreshToken";
-        when(redisService.exists(any()))
+        when(cacheOperator.exists(any()))
                 .thenReturn(false);
 
         // expected
@@ -161,9 +161,9 @@ class JwtServiceTest {
         // given
         String refreshToken = "refreshToken";
         long memberId = 1L;
-        when(redisService.exists(any()))
+        when(cacheOperator.exists(any()))
                 .thenReturn(true);
-        when(redisService.get(any()))
+        when(cacheOperator.get(any()))
                 .thenReturn(String.valueOf(memberId));
         Member testMember = MemberFixture.withAll();
         when(memberRepository.findMemberWithAllById(memberId))
@@ -179,7 +179,7 @@ class JwtServiceTest {
         JwtResponse jwtResponse = jwtService.reIssueToken(refreshToken);
 
         // then
-        verify(redisService, times(1))
+        verify(cacheOperator, times(1))
                 .delete(any());
         long countComma = jwtResponse.getAccessToken().chars().filter(c -> c == '.').count();
         assertEquals(2, countComma);
