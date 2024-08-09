@@ -2,7 +2,7 @@ package com.whatpl.domain.project.service;
 
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
-import com.whatpl.domain.project.converter.ProjectModelConverter;
+import com.whatpl.domain.project.mapper.ProjectMapper;
 import com.whatpl.domain.project.domain.Project;
 import com.whatpl.domain.project.dto.ProjectInfo;
 import com.whatpl.domain.project.dto.ProjectReadResponse;
@@ -35,7 +35,7 @@ public class ProjectReadService {
         long likes = projectLikeRepository.countByProject(project);
         project.increaseViews();
 
-        return ProjectModelConverter.toProjectReadResponse(project, likes, myLike);
+        return ProjectMapper.toProjectReadResponse(project, likes, myLike);
     }
 
     @Transactional(readOnly = true)

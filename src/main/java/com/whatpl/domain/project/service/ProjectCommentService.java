@@ -4,7 +4,7 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.member.repository.MemberRepository;
-import com.whatpl.domain.project.converter.ProjectCommentModelConverter;
+import com.whatpl.domain.project.mapper.ProjectCommentMapper;
 import com.whatpl.domain.project.domain.Project;
 import com.whatpl.domain.project.domain.ProjectComment;
 import com.whatpl.domain.project.dto.ProjectCommentCreateRequest;
@@ -76,7 +76,7 @@ public class ProjectCommentService {
                 .toList();
 
         List<ProjectCommentDto> projectCommentDtos = projectComments.stream()
-                .map(ProjectCommentModelConverter::toProjectCommentDto)
+                .map(ProjectCommentMapper::toProjectCommentDto)
                 .toList();
 
         return ProjectCommentListResponse.builder()

@@ -1,4 +1,4 @@
-package com.whatpl.domain.project.converter;
+package com.whatpl.domain.project.mapper;
 
 import com.whatpl.domain.project.domain.ProjectComment;
 import com.whatpl.domain.project.dto.ProjectCommentDto;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProjectCommentModelConverter {
+public class ProjectCommentMapper {
 
     public static ProjectCommentDto toProjectCommentDto(ProjectComment projectComment) {
         // 하위 댓글

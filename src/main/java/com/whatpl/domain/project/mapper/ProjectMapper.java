@@ -1,4 +1,4 @@
-package com.whatpl.domain.project.converter;
+package com.whatpl.domain.project.mapper;
 
 import com.whatpl.domain.attachment.domain.Attachment;
 import com.whatpl.global.common.model.Job;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ProjectModelConverter {
+public final class ProjectMapper {
 
     public static Project toProject(final ProjectCreateRequest request, final Member writer, final Attachment representImage) {
         if (request == null || writer == null) {
@@ -95,7 +95,7 @@ public final class ProjectModelConverter {
         }
         return projectParticipants.stream()
                 .filter(projectParticipant -> projectParticipant.getJob().equals(job))
-                .map(ProjectModelConverter::buildParticipant)
+                .map(ProjectMapper::buildParticipant)
                 .toList();
     }
 

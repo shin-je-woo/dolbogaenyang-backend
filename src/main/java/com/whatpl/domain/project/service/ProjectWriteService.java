@@ -8,7 +8,7 @@ import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.util.FileUtils;
 import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.member.repository.MemberRepository;
-import com.whatpl.domain.project.converter.ProjectModelConverter;
+import com.whatpl.domain.project.mapper.ProjectMapper;
 import com.whatpl.domain.project.domain.Project;
 import com.whatpl.domain.project.dto.ProjectCreateRequest;
 import com.whatpl.domain.project.dto.ProjectUpdateRequest;
@@ -33,7 +33,7 @@ public class ProjectWriteService {
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
 
         Attachment representImage = getRepresentImage(request.getRepresentImageId());
-        Project project = ProjectModelConverter.toProject(request, writer, representImage);
+        Project project = ProjectMapper.toProject(request, writer, representImage);
 
         Project savedProject = projectRepository.save(project);
         return savedProject.getId();
