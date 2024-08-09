@@ -1,7 +1,7 @@
 package com.whatpl.domain.member.domain;
 
 import com.whatpl.domain.attachment.domain.Attachment;
-import com.whatpl.global.common.BaseTimeEntity;
+import com.whatpl.global.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

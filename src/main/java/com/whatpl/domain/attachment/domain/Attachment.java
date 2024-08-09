@@ -1,6 +1,6 @@
 package com.whatpl.domain.attachment.domain;
 
-import com.whatpl.global.common.BaseTimeEntity;
+import com.whatpl.global.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

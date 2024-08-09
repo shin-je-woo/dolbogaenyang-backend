@@ -1,4 +1,4 @@
-package com.whatpl.global.common;
+package com.whatpl.global.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;

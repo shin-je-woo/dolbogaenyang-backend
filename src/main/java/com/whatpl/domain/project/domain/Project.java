@@ -1,7 +1,7 @@
 package com.whatpl.domain.project.domain;
 
 import com.whatpl.domain.attachment.domain.Attachment;
-import com.whatpl.global.common.BaseTimeEntity;
+import com.whatpl.global.common.domain.BaseTimeEntity;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.common.domain.enums.Skill;
 import com.whatpl.global.common.domain.enums.Subject;

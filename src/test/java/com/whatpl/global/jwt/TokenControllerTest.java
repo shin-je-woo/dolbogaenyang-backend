@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class JwtControllerTest extends BaseSecurityWebMvcTest {
+class TokenControllerTest extends BaseSecurityWebMvcTest {
 
     @Test
     @DisplayName("토큰 재발급 요청")

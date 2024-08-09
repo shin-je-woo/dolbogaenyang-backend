@@ -1,4 +1,4 @@
-package com.whatpl.global.common;
+package com.whatpl.global.common.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

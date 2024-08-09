@@ -1,4 +1,4 @@
-package com.whatpl.global.common.domain;
+package com.whatpl.global.common.controller;
 
 import com.whatpl.global.common.domain.enums.*;
 import com.whatpl.global.common.domain.enums.ApplyStatus;

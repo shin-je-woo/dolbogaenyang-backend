@@ -1,4 +1,4 @@
-package com.whatpl.global.properties;
+package com.whatpl.global.common.properties;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.whatpl.domain.chat.domain;
 
-import com.whatpl.global.common.BaseTimeEntity;
+import com.whatpl.global.common.domain.BaseTimeEntity;
 import com.whatpl.domain.project.domain.Apply;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

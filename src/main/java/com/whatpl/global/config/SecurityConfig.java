@@ -1,7 +1,7 @@
 package com.whatpl.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.whatpl.global.properties.JwtProperties;
+import com.whatpl.global.common.properties.JwtProperties;
 import com.whatpl.global.jwt.service.JwtService;
 import com.whatpl.global.security.filter.JwtAuthenticationFilter;
 import com.whatpl.global.security.handler.LoginFailureHandler;

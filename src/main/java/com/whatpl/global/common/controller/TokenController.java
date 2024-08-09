@@ -1,4 +1,4 @@
-package com.whatpl.global.jwt.controller;
+package com.whatpl.global.common.controller;
 
 import com.whatpl.global.jwt.dto.JwtResponse;
 import com.whatpl.global.jwt.service.JwtService;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class JwtController {
+public class TokenController {
 
     private final JwtService jwtService;
 

@@ -1,6 +1,6 @@
 package com.whatpl.domain.project.domain;
 
-import com.whatpl.global.common.BaseTimeEntity;
+import com.whatpl.global.common.domain.BaseTimeEntity;
 import com.whatpl.global.common.domain.enums.Skill;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

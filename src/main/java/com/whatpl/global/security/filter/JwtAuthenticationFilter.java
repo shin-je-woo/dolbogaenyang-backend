@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.exception.ErrorResponse;
-import com.whatpl.global.properties.JwtProperties;
+import com.whatpl.global.common.properties.JwtProperties;
 import com.whatpl.global.jwt.service.JwtService;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import io.jsonwebtoken.ExpiredJwtException;

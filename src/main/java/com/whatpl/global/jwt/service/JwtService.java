@@ -7,7 +7,7 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.jwt.model.WhatplClaim;
 import com.whatpl.global.jwt.dto.JwtResponse;
-import com.whatpl.global.properties.JwtProperties;
+import com.whatpl.global.common.properties.JwtProperties;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.member.repository.MemberRepository;

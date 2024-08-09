@@ -4,7 +4,7 @@ import com.whatpl.global.authentication.MemberPrincipalFixture;
 import com.whatpl.external.cache.CacheOperator;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
-import com.whatpl.global.properties.JwtProperties;
+import com.whatpl.global.common.properties.JwtProperties;
 import com.whatpl.global.jwt.dto.JwtResponse;
 import com.whatpl.global.jwt.service.JwtService;
 import com.whatpl.global.security.domain.MemberPrincipal;
