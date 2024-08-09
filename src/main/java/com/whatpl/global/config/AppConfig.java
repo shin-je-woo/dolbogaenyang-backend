@@ -1,9 +1,9 @@
 package com.whatpl.global.config;
 
-import com.whatpl.global.cache.CacheOperator;
-import com.whatpl.global.cache.RedisOperator;
-import com.whatpl.global.upload.FileUploader;
-import com.whatpl.global.upload.S3Uploader;
+import com.whatpl.external.cache.CacheOperator;
+import com.whatpl.external.cache.RedisOperator;
+import com.whatpl.external.upload.FileUploader;
+import com.whatpl.external.upload.S3Uploader;
 import io.awspring.cloud.s3.S3Template;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

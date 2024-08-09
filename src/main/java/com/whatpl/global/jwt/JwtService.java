@@ -1,6 +1,6 @@
 package com.whatpl.global.jwt;
 
-import com.whatpl.global.cache.CacheOperator;
+import com.whatpl.external.cache.CacheOperator;
 import com.whatpl.global.common.domain.enums.Career;
 import com.whatpl.global.common.domain.enums.Job;
 import com.whatpl.global.exception.BizException;

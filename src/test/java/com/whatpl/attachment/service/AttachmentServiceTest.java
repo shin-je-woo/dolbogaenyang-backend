@@ -3,7 +3,7 @@ package com.whatpl.attachment.service;
 import com.whatpl.attachment.domain.Attachment;
 import com.whatpl.attachment.dto.ResourceDto;
 import com.whatpl.attachment.repository.AttachmentRepository;
-import com.whatpl.global.upload.FileUploader;
+import com.whatpl.external.upload.FileUploader;
 import io.awspring.cloud.s3.S3Resource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

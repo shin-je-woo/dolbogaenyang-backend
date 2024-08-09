@@ -1,4 +1,4 @@
-package com.whatpl.global.cache;
+package com.whatpl.external.cache;
 
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;

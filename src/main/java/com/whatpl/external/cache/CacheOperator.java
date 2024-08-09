@@ -1,4 +1,4 @@
-package com.whatpl.global.cache;
+package com.whatpl.external.cache;
 
 public interface CacheOperator {
     void put(String key, Object value, long expirationTime);

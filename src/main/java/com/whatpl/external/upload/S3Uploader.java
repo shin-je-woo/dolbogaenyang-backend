@@ -1,4 +1,4 @@
-package com.whatpl.global.upload;
+package com.whatpl.external.upload;
 
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;

@@ -8,7 +8,7 @@ import com.whatpl.global.config.SecurityConfig;
 import com.whatpl.global.image.ImageProperties;
 import com.whatpl.global.jwt.JwtProperties;
 import com.whatpl.global.jwt.JwtService;
-import com.whatpl.global.upload.FileUploader;
+import com.whatpl.external.upload.FileUploader;
 import com.whatpl.member.service.MemberLoginService;
 import com.whatpl.member.service.MemberProfileService;
 import com.whatpl.project.service.*;

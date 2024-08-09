@@ -1,7 +1,7 @@
 package com.whatpl.global.image;
 
 import com.whatpl.global.common.domain.enums.Skill;
-import com.whatpl.global.upload.FileUploader;
+import com.whatpl.external.upload.FileUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;

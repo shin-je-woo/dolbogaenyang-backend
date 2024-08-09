@@ -5,7 +5,7 @@ import com.whatpl.attachment.dto.ResourceDto;
 import com.whatpl.attachment.repository.AttachmentRepository;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
-import com.whatpl.global.upload.FileUploader;
+import com.whatpl.external.upload.FileUploader;
 import com.whatpl.global.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;

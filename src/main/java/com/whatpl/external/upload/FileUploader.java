@@ -1,4 +1,4 @@
-package com.whatpl.global.upload;
+package com.whatpl.external.upload;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;

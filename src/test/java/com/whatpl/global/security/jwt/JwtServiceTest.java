@@ -1,7 +1,7 @@
 package com.whatpl.global.security.jwt;
 
 import com.whatpl.global.authentication.MemberPrincipalFixture;
-import com.whatpl.global.cache.CacheOperator;
+import com.whatpl.external.cache.CacheOperator;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.jwt.JwtProperties;
