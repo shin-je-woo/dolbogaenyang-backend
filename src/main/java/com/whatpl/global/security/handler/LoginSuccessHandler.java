@@ -2,8 +2,8 @@ package com.whatpl.global.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatpl.global.security.domain.MemberPrincipal;
-import com.whatpl.global.jwt.JwtResponse;
-import com.whatpl.global.jwt.JwtService;
+import com.whatpl.global.jwt.dto.JwtResponse;
+import com.whatpl.global.jwt.service.JwtService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

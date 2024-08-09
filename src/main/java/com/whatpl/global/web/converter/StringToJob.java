@@ -1,6 +1,6 @@
 package com.whatpl.global.web.converter;
 
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.Job;
 import jakarta.annotation.Nonnull;
 import org.springframework.core.convert.converter.Converter;
 

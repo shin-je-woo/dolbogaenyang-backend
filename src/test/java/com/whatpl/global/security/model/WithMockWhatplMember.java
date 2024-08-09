@@ -1,7 +1,7 @@
 package com.whatpl.global.security.model;
 
-import com.whatpl.global.common.domain.enums.Career;
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.Career;
+import com.whatpl.global.common.model.Job;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.security.test.context.support.WithSecurityContext;
 

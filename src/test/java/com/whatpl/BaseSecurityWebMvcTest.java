@@ -1,17 +1,17 @@
 package com.whatpl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.whatpl.attachment.service.AttachmentService;
-import com.whatpl.chat.service.ChatMessageService;
-import com.whatpl.chat.service.ChatRoomService;
+import com.whatpl.domain.attachment.service.AttachmentService;
+import com.whatpl.domain.chat.service.ChatMessageService;
+import com.whatpl.domain.chat.service.ChatRoomService;
+import com.whatpl.domain.project.service.*;
 import com.whatpl.global.config.SecurityConfig;
-import com.whatpl.global.image.ImageProperties;
-import com.whatpl.global.jwt.JwtProperties;
-import com.whatpl.global.jwt.JwtService;
-import com.whatpl.global.upload.FileUploader;
-import com.whatpl.member.service.MemberLoginService;
-import com.whatpl.member.service.MemberProfileService;
-import com.whatpl.project.service.*;
+import com.whatpl.global.common.properties.ImageProperties;
+import com.whatpl.global.common.properties.JwtProperties;
+import com.whatpl.global.jwt.service.JwtService;
+import com.whatpl.external.upload.FileUploader;
+import com.whatpl.domain.member.service.MemberLoginService;
+import com.whatpl.domain.member.service.MemberProfileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

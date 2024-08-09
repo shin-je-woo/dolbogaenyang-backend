@@ -1,16 +1,16 @@
 package com.whatpl.global.security.jwt;
 
 import com.whatpl.global.authentication.MemberPrincipalFixture;
-import com.whatpl.global.cache.CacheOperator;
+import com.whatpl.external.cache.CacheOperator;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
-import com.whatpl.global.jwt.JwtProperties;
-import com.whatpl.global.jwt.JwtResponse;
-import com.whatpl.global.jwt.JwtService;
+import com.whatpl.global.common.properties.JwtProperties;
+import com.whatpl.global.jwt.dto.JwtResponse;
+import com.whatpl.global.jwt.service.JwtService;
 import com.whatpl.global.security.domain.MemberPrincipal;
-import com.whatpl.member.domain.Member;
-import com.whatpl.member.model.MemberFixture;
-import com.whatpl.member.repository.MemberRepository;
+import com.whatpl.domain.member.domain.Member;
+import com.whatpl.domain.member.model.MemberFixture;
+import com.whatpl.domain.member.repository.MemberRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.io.Decoders;

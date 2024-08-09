@@ -2,7 +2,7 @@ package com.whatpl.global.authentication.docs;
 
 import com.whatpl.ApiDocTag;
 import com.whatpl.BaseSecurityWebMvcTest;
-import com.whatpl.global.jwt.JwtResponse;
+import com.whatpl.global.jwt.dto.JwtResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

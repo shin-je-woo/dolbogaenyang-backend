@@ -1,8 +1,8 @@
 package com.whatpl.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.whatpl.global.jwt.JwtProperties;
-import com.whatpl.global.jwt.JwtService;
+import com.whatpl.global.common.properties.JwtProperties;
+import com.whatpl.global.jwt.service.JwtService;
 import com.whatpl.global.security.filter.JwtAuthenticationFilter;
 import com.whatpl.global.security.handler.LoginFailureHandler;
 import com.whatpl.global.security.handler.LoginSuccessHandler;
@@ -10,7 +10,7 @@ import com.whatpl.global.security.handler.NoAuthenticationHandler;
 import com.whatpl.global.security.handler.NoAuthorizationHandler;
 import com.whatpl.global.security.repository.CookieOAuth2AuthorizationRequestRepository;
 import com.whatpl.global.security.service.MemberOAuth2UserService;
-import com.whatpl.member.service.MemberLoginService;
+import com.whatpl.domain.member.service.MemberLoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
