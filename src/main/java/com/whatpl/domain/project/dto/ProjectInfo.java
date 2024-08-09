@@ -1,9 +1,9 @@
 package com.whatpl.domain.project.dto;
 
-import com.whatpl.global.common.domain.enums.Skill;
-import com.whatpl.global.common.domain.enums.Subject;
+import com.whatpl.global.common.model.Skill;
+import com.whatpl.global.common.model.Subject;
 import com.whatpl.global.pagination.SliceElement;
-import com.whatpl.domain.project.domain.enums.ProjectStatus;
+import com.whatpl.domain.project.model.ProjectStatus;
 import lombok.*;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.whatpl.domain.project.dto;
 
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.Job;
 import com.whatpl.domain.project.domain.ProjectParticipant;
 import com.whatpl.domain.project.domain.RecruitJob;
 import lombok.Builder;

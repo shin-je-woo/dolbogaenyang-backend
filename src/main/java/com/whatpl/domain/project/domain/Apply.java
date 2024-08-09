@@ -1,12 +1,12 @@
 package com.whatpl.domain.project.domain;
 
-import com.whatpl.global.common.domain.BaseTimeEntity;
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.BaseTimeEntity;
+import com.whatpl.global.common.model.Job;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.domain.member.domain.Member;
-import com.whatpl.global.common.domain.enums.ApplyStatus;
-import com.whatpl.domain.project.domain.enums.ApplyType;
+import com.whatpl.global.common.model.ApplyStatus;
+import com.whatpl.domain.project.model.ApplyType;
 import jakarta.persistence.*;
 import lombok.*;
 

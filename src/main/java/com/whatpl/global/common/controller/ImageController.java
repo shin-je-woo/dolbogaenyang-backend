@@ -1,6 +1,6 @@
 package com.whatpl.global.common.controller;
 
-import com.whatpl.global.common.domain.enums.Skill;
+import com.whatpl.global.common.model.Skill;
 import com.whatpl.external.upload.FileUploader;
 import com.whatpl.global.common.properties.ImageProperties;
 import lombok.RequiredArgsConstructor;

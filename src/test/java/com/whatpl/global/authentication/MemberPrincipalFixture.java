@@ -1,7 +1,7 @@
 package com.whatpl.global.authentication;
 
-import com.whatpl.global.common.domain.enums.Career;
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.Career;
+import com.whatpl.global.common.model.Job;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

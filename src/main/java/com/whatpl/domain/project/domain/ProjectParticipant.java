@@ -1,7 +1,7 @@
 package com.whatpl.domain.project.domain;
 
-import com.whatpl.global.common.domain.BaseTimeEntity;
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.BaseTimeEntity;
+import com.whatpl.global.common.model.Job;
 import com.whatpl.domain.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;

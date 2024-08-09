@@ -1,8 +1,8 @@
 package com.whatpl.global.jwt.service;
 
 import com.whatpl.external.cache.CacheOperator;
-import com.whatpl.global.common.domain.enums.Career;
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.Career;
+import com.whatpl.global.common.model.Job;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.jwt.model.WhatplClaim;

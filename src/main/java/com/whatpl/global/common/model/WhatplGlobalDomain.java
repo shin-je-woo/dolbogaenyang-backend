@@ -1,4 +1,4 @@
-package com.whatpl.global.common.domain.enums;
+package com.whatpl.global.common.model;
 
 public interface WhatplGlobalDomain {
 

@@ -1,10 +1,10 @@
 package com.whatpl.domain.project.model;
 
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.Job;
 import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.project.domain.Apply;
 import com.whatpl.domain.project.domain.Project;
-import com.whatpl.global.common.domain.enums.ApplyStatus;
+import com.whatpl.global.common.model.ApplyStatus;
 
 public class ApplyFixture {
 

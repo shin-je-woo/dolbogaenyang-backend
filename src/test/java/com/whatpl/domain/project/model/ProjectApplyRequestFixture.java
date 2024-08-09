@@ -1,7 +1,6 @@
 package com.whatpl.domain.project.model;
 
-import com.whatpl.global.common.domain.enums.Job;
-import com.whatpl.domain.project.domain.enums.ApplyType;
+import com.whatpl.global.common.model.Job;
 import com.whatpl.domain.project.dto.ProjectApplyRequest;
 
 public class ProjectApplyRequestFixture {

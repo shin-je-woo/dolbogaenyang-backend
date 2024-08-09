@@ -1,11 +1,11 @@
 package com.whatpl.domain.member.domain;
 
-import com.whatpl.global.common.domain.BaseTimeEntity;
-import com.whatpl.global.common.domain.enums.*;
+import com.whatpl.global.common.model.BaseTimeEntity;
+import com.whatpl.global.common.model.*;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
-import com.whatpl.domain.member.domain.enums.MemberStatus;
-import com.whatpl.domain.member.domain.enums.SocialType;
+import com.whatpl.domain.member.model.MemberStatus;
+import com.whatpl.domain.member.model.SocialType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.util.CollectionUtils;

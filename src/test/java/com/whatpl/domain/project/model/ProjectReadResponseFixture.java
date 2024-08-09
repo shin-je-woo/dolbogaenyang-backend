@@ -1,11 +1,9 @@
 package com.whatpl.domain.project.model;
 
-import com.whatpl.global.common.domain.enums.Career;
-import com.whatpl.global.common.domain.enums.Job;
-import com.whatpl.global.common.domain.enums.Skill;
-import com.whatpl.global.common.domain.enums.Subject;
-import com.whatpl.domain.project.domain.enums.MeetingType;
-import com.whatpl.domain.project.domain.enums.ProjectStatus;
+import com.whatpl.global.common.model.Career;
+import com.whatpl.global.common.model.Job;
+import com.whatpl.global.common.model.Skill;
+import com.whatpl.global.common.model.Subject;
 import com.whatpl.domain.project.dto.ProjectJobParticipantDto;
 import com.whatpl.domain.project.dto.ProjectReadResponse;
 

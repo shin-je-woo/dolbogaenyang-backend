@@ -1,8 +1,8 @@
 package com.whatpl.domain.project.dto;
 
-import com.whatpl.global.common.domain.enums.Skill;
-import com.whatpl.global.common.domain.enums.Subject;
-import com.whatpl.domain.project.domain.enums.MeetingType;
+import com.whatpl.global.common.model.Skill;
+import com.whatpl.global.common.model.Subject;
+import com.whatpl.domain.project.model.MeetingType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

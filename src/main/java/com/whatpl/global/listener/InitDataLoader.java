@@ -1,12 +1,12 @@
 package com.whatpl.global.listener;
 
 import com.whatpl.global.aop.annotation.DistributedLock;
-import com.whatpl.global.common.domain.enums.Career;
-import com.whatpl.global.common.domain.enums.Job;
-import com.whatpl.global.common.domain.enums.Skill;
-import com.whatpl.global.common.domain.enums.WorkTime;
+import com.whatpl.global.common.model.Career;
+import com.whatpl.global.common.model.Job;
+import com.whatpl.global.common.model.Skill;
+import com.whatpl.global.common.model.WorkTime;
 import com.whatpl.domain.member.domain.Member;
-import com.whatpl.domain.member.domain.enums.SocialType;
+import com.whatpl.domain.member.model.SocialType;
 import com.whatpl.domain.member.repository.MemberRepository;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;

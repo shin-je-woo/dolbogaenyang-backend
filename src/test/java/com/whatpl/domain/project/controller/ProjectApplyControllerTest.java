@@ -2,9 +2,9 @@ package com.whatpl.domain.project.controller;
 
 import com.whatpl.ApiDocTag;
 import com.whatpl.BaseSecurityWebMvcTest;
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.Job;
 import com.whatpl.global.security.model.WithMockWhatplMember;
-import com.whatpl.global.common.domain.enums.ApplyStatus;
+import com.whatpl.global.common.model.ApplyStatus;
 import com.whatpl.domain.project.dto.ApplyResponse;
 import com.whatpl.domain.project.dto.ProjectApplyRequest;
 import com.whatpl.domain.project.dto.ProjectApplyStatusRequest;

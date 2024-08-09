@@ -1,4 +1,4 @@
-package com.whatpl.domain.project.domain.enums;
+package com.whatpl.domain.project.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

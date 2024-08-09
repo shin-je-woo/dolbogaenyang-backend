@@ -1,12 +1,12 @@
 package com.whatpl.domain.project.service;
 
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.Job;
 import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.member.model.MemberFixture;
 import com.whatpl.domain.project.domain.Apply;
 import com.whatpl.domain.project.domain.Project;
 import com.whatpl.domain.project.domain.ProjectParticipant;
-import com.whatpl.global.common.domain.enums.ApplyStatus;
+import com.whatpl.global.common.model.ApplyStatus;
 import com.whatpl.domain.project.model.ApplyFixture;
 import com.whatpl.domain.project.model.ProjectFixture;
 import com.whatpl.domain.project.repository.ApplyRepository;

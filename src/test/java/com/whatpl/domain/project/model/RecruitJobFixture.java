@@ -1,6 +1,6 @@
 package com.whatpl.domain.project.model;
 
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.Job;
 import com.whatpl.domain.project.domain.RecruitJob;
 
 public class RecruitJobFixture {

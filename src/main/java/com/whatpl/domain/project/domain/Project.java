@@ -1,15 +1,15 @@
 package com.whatpl.domain.project.domain;
 
 import com.whatpl.domain.attachment.domain.Attachment;
-import com.whatpl.global.common.domain.BaseTimeEntity;
-import com.whatpl.global.common.domain.enums.Job;
-import com.whatpl.global.common.domain.enums.Skill;
-import com.whatpl.global.common.domain.enums.Subject;
+import com.whatpl.global.common.model.BaseTimeEntity;
+import com.whatpl.global.common.model.Job;
+import com.whatpl.global.common.model.Skill;
+import com.whatpl.global.common.model.Subject;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.domain.member.domain.Member;
-import com.whatpl.domain.project.domain.enums.MeetingType;
-import com.whatpl.domain.project.domain.enums.ProjectStatus;
+import com.whatpl.domain.project.model.MeetingType;
+import com.whatpl.domain.project.model.ProjectStatus;
 import com.whatpl.domain.project.dto.ProjectUpdateRequest;
 import com.whatpl.domain.project.dto.RecruitJobField;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package com.whatpl.global.common.domain.enums;
+package com.whatpl.global.common.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

@@ -1,10 +1,9 @@
 package com.whatpl.domain.project.model;
 
-import com.whatpl.global.common.domain.enums.Subject;
+import com.whatpl.global.common.model.Subject;
 import com.whatpl.domain.project.domain.Project;
 import com.whatpl.domain.project.domain.ProjectParticipant;
 import com.whatpl.domain.project.domain.RecruitJob;
-import com.whatpl.domain.project.domain.enums.MeetingType;
 
 import java.util.List;
 

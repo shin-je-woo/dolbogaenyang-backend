@@ -1,6 +1,6 @@
 package com.whatpl.global.security.domain;
 
-import com.whatpl.domain.member.domain.enums.SocialType;
+import com.whatpl.domain.member.model.SocialType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

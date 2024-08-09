@@ -1,9 +1,8 @@
 package com.whatpl.domain.project.model;
 
-import com.whatpl.global.common.domain.enums.Job;
-import com.whatpl.global.common.domain.enums.Skill;
-import com.whatpl.global.common.domain.enums.Subject;
-import com.whatpl.domain.project.domain.enums.MeetingType;
+import com.whatpl.global.common.model.Job;
+import com.whatpl.global.common.model.Skill;
+import com.whatpl.global.common.model.Subject;
 import com.whatpl.domain.project.dto.ProjectUpdateRequest;
 import com.whatpl.domain.project.dto.RecruitJobField;
 

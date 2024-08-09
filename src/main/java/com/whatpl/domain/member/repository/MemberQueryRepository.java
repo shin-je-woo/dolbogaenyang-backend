@@ -1,7 +1,7 @@
 package com.whatpl.domain.member.repository;
 
 import com.whatpl.domain.member.domain.Member;
-import com.whatpl.domain.member.domain.enums.SocialType;
+import com.whatpl.domain.member.model.SocialType;
 
 import java.util.Optional;
 

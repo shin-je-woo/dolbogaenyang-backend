@@ -1,6 +1,6 @@
 package com.whatpl.domain.project.dto;
 
-import com.whatpl.global.common.domain.enums.ApplyStatus;
+import com.whatpl.global.common.model.ApplyStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

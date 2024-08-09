@@ -1,7 +1,6 @@
 package com.whatpl.global.common.controller;
 
-import com.whatpl.global.common.domain.enums.*;
-import com.whatpl.global.common.domain.enums.ApplyStatus;
+import com.whatpl.global.common.model.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

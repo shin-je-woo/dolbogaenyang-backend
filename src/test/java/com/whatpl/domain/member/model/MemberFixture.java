@@ -2,9 +2,7 @@ package com.whatpl.domain.member.model;
 
 import com.whatpl.domain.attachment.domain.Attachment;
 import com.whatpl.domain.member.domain.*;
-import com.whatpl.global.common.domain.enums.*;
-import com.whatpl.domain.member.domain.enums.MemberStatus;
-import com.whatpl.domain.member.domain.enums.SocialType;
+import com.whatpl.global.common.model.*;
 import org.springframework.http.MediaType;
 
 import java.util.UUID;

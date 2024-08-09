@@ -1,7 +1,7 @@
 package com.whatpl.domain.project.dto;
 
-import com.whatpl.global.common.domain.enums.Job;
-import com.whatpl.domain.project.domain.enums.ApplyType;
+import com.whatpl.global.common.model.Job;
+import com.whatpl.domain.project.model.ApplyType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

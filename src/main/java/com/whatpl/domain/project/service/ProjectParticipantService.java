@@ -1,7 +1,7 @@
 package com.whatpl.domain.project.service;
 
 import com.whatpl.global.aop.annotation.DistributedLock;
-import com.whatpl.global.common.domain.enums.ApplyStatus;
+import com.whatpl.global.common.model.ApplyStatus;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.domain.project.domain.Project;

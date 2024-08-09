@@ -5,7 +5,7 @@ import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.domain.project.domain.Apply;
 import com.whatpl.domain.project.domain.Project;
-import com.whatpl.domain.project.domain.enums.ApplyType;
+import com.whatpl.domain.project.model.ApplyType;
 import com.whatpl.domain.project.repository.ApplyRepository;
 import com.whatpl.domain.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;

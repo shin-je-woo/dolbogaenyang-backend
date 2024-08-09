@@ -2,7 +2,7 @@ package com.whatpl.domain.project.service;
 
 import com.whatpl.domain.chat.service.ChatRoomService;
 import com.whatpl.global.aop.annotation.DistributedLock;
-import com.whatpl.global.common.domain.enums.ApplyStatus;
+import com.whatpl.global.common.model.ApplyStatus;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.domain.member.domain.Member;
@@ -50,7 +50,7 @@ public class ProjectApplyService {
     @Transactional
     @DistributedLock(name = "'project:'.concat(#projectId)")
     @CacheEvict(value = "projectList", allEntries = true,
-            condition = "T(com.whatpl.global.common.domain.enums.ApplyStatus).ACCEPTED.equals(#applyStatus)")
+            condition = "T(com.whatpl.global.common.model.ApplyStatus).ACCEPTED.equals(#applyStatus)")
     public void status(final long projectId, final long applyId, final ApplyStatus applyStatus) {
         Project project = projectRepository.findWithRecruitJobsById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));

@@ -1,7 +1,7 @@
 package com.whatpl.domain.chat.dto;
 
 import com.whatpl.global.pagination.SliceElement;
-import com.whatpl.domain.project.domain.enums.ApplyType;
+import com.whatpl.domain.project.model.ApplyType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

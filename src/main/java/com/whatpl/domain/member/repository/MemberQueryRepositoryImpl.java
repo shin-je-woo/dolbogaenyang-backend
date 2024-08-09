@@ -2,7 +2,7 @@ package com.whatpl.domain.member.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.whatpl.domain.member.domain.Member;
-import com.whatpl.domain.member.domain.enums.SocialType;
+import com.whatpl.domain.member.model.SocialType;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;

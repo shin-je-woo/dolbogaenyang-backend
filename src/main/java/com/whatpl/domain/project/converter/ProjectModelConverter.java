@@ -1,13 +1,13 @@
 package com.whatpl.domain.project.converter;
 
 import com.whatpl.domain.attachment.domain.Attachment;
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.Job;
 import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.project.domain.Project;
 import com.whatpl.domain.project.domain.ProjectParticipant;
 import com.whatpl.domain.project.domain.ProjectSkill;
 import com.whatpl.domain.project.domain.RecruitJob;
-import com.whatpl.domain.project.domain.enums.ProjectStatus;
+import com.whatpl.domain.project.model.ProjectStatus;
 import com.whatpl.domain.project.dto.ProjectCreateRequest;
 import com.whatpl.domain.project.dto.ProjectJobParticipantDto;
 import com.whatpl.domain.project.dto.ProjectReadResponse;

@@ -1,7 +1,7 @@
 package com.whatpl.global.security.domain;
 
-import com.whatpl.global.common.domain.enums.Career;
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.Career;
+import com.whatpl.global.common.model.Job;
 import com.whatpl.domain.member.domain.Member;
 import lombok.Builder;
 import lombok.Getter;

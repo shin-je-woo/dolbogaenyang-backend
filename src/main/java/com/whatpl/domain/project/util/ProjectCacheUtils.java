@@ -1,6 +1,6 @@
 package com.whatpl.domain.project.util;
 
-import com.whatpl.domain.project.domain.enums.ProjectStatus;
+import com.whatpl.domain.project.model.ProjectStatus;
 import com.whatpl.domain.project.dto.ProjectSearchCondition;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

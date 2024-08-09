@@ -2,7 +2,7 @@ package com.whatpl.domain.project.service;
 
 import com.whatpl.domain.attachment.domain.Attachment;
 import com.whatpl.domain.attachment.repository.AttachmentRepository;
-import com.whatpl.global.common.domain.enums.Job;
+import com.whatpl.global.common.model.Job;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.domain.member.model.MemberFixture;

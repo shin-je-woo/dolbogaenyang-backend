@@ -1,4 +1,4 @@
-package com.whatpl.domain.member.domain.enums;
+package com.whatpl.domain.member.model;
 
 import lombok.Getter;
 

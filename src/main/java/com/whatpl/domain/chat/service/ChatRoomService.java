@@ -5,7 +5,7 @@ import com.whatpl.domain.chat.dto.ChatRoomResponse;
 import com.whatpl.domain.chat.repository.ChatRoomRepository;
 import com.whatpl.global.util.PaginationUtils;
 import com.whatpl.domain.project.domain.Apply;
-import com.whatpl.domain.project.domain.enums.ApplyType;
+import com.whatpl.domain.project.model.ApplyType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;

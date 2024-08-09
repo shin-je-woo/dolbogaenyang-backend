@@ -4,7 +4,7 @@ import com.whatpl.ApiDocTag;
 import com.whatpl.BaseSecurityWebMvcTest;
 import com.whatpl.domain.chat.dto.ChatRoomResponse;
 import com.whatpl.global.security.model.WithMockWhatplMember;
-import com.whatpl.domain.project.domain.enums.ApplyType;
+import com.whatpl.domain.project.model.ApplyType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

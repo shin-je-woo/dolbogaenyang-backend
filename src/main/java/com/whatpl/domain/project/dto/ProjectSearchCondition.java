@@ -2,10 +2,10 @@ package com.whatpl.domain.project.dto;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.whatpl.domain.project.domain.enums.ProjectStatus;
-import com.whatpl.global.common.domain.enums.Job;
-import com.whatpl.global.common.domain.enums.Skill;
-import com.whatpl.global.common.domain.enums.Subject;
+import com.whatpl.domain.project.model.ProjectStatus;
+import com.whatpl.global.common.model.Job;
+import com.whatpl.global.common.model.Skill;
+import com.whatpl.global.common.model.Subject;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,6 @@
 package com.whatpl.domain.project.controller;
 
-import com.whatpl.domain.project.domain.enums.ProjectStatus;
+import com.whatpl.domain.project.model.ProjectStatus;
 import com.whatpl.domain.project.dto.*;
 import com.whatpl.domain.project.service.ProjectReadService;
 import com.whatpl.domain.project.service.ProjectWriteService;
