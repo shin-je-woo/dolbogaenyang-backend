@@ -1,4 +1,4 @@
-package com.whatpl.domain.chat.repository;
+package com.whatpl.domain.chat.repository.room;
 
 import com.whatpl.domain.chat.domain.ChatRoom;
 import com.whatpl.domain.chat.dto.ChatRoomResponse;

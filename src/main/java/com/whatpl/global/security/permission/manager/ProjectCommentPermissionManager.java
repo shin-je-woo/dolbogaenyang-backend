@@ -4,7 +4,7 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.domain.project.domain.ProjectComment;
-import com.whatpl.domain.project.repository.ProjectCommentRepository;
+import com.whatpl.domain.project.repository.comment.ProjectCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

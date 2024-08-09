@@ -1,4 +1,4 @@
-package com.whatpl.domain.project.repository;
+package com.whatpl.domain.project.repository.project;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;

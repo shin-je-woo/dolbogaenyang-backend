@@ -10,7 +10,7 @@ import com.whatpl.domain.project.dto.ProjectCommentListResponse;
 import com.whatpl.domain.project.dto.ProjectCommentUpdateRequest;
 import com.whatpl.domain.project.model.ProjectCommentFixture;
 import com.whatpl.domain.project.model.ProjectFixture;
-import com.whatpl.domain.project.repository.ProjectCommentRepository;
+import com.whatpl.domain.project.repository.comment.ProjectCommentRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

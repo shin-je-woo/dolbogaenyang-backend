@@ -1,4 +1,4 @@
-package com.whatpl.domain.chat.repository;
+package com.whatpl.domain.chat.repository.message;
 
 import com.whatpl.domain.chat.domain.ChatMessage;
 import org.springframework.data.jpa.repository.JpaRepository;

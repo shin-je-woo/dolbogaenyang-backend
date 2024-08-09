@@ -17,7 +17,7 @@ import com.whatpl.domain.project.model.ProjectCreateRequestFixture;
 import com.whatpl.domain.project.model.ProjectFixture;
 import com.whatpl.domain.project.model.ProjectParticipantFixture;
 import com.whatpl.domain.project.model.RecruitJobFixture;
-import com.whatpl.domain.project.repository.ProjectRepository;
+import com.whatpl.domain.project.repository.project.ProjectRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,4 +1,4 @@
-package com.whatpl.domain.chat.repository;
+package com.whatpl.domain.chat.repository.message;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;

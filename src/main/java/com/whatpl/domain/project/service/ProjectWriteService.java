@@ -12,7 +12,7 @@ import com.whatpl.domain.project.converter.ProjectModelConverter;
 import com.whatpl.domain.project.domain.Project;
 import com.whatpl.domain.project.dto.ProjectCreateRequest;
 import com.whatpl.domain.project.dto.ProjectUpdateRequest;
-import com.whatpl.domain.project.repository.ProjectRepository;
+import com.whatpl.domain.project.repository.project.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;

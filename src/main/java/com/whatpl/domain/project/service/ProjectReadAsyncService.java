@@ -5,7 +5,7 @@ import com.whatpl.domain.project.domain.ProjectSkill;
 import com.whatpl.domain.project.domain.RecruitJob;
 import com.whatpl.domain.project.dto.ProjectInfo;
 import com.whatpl.domain.project.dto.RemainedJobDto;
-import com.whatpl.domain.project.repository.ProjectRepository;
+import com.whatpl.domain.project.repository.project.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

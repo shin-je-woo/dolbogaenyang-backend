@@ -1,4 +1,4 @@
-package com.whatpl.domain.project.repository;
+package com.whatpl.domain.project.repository.comment;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.whatpl.domain.project.domain.ProjectComment;

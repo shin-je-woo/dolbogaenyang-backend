@@ -1,4 +1,4 @@
-package com.whatpl.domain.project.repository;
+package com.whatpl.domain.project.repository.project;
 
 import com.whatpl.domain.project.domain.Project;
 import org.springframework.data.jpa.repository.EntityGraph;

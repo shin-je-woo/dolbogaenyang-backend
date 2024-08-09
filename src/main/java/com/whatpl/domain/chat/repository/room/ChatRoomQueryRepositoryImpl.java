@@ -1,4 +1,4 @@
-package com.whatpl.domain.chat.repository;
+package com.whatpl.domain.chat.repository.room;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.dsl.BooleanExpression;

@@ -10,8 +10,8 @@ import com.whatpl.domain.project.domain.RecruitJob;
 import com.whatpl.domain.project.model.ProjectStatus;
 import com.whatpl.domain.project.dto.ProjectApplyRequest;
 import com.whatpl.domain.project.model.*;
-import com.whatpl.domain.project.repository.ApplyRepository;
-import com.whatpl.domain.project.repository.ProjectRepository;
+import com.whatpl.domain.project.repository.apply.ApplyRepository;
+import com.whatpl.domain.project.repository.project.ProjectRepository;
 import com.whatpl.global.common.model.ApplyStatus;
 import com.whatpl.global.common.model.Job;
 import com.whatpl.global.exception.BizException;
@@ -145,8 +145,6 @@ class ProjectApplyServiceTest {
                 .thenReturn(Optional.of(project));
         when(memberRepository.findById(anyLong()))
                 .thenReturn(Optional.of(applicant));
-//        when(projectParticipantRepository.countByProjectIdAndJob(any(), any()))
-//                .thenReturn(5);
 
         // when & then
         BizException bizException = assertThrows(BizException.class, () ->
