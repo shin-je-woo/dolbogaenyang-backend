@@ -3,8 +3,8 @@ package com.whatpl.global.security.permission.manager;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.security.domain.MemberPrincipal;
-import com.whatpl.project.domain.ProjectLike;
-import com.whatpl.project.repository.ProjectLikeRepository;
+import com.whatpl.domain.project.domain.ProjectLike;
+import com.whatpl.domain.project.repository.ProjectLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

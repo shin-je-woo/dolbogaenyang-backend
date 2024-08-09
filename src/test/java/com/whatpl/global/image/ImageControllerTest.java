@@ -2,6 +2,7 @@ package com.whatpl.global.image;
 
 import com.whatpl.ApiDocTag;
 import com.whatpl.BaseSecurityWebMvcTest;
+import com.whatpl.global.properties.ImageProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

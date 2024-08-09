@@ -2,7 +2,7 @@ package com.whatpl.global.security.service;
 
 import com.whatpl.global.security.domain.OAuth2UserAttributes;
 import com.whatpl.global.security.domain.OAuth2UserInfo;
-import com.whatpl.member.service.MemberLoginService;
+import com.whatpl.domain.member.service.MemberLoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

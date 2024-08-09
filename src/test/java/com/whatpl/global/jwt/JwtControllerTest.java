@@ -1,6 +1,7 @@
 package com.whatpl.global.jwt;
 
 import com.whatpl.BaseSecurityWebMvcTest;
+import com.whatpl.global.jwt.dto.JwtResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;

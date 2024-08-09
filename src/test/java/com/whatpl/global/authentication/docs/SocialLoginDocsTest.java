@@ -3,7 +3,7 @@ package com.whatpl.global.authentication.docs;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatpl.ApiDocTag;
 import com.whatpl.BaseSecurityWebMvcTest;
-import com.whatpl.global.jwt.JwtResponse;
+import com.whatpl.global.jwt.dto.JwtResponse;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

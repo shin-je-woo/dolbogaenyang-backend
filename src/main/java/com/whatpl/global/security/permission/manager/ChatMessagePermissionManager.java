@@ -1,7 +1,7 @@
 package com.whatpl.global.security.permission.manager;
 
-import com.whatpl.chat.domain.ChatRoom;
-import com.whatpl.chat.repository.ChatRoomRepository;
+import com.whatpl.domain.chat.domain.ChatRoom;
+import com.whatpl.domain.chat.repository.ChatRoomRepository;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.security.domain.MemberPrincipal;
