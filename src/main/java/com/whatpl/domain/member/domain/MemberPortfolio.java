@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.NonNull;
 
 @Getter
 @Entity
@@ -22,12 +22,15 @@ public class MemberPortfolio extends BaseTimeEntity {
     @JoinColumn(name = "attachment_id")
     private Attachment attachment;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     public MemberPortfolio(Attachment attachment) {
         this.attachment = attachment;
+    }
+
+    public void addRelation(@NonNull Member member) {
+        this.member = member;
     }
 }

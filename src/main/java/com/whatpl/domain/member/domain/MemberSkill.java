@@ -18,12 +18,15 @@ public class MemberSkill extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Skill skill;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     public MemberSkill(Skill skill) {
         this.skill = skill;
+    }
+
+    public void addRelation(@NonNull Member member) {
+        this.member = member;
     }
 }

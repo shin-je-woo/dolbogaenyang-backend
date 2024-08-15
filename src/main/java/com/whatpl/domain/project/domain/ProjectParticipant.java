@@ -19,7 +19,6 @@ public class ProjectParticipant extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Job job;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
@@ -33,5 +32,9 @@ public class ProjectParticipant extends BaseTimeEntity {
         this.job = job;
         this.project = project;
         this.participant = participant;
+    }
+
+    public void addRelation(@NonNull Project project) {
+        this.project = project;
     }
 }

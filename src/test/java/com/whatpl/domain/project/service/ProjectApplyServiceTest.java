@@ -50,9 +50,8 @@ class ProjectApplyServiceTest {
     @DisplayName("삭제된 프로젝트에 지원하면 실패")
     void apply_deleted_project() {
         // given
-        Project project = ProjectFixture.create();
+        Project project = ProjectFixture.create(ProjectStatus.DELETED);
         Member writer = MemberFixture.onlyRequired();
-        project.setStatus(ProjectStatus.DELETED);
         ProjectApplyRequest request = ProjectApplyRequestFixture.apply(Job.BACKEND_DEVELOPER);
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
@@ -69,9 +68,8 @@ class ProjectApplyServiceTest {
     @DisplayName("모집완료된 프로젝트에 지원하면 실패")
     void apply_completed_project() {
         // given
-        Project project = ProjectFixture.create();
+        Project project = ProjectFixture.create(ProjectStatus.COMPLETED);
         Member writer = MemberFixture.onlyRequired();
-        project.setStatus(ProjectStatus.COMPLETED);
         ProjectApplyRequest request = ProjectApplyRequestFixture.apply(Job.BACKEND_DEVELOPER);
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
@@ -88,10 +86,9 @@ class ProjectApplyServiceTest {
     @DisplayName("본인이 등록한 프로젝트에 지원하면 실패")
     void apply_writer_equals_applicant() {
         // given
-        Project project = ProjectFixture.create();
+        Project project = ProjectFixture.create(ProjectStatus.RECRUITING);
         Member writer = MemberFixture.onlyRequired();
         project.addRepresentImageAndWriter(null, writer);
-        project.setStatus(ProjectStatus.RECRUITING);
         ProjectApplyRequest request = ProjectApplyRequestFixture.apply(Job.BACKEND_DEVELOPER);
         when(projectRepository.findWithRecruitJobsById(anyLong()))
                 .thenReturn(Optional.of(project));
@@ -108,10 +105,9 @@ class ProjectApplyServiceTest {
     @DisplayName("모집직군에 지원하는 직무가 없으면 실패")
     void apply_has_not_match_job_project() {
         // given
-        Project project = ProjectFixture.create();
+        Project project = ProjectFixture.create(ProjectStatus.RECRUITING);
         Member writer = MemberFixture.onlyRequired();
         project.addRepresentImageAndWriter(null, writer);
-        project.setStatus(ProjectStatus.RECRUITING);
         project.addRecruitJob(new RecruitJob(Job.DESIGNER, 5));
 
         ProjectApplyRequest request = ProjectApplyRequestFixture.apply(Job.BACKEND_DEVELOPER);
@@ -131,13 +127,12 @@ class ProjectApplyServiceTest {
     void apply_full_job_project() {
         // given
         int recruitAmount = 1;
-        Project project = ProjectFixture.create();
+        Project project = ProjectFixture.create(ProjectStatus.RECRUITING);
         Member writer = MemberFixture.onlyRequired();
         Member applicant = MemberFixture.withAll();
         ProjectParticipant participant = ProjectParticipantFixture.create(Job.BACKEND_DEVELOPER, applicant);
         project.addProjectParticipant(participant);
         project.addRepresentImageAndWriter(null, writer);
-        project.setStatus(ProjectStatus.RECRUITING);
         project.addRecruitJob(new RecruitJob(Job.BACKEND_DEVELOPER, recruitAmount));
 
         ProjectApplyRequest request = ProjectApplyRequestFixture.apply(Job.BACKEND_DEVELOPER);
@@ -156,13 +151,12 @@ class ProjectApplyServiceTest {
     @DisplayName("이미 지원한 프로젝트에 지원하면 실패")
     void apply_duplicated_apply_project() {
         // given
-        Project project = ProjectFixture.create();
+        Project project = ProjectFixture.create(ProjectStatus.RECRUITING);
         Member writer = MemberFixture.onlyRequired();
         Member applicant = MemberFixture.withAll();
         Apply apply = ApplyFixture.waiting(Job.BACKEND_DEVELOPER, applicant, project); // 현재상태 WAITING
         project.addApply(apply);
         project.addRepresentImageAndWriter(null, writer);
-        project.setStatus(ProjectStatus.RECRUITING);
         project.addRecruitJob(new RecruitJob(Job.BACKEND_DEVELOPER, 5));
 
         ProjectApplyRequest request = ProjectApplyRequestFixture.apply(Job.BACKEND_DEVELOPER);

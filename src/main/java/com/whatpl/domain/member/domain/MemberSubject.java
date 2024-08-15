@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.NonNull;
 
 @Getter
 @Entity
@@ -21,12 +21,15 @@ public class MemberSubject extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Subject subject;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     public MemberSubject(Subject subject) {
         this.subject = subject;
+    }
+
+    public void addRelation(@NonNull Member member) {
+        this.member = member;
     }
 }

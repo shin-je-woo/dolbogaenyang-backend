@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.NonNull;
 
 @Getter
 @Entity
@@ -19,12 +19,15 @@ public class MemberReference extends BaseTimeEntity {
 
     private String reference;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     public MemberReference(String reference) {
         this.reference = reference;
+    }
+
+    public void addRelation(@NonNull Member member) {
+        this.member = member;
     }
 }

@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.NonNull;
 
 @Getter
 @Entity
@@ -21,12 +21,15 @@ public class ProjectSkill extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Skill skill;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
 
     public ProjectSkill(Skill skill) {
         this.skill = skill;
+    }
+
+    public void addRelation(@NonNull Project project) {
+        this.project = project;
     }
 }

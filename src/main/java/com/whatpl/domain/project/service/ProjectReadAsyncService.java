@@ -6,6 +6,7 @@ import com.whatpl.domain.project.domain.RecruitJob;
 import com.whatpl.domain.project.dto.ProjectInfo;
 import com.whatpl.domain.project.dto.RemainedJobDto;
 import com.whatpl.domain.project.repository.project.ProjectRepository;
+import com.whatpl.global.common.model.Skill;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,20 +26,21 @@ public class ProjectReadAsyncService {
     private static final ExecutorService executor = Executors.newWorkStealingPool();
 
     /**
-     * projectInfos 를 순회하면서 skills 필드를 set 합니다.
+     * projectInfos 를 순회하면서 skills 필드를 merge 합니다.
      */
     public CompletableFuture<Void> mergeSkills(List<ProjectInfo> projectInfos) {
         return CompletableFuture.supplyAsync(() -> projectRepository.findProjectSkillMap(toProjectIds(projectInfos)), executor)
                 .thenAccept(skillMap -> projectInfos.forEach(projectInfo -> {
                     long projectId = projectInfo.getProjectId();
-                    projectInfo.setSkills(skillMap.get(projectId)
+                    List<Skill> skills = skillMap.get(projectId)
                             .stream()
-                            .map(ProjectSkill::getSkill).toList());
+                            .map(ProjectSkill::getSkill).toList();
+                    ProjectInfo.Editor.fromSkills(skills).merge(projectInfo);
                 }));
     }
 
     /**
-     * projectInfos 를 순회하면서 remainedJobs 필드를 set 합니다.
+     * projectInfos 를 순회하면서 remainedJobs 필드를 merge 합니다.
      * getRecruitJobs 메서드와 getParticipants 메서드를 비동기로 실행하고, 실행결과를 조합합니다.
      */
     public CompletableFuture<Void> mergeRemainedJobs(List<ProjectInfo> projectInfos) {
@@ -51,33 +53,33 @@ public class ProjectReadAsyncService {
                         List<RemainedJobDto> remainedJobs = recruitJobs.stream()
                                 .map(recruitJob -> RemainedJobDto.of(recruitJob, participants))
                                 .toList();
-                        projectInfo.setRemainedJobs(remainedJobs);
+                        ProjectInfo.Editor.fromRemainedJobs(remainedJobs).merge(projectInfo);
                     });
                     return null;
                 });
     }
 
     /**
-     * projectInfos 를 순회하면서 likes 필드를 set 합니다.
+     * projectInfos 를 순회하면서 likes 필드를 merge 합니다.
      */
     public CompletableFuture<Void> mergeLikes(List<ProjectInfo> projectInfos) {
         return CompletableFuture.supplyAsync(() -> projectRepository.findProjectLikeMap(toProjectIds(projectInfos)), executor)
                 .thenAccept(likeMap -> projectInfos.forEach(projectInfo -> {
                     long projectId = projectInfo.getProjectId();
                     int likes = Optional.ofNullable(likeMap.get(projectId)).orElseGet(Collections::emptyList).size();
-                    projectInfo.setLikes(likes);
+                    ProjectInfo.Editor.fromLikes(likes).merge(projectInfo);
                 }));
     }
 
     /**
-     * projectInfos 를 순회하면서 comments 필드를 set 합니다.
+     * projectInfos 를 순회하면서 comments 필드를 merge 합니다.
      */
     public CompletableFuture<Void> mergeComments(List<ProjectInfo> projectInfos) {
         return CompletableFuture.supplyAsync(() -> projectRepository.findProjectCommentMap(toProjectIds(projectInfos)), executor)
                 .thenAccept(commentMap -> projectInfos.forEach(projectInfo -> {
                     long projectId = projectInfo.getProjectId();
                     int comments = Optional.ofNullable(commentMap.get(projectId)).orElseGet(Collections::emptyList).size();
-                    projectInfo.setComments(comments);
+                    ProjectInfo.Editor.fromComments(comments).merge(projectInfo);
                 }));
     }
 

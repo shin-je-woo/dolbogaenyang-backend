@@ -1,5 +1,6 @@
 package com.whatpl.domain.project.service;
 
+import com.whatpl.domain.project.model.ProjectStatus;
 import com.whatpl.global.common.model.Job;
 import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.member.model.MemberFixture;
@@ -45,7 +46,7 @@ class ProjectParticipantServiceTest {
     void deleteParticipant() {
         // given
         Member participant = Mockito.spy(MemberFixture.onlyRequired());
-        Project project = Mockito.spy(ProjectFixture.create());
+        Project project = Mockito.spy(ProjectFixture.create(ProjectStatus.RECRUITING));
         ProjectParticipant projectParticipant = ProjectParticipant.builder()
                 .job(Job.BACKEND_DEVELOPER)
                 .project(project)

@@ -32,8 +32,7 @@ public class Apply extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applicant_id")
     private Member applicant;
-
-    @Setter
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
@@ -44,6 +43,10 @@ public class Apply extends BaseTimeEntity {
         this.status = status;
         this.type = type;
         this.applicant = applicant;
+        this.project = project;
+    }
+
+    public void addRelation(@NonNull Project project) {
         this.project = project;
     }
 
