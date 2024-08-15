@@ -27,13 +27,13 @@ public class ChatMessage extends BaseTimeEntity {
 
     private String content;
 
-    @Setter
     private LocalDateTime readAt;
 
     @Builder
-    public ChatMessage(Member sender, ChatRoom chatRoom, String content) {
+    public ChatMessage(Member sender, ChatRoom chatRoom, String content, LocalDateTime readAt) {
         this.sender = sender;
         this.chatRoom = chatRoom;
         this.content = content;
+        this.readAt = readAt;
     }
 }

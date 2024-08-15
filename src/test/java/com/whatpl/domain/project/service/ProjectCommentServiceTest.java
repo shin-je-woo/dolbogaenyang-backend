@@ -1,5 +1,6 @@
 package com.whatpl.domain.project.service;
 
+import com.whatpl.domain.project.model.ProjectStatus;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.domain.member.domain.Member;
@@ -38,7 +39,7 @@ class ProjectCommentServiceTest {
     @DisplayName("댓글 수정 시 요청 projectId와 댓글의 projectId가 일치하지 않을 경우 예외 발생")
     void updateProjectComment_not_match() {
         // given
-        Project project = spy(ProjectFixture.create());
+        Project project = spy(ProjectFixture.create(ProjectStatus.RECRUITING));
         when(project.getId()).thenReturn(1L);
         ProjectComment projectComment = ProjectCommentFixture.normal(project, MemberFixture.onlyRequired());
         when(projectCommentRepository.findById(anyLong())).thenReturn(Optional.of(projectComment));
@@ -53,7 +54,7 @@ class ProjectCommentServiceTest {
     @DisplayName("댓글 삭제 시 요청 projectId와 댓글의 projectId가 일치하지 않을 경우 예외 발생")
     void deleteProjectComment_not_match() {
         // given
-        Project project = spy(ProjectFixture.create());
+        Project project = spy(ProjectFixture.create(ProjectStatus.RECRUITING));
         when(project.getId()).thenReturn(1L);
         ProjectComment projectComment = ProjectCommentFixture.normal(project, MemberFixture.onlyRequired());
         when(projectCommentRepository.findById(anyLong())).thenReturn(Optional.of(projectComment));
@@ -67,7 +68,7 @@ class ProjectCommentServiceTest {
     @DisplayName("댓글 리스트 조회 시 삭제된 댓글은 '삭제된 댓글입니다.'로 표기")
     void readProjectCommentList_deleted_comment() {
         // given
-        Project project = ProjectFixture.create();
+        Project project = ProjectFixture.create(ProjectStatus.RECRUITING);
         Member writer = spy(MemberFixture.onlyRequired());
         ProjectComment projectComment = spy(ProjectCommentFixture.deleted(project, writer));
         when(writer.getId()).thenReturn(1L);

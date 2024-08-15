@@ -9,9 +9,10 @@ import java.util.List;
 
 public class ProjectFixture {
 
-    public static Project create() {
+    public static Project create(ProjectStatus status) {
         return Project.builder()
                 .title("테스트 타이틀")
+                .status(status)
                 .subject(Subject.SOCIAL_MEDIA)
                 .content("<p>테스트 콘텐츠 HTML<p>")
                 .profitable(false)
@@ -21,7 +22,7 @@ public class ProjectFixture {
     }
 
     public static Project withRecruitJobs(RecruitJob... recruitJobs) {
-        Project project = create();
+        Project project = create(ProjectStatus.RECRUITING);
         if(recruitJobs != null) {
             for (RecruitJob recruitJob : recruitJobs) {
                 project.addRecruitJob(recruitJob);
@@ -31,7 +32,7 @@ public class ProjectFixture {
     }
 
     public static Project withRecruitJobAndParticipant(List<RecruitJob> recruitJobs, List<ProjectParticipant> participant) {
-        Project project = create();
+        Project project = create(ProjectStatus.RECRUITING);
         recruitJobs.forEach(project::addRecruitJob);
         participant.forEach(project::addProjectParticipant);
         return project;

@@ -38,8 +38,7 @@ public class Project extends BaseTimeEntity {
     private Integer term;
 
     private Long views;
-
-    @Setter
+    
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 

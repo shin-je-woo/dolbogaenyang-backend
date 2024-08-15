@@ -38,7 +38,6 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Career career;
 
-    @Setter
     @Enumerated(EnumType.STRING)
     private WorkTime workTime;
 
@@ -172,5 +171,9 @@ public class Member extends BaseTimeEntity {
                 .orElseGet(Collections::emptySet).stream()
                 .map(MemberReference::new)
                 .forEach(this::addMemberReference);
+    }
+
+    public void modifyWorkTime(@NonNull WorkTime workTime) {
+        this.workTime = workTime;
     }
 }

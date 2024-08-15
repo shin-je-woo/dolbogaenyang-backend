@@ -52,6 +52,6 @@ public class MemberProfileService {
         memberPortfolios.forEach(member::addMemberPortfolio);
         member.modifyMemberSubject(info.getSubjects());
         member.modifyMemberReference(info.getReferences());
-        member.setWorkTime(info.getWorkTime());
+        member.modifyWorkTime(info.getWorkTime());
     }
 }
