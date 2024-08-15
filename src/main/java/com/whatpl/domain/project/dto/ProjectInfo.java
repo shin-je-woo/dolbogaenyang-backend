@@ -5,6 +5,7 @@ import com.whatpl.global.common.model.Subject;
 import com.whatpl.global.pagination.SliceElement;
 import com.whatpl.domain.project.model.ProjectStatus;
 import lombok.*;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -13,20 +14,58 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectInfo implements SliceElement {
+
     private long projectId;
     private String title;
     private ProjectStatus status;
     private Subject subject;
     private boolean myLike;
-    @Setter
     private List<Skill> skills;
-    @Setter
     private List<RemainedJobDto> remainedJobs;
     private boolean profitable;
     private int views;
-    @Setter
     private int likes;
-    @Setter
     private int comments;
     private String representImageUri;
+
+    @Getter
+    @Builder
+    public static class Editor {
+
+        private List<Skill> skills;
+        private List<RemainedJobDto> remainedJobs;
+        private int likes;
+        private int comments;
+
+        public static Editor fromSkills(List<Skill> skills) {
+            return Editor.builder().skills(skills).build();
+        }
+
+        public static Editor fromRemainedJobs(List<RemainedJobDto> remainedJobs) {
+            return Editor.builder().remainedJobs(remainedJobs).build();
+        }
+
+        public static Editor fromLikes(int likes) {
+            return Editor.builder().likes(likes).build();
+        }
+
+        public static Editor fromComments(int comments) {
+            return Editor.builder().comments(comments).build();
+        }
+
+        public void merge(ProjectInfo original) {
+            if (!CollectionUtils.isEmpty(skills)) {
+                original.skills = skills;
+            }
+            if (!CollectionUtils.isEmpty(remainedJobs)) {
+                original.remainedJobs = remainedJobs;
+            }
+            if (likes > 0) {
+                original.likes = likes;
+            }
+            if (comments > 0) {
+                original.comments = comments;
+            }
+        }
+    }
 }
