@@ -100,7 +100,7 @@ public class Project extends BaseTimeEntity {
             return;
         }
         this.projectSkills.add(projectSkill);
-        projectSkill.setProject(this);
+        projectSkill.addRelation(this);
     }
 
     public void addRecruitJob(RecruitJob recruitJob) {
@@ -108,7 +108,7 @@ public class Project extends BaseTimeEntity {
             return;
         }
         this.recruitJobs.add(recruitJob);
-        recruitJob.setProject(this);
+        recruitJob.addRelation(this);
     }
 
     public void addProjectParticipant(ProjectParticipant projectParticipant) {
@@ -116,7 +116,7 @@ public class Project extends BaseTimeEntity {
             return;
         }
         this.projectParticipants.add(projectParticipant);
-        projectParticipant.setProject(this);
+        projectParticipant.addRelation(this);
     }
 
     public void addRepresentImageAndWriter(Attachment representImage, Member writer) {
@@ -129,7 +129,7 @@ public class Project extends BaseTimeEntity {
             return;
         }
         this.applies.add(apply);
-        apply.setProject(this);
+        apply.addRelation(this);
     }
 
     //==비즈니스 로직==//

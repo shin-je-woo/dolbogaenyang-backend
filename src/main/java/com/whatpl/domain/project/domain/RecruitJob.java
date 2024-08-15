@@ -22,7 +22,6 @@ public class RecruitJob extends BaseTimeEntity {
 
     private Integer recruitAmount;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
@@ -34,6 +33,10 @@ public class RecruitJob extends BaseTimeEntity {
         }
         this.job = job;
         this.recruitAmount = recruitAmount;
+    }
+
+    public void addRelation(@NonNull Project project) {
+        this.project = project;
     }
 
     public void changeRecruitAmount(int recruitAmount) {

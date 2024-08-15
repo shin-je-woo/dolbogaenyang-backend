@@ -78,7 +78,7 @@ public class Member extends BaseTimeEntity {
             throw new BizException(ErrorCode.MAX_SKILL_SIZE_EXCEED);
         }
         this.memberSkills.add(memberSkill);
-        memberSkill.setMember(this);
+        memberSkill.addRelation(this);
     }
 
     public void addMemberSubject(MemberSubject memberSubject) {
@@ -89,7 +89,7 @@ public class Member extends BaseTimeEntity {
             throw new BizException(ErrorCode.MAX_SUBJECT_SIZE_EXCEED);
         }
         this.memberSubjects.add(memberSubject);
-        memberSubject.setMember(this);
+        memberSubject.addRelation(this);
     }
 
     public void addMemberReference(MemberReference memberReference) {
@@ -100,7 +100,7 @@ public class Member extends BaseTimeEntity {
             throw new BizException(ErrorCode.MAX_REFERENCE_SIZE_EXCEED);
         }
         this.memberReferences.add(memberReference);
-        memberReference.setMember(this);
+        memberReference.addRelation(this);
     }
 
     public void addMemberPortfolio(MemberPortfolio memberPortfolio) {
@@ -111,7 +111,7 @@ public class Member extends BaseTimeEntity {
             throw new BizException(ErrorCode.MAX_PORTFOLIO_SIZE_EXCEED);
         }
         this.memberPortfolios.add(memberPortfolio);
-        memberPortfolio.setMember(this);
+        memberPortfolio.addRelation(this);
     }
 
     //==비즈니스 로직==//
