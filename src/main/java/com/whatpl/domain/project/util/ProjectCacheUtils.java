@@ -2,6 +2,7 @@ package com.whatpl.domain.project.util;
 
 import com.whatpl.domain.project.model.ProjectStatus;
 import com.whatpl.domain.project.dto.ProjectSearchCondition;
+import com.whatpl.domain.project.repository.project.dto.ProjectOrderType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +17,7 @@ public class ProjectCacheUtils {
     }
 
     public static boolean isCacheable(Pageable pageable, ProjectSearchCondition searchCondition) {
-        String latest = ProjectSearchCondition.OrderType.LATEST.name().toLowerCase();
+        String latest = ProjectOrderType.LATEST.name().toLowerCase();
         return pageable.getPageNumber() == 0 &&
                 (pageable.getSort().isEmpty() || pageable.getSort().getOrderFor(latest) != null) &&
                 searchCondition.isEmpty();
