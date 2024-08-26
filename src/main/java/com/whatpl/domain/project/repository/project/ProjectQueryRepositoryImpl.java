@@ -10,6 +10,7 @@ import com.whatpl.domain.project.domain.*;
 import com.whatpl.domain.project.model.ProjectStatus;
 import com.whatpl.domain.project.dto.ProjectInfo;
 import com.whatpl.domain.project.dto.ProjectSearchCondition;
+import com.whatpl.domain.project.repository.project.dto.ProjectOrderType;
 import com.whatpl.global.common.model.Job;
 import com.whatpl.global.common.model.Skill;
 import com.whatpl.global.common.model.Subject;
@@ -82,10 +83,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
      */
     private OrderSpecifier<?>[] projectOrderBy(Pageable pageable) {
         List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
-        pageable.getSort().forEach(order -> {
-            Arrays.stream(ProjectSearchCondition.OrderType.values())
-                    .forEach(orderType -> orderType.getOrderSpecifier(order).ifPresent(orderSpecifiers::add));
-        });
+        pageable.getSort().forEach(order -> ProjectOrderType.getOrderSpecifier(order).ifPresent(orderSpecifiers::add));
         return orderSpecifiers.toArray(new OrderSpecifier[0]);
     }
 
