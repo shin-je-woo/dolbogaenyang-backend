@@ -5,6 +5,7 @@ import com.whatpl.domain.attachment.service.AttachmentService;
 import com.whatpl.domain.chat.service.ChatMessageService;
 import com.whatpl.domain.chat.service.ChatRoomService;
 import com.whatpl.domain.project.service.*;
+import com.whatpl.domain.whatplpople.service.WhatplpeopleService;
 import com.whatpl.global.config.SecurityConfig;
 import com.whatpl.global.common.properties.ImageProperties;
 import com.whatpl.global.common.properties.JwtProperties;
@@ -81,6 +82,9 @@ public abstract class BaseSecurityWebMvcTest {
 
     @MockBean
     protected ImageProperties imageProperties;
+
+    @MockBean
+    protected WhatplpeopleService whatplpeopleService;
 
     @BeforeEach
     protected void init() {

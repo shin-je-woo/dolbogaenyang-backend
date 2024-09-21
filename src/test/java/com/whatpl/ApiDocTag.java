@@ -18,7 +18,8 @@ public enum ApiDocTag {
     CHAT_ROOM("Chat Rooms"),
     CHAT_MESSAGE("Chat Messages"),
     DOMAIN("Domains"),
-    IMAGE("Images");
+    IMAGE("Images"),
+    WHATPLPEOPLE("whatplpeople");
 
     private final String tag;
 }
