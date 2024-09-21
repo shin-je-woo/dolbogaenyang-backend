@@ -1,11 +1,8 @@
 package com.whatpl.domain.whatplpople.controller;
 
-import com.whatpl.domain.project.model.ProjectStatus;
 import com.whatpl.domain.whatplpople.dto.WhatplpeopleDto;
 import com.whatpl.domain.whatplpople.dto.WhatplpeopleSearchCondition;
 import com.whatpl.domain.whatplpople.service.WhatplpeopleService;
-import com.whatpl.global.exception.BizException;
-import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.global.pagination.SliceResponse;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.global.util.PaginationUtils;
