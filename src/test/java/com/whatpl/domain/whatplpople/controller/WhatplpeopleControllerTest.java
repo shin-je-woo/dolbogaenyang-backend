@@ -78,7 +78,7 @@ class WhatplpeopleControllerTest extends BaseSecurityWebMvcTest {
                 jsonPath("$.list[*].career").value(whatplpeopleDto.getCareer().getValue()),
                 jsonPath("$.list[*].memberSkills").exists(),
                 jsonPath("$.list[*].memberSubjects").exists()
-        ).andDo(print()).andDo(document("search-me-whatplpeople",
+        ).andDo(print()).andDo(document("me-whatplpeoples",
                 resourceDetails().tag(ApiDocTag.WHATPLPEOPLE.getTag())
                         .summary("내가 찾는 피플")
                         .description("내가 찾는 피플"),
@@ -144,10 +144,10 @@ class WhatplpeopleControllerTest extends BaseSecurityWebMvcTest {
                 jsonPath("$.list[*].career").value(whatplpeopleDto.getCareer().getValue()),
                 jsonPath("$.list[*].memberSkills").exists(),
                 jsonPath("$.list[*].memberSubjects").exists()
-        ).andDo(print()).andDo(document("search-me-whatplpeople",
+        ).andDo(print()).andDo(document("whatplpeoples-me",
                 resourceDetails().tag(ApiDocTag.WHATPLPEOPLE.getTag())
-                        .summary("내가 찾는 피플")
-                        .description("내가 찾는 피플"),
+                        .summary("나를 찾는 피플")
+                        .description("나를 찾는 피플"),
                 queryParameters(
                         parameterWithName("page").description("페이지 번호"),
                         parameterWithName("size").description("페이지 사이즈"),
@@ -209,10 +209,10 @@ class WhatplpeopleControllerTest extends BaseSecurityWebMvcTest {
                 jsonPath("$.list[*].career").value(whatplpeopleDto.getCareer().getValue()),
                 jsonPath("$.list[*].memberSkills").exists(),
                 jsonPath("$.list[*].memberSubjects").exists()
-        ).andDo(print()).andDo(document("search-me-whatplpeople",
+        ).andDo(print()).andDo(document("whatplpeoples-all",
                 resourceDetails().tag(ApiDocTag.WHATPLPEOPLE.getTag())
-                        .summary("내가 찾는 피플")
-                        .description("내가 찾는 피플"),
+                        .summary("모든 왓피플")
+                        .description("모든 왓피플"),
                 queryParameters(
                         parameterWithName("page").description("페이지 번호"),
                         parameterWithName("size").description("페이지 사이즈"),
