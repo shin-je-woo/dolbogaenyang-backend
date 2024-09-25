@@ -176,4 +176,29 @@ public class Member extends BaseTimeEntity {
     public void modifyWorkTime(@NonNull WorkTime workTime) {
         this.workTime = workTime;
     }
+
+    public MemberEditor.MemberEditorBuilder toEditor() {
+        return MemberEditor.builder()
+                .nickname(nickname)
+                .job(job)
+                .career(career)
+                .profileOpen(profileOpen)
+                .workTime(workTime);
+    }
+
+    public void updateProfile(
+            MemberEditor editor,
+            Set<Subject> subjects,
+            Set<String> references,
+            Set<Skill> skills
+    ) {
+        this.nickname = editor.getNickname();
+        this.job = editor.getJob();
+        this.career = editor.getCareer();
+        this.workTime = editor.getWorkTime();
+        this.profileOpen = editor.isProfileOpen();
+        modifyMemberSubject(subjects);
+        modifyMemberReference(references);
+        modifyMemberSkills(skills);
+    }
 }

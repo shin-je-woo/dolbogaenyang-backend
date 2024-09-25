@@ -1,12 +1,9 @@
 package com.whatpl.domain.member.controller;
 
+import com.whatpl.domain.member.dto.*;
+import com.whatpl.domain.member.service.MemberProfileService;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.global.web.validator.ValidFileList;
-import com.whatpl.domain.member.dto.NicknameDuplRequest;
-import com.whatpl.domain.member.dto.NicknameDuplResponse;
-import com.whatpl.domain.member.dto.ProfileOptionalRequest;
-import com.whatpl.domain.member.dto.ProfileRequiredRequest;
-import com.whatpl.domain.member.service.MemberProfileService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +43,15 @@ public class MemberController {
                                          @RequestPart(required = false) List<MultipartFile> portfolios,
                                          @AuthenticationPrincipal MemberPrincipal principal) {
         memberProfileService.updateOptionalProfile(info, portfolios, principal.getId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/my-profile")
+    public ResponseEntity<Void> updateProfile(
+            @Valid @RequestBody ProfileUpdateRequest request,
+            @AuthenticationPrincipal MemberPrincipal principal
+    ) {
+        memberProfileService.updateProfile(request, principal.getId());
         return ResponseEntity.noContent().build();
     }
 }

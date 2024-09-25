@@ -1,13 +1,15 @@
 package com.whatpl.domain.member.service;
 
-import com.whatpl.global.exception.BizException;
-import com.whatpl.global.exception.ErrorCode;
 import com.whatpl.domain.member.domain.Member;
+import com.whatpl.domain.member.domain.MemberEditor;
 import com.whatpl.domain.member.domain.MemberPortfolio;
 import com.whatpl.domain.member.dto.NicknameDuplResponse;
 import com.whatpl.domain.member.dto.ProfileOptionalRequest;
 import com.whatpl.domain.member.dto.ProfileRequiredRequest;
+import com.whatpl.domain.member.dto.ProfileUpdateRequest;
 import com.whatpl.domain.member.repository.MemberRepository;
+import com.whatpl.global.exception.BizException;
+import com.whatpl.global.exception.ErrorCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,5 +55,19 @@ public class MemberProfileService {
         member.modifyMemberSubject(info.getSubjects());
         member.modifyMemberReference(info.getReferences());
         member.modifyWorkTime(info.getWorkTime());
+    }
+
+    @Transactional
+    public void updateProfile(ProfileUpdateRequest request, final long memberId) {
+        Member member = memberRepository.findMemberWithAllById(memberId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
+        MemberEditor memberEditor = member.toEditor()
+                .nickname(request.getNickname())
+                .job(request.getJob())
+                .career(request.getCareer())
+                .profileOpen(request.isProfileOpen())
+                .workTime(request.getWorkTime())
+                .build();
+        member.updateProfile(memberEditor, request.getSubjects(), request.getReferences(), request.getSkills());
     }
 }
