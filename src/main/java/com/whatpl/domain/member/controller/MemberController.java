@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,12 +47,17 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/my-profile")
-    public ResponseEntity<Void> updateProfile(
-            @Valid @RequestBody ProfileUpdateRequest request,
-            @AuthenticationPrincipal MemberPrincipal principal
-    ) {
-        memberProfileService.updateProfile(request, principal.getId());
+    @PreAuthorize("hasPermission(#memberId, 'MEMBER', 'UPDATE')")
+    @PutMapping("/{memberId}")
+    public ResponseEntity<Void> updateProfile(@PathVariable Long memberId,
+                                              @Valid @RequestBody ProfileUpdateRequest request) {
+        memberProfileService.updateProfile(request, memberId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{memberId}")
+    public ResponseEntity<MemberProfileResponse> readProfile(@PathVariable Long memberId) {
+        MemberProfileResponse memberProfileResponse = memberProfileService.readProfile(memberId);
+        return ResponseEntity.ok(memberProfileResponse);
     }
 }

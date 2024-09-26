@@ -3,10 +3,8 @@ package com.whatpl.domain.member.service;
 import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.member.domain.MemberEditor;
 import com.whatpl.domain.member.domain.MemberPortfolio;
-import com.whatpl.domain.member.dto.NicknameDuplResponse;
-import com.whatpl.domain.member.dto.ProfileOptionalRequest;
-import com.whatpl.domain.member.dto.ProfileRequiredRequest;
-import com.whatpl.domain.member.dto.ProfileUpdateRequest;
+import com.whatpl.domain.member.dto.*;
+import com.whatpl.domain.member.mapper.MemberMapper;
 import com.whatpl.domain.member.repository.MemberRepository;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
@@ -69,5 +67,12 @@ public class MemberProfileService {
                 .workTime(request.getWorkTime())
                 .build();
         member.updateProfile(memberEditor, request.getSubjects(), request.getReferences(), request.getSkills());
+    }
+
+    @Transactional(readOnly = true)
+    public MemberProfileResponse readProfile(final long memberId) {
+        Member member = memberRepository.findMemberWithAllById(memberId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
+        return MemberMapper.toMemberProfileResponse(member);
     }
 }
