@@ -3,6 +3,8 @@ package com.whatpl.domain.member.controller;
 import com.whatpl.ApiDocTag;
 import com.whatpl.ApiDocUtils;
 import com.whatpl.BaseSecurityWebMvcTest;
+import com.whatpl.domain.member.dto.MemberProfileResponse;
+import com.whatpl.domain.member.model.MemberProfileResponseFixture;
 import com.whatpl.global.security.model.WithMockWhatplMember;
 import com.whatpl.global.common.model.Career;
 import com.whatpl.global.common.model.Job;
@@ -30,8 +32,7 @@ import java.util.Set;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -183,23 +184,23 @@ class MemberControllerTest extends BaseSecurityWebMvcTest {
                                 .summary("프로필 선택 정보 입력")
                                 .description("""
                                         프로필 선택 정보 입력
-                                                                                
+                                        
                                         현재 사용 플러그인(ePages/restdocs-api-spec)이 multipart/form-data 문서화가 지원되지 않습니다. (try it out 불가능)
-
+                                        
                                         아래 형식을 참고하여 요청하면 됩니다.
                                         
                                         <h2> JSON Part </h2>
                                         | name   | Content-Type           | Description          |
                                         |--------|------------------------| ---------------------|
                                         | info   | application/json       | Member 프로필 정보     |
-                                                                                
+                                        
                                         <h2> JSON Field Part - info </h2>
                                         | key         | Type       | Description          |
                                         |-------------|------------| ---------------------|
                                         | subjects    | List       | 관심주제               |
                                         | references  | List       | 참고링크               |
                                         | workTime    | String     | 작업시간               |
-                                                                                
+                                        
                                         <h2> File Part </h2>
                                         | name         | filename  |Content-Type                 | Description            |
                                         |--------------|-----------|-----------------------------| -----------------------|
@@ -217,6 +218,43 @@ class MemberControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("references").description("참고링크"),
                                 fieldWithPath("workTime").description("작업시간"))
 
+                ));
+    }
+
+    @Test
+    @WithMockWhatplMember
+    @DisplayName("멤버 프로필 조회")
+    void readProfile() throws Exception {
+        // given
+        MemberProfileResponse memberProfileResponse = MemberProfileResponseFixture.generate();
+        when(memberProfileService.readProfile(anyLong())).thenReturn(memberProfileResponse);
+
+        // expected
+        mockMvc.perform(get("/members/{memberId}", 1L)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer {AccessToken}"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("read-profile",
+                        resourceDetails()
+                                .tag(ApiDocTag.MEMBER.getTag())
+                                .summary("멤버 프로필 조회")
+                                .description("""
+                                        멤버 프로필을 조회합니다.
+                                        """),
+                        pathParameters(
+                                parameterWithName("memberId").description("조회할 멤버 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+                                fieldWithPath("job").type(JsonFieldType.STRING).description("직무"),
+                                fieldWithPath("career").type(JsonFieldType.STRING).description("연차"),
+                                fieldWithPath("workTime").type(JsonFieldType.STRING).description("작업 가능 시간"),
+                                fieldWithPath("profileOpen").type(JsonFieldType.BOOLEAN).description("프로필 오픈 여부"),
+                                fieldWithPath("skills").type(JsonFieldType.ARRAY).description("스킬"),
+                                fieldWithPath("subjects").type(JsonFieldType.ARRAY).description("관심 주제"),
+                                fieldWithPath("references").type(JsonFieldType.ARRAY).description("참고 링크"),
+                                fieldWithPath("portfolioIds").type(JsonFieldType.ARRAY).description("포트폴리오 ID")
+                        )
                 ));
     }
 }
