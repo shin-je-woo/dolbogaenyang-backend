@@ -4,15 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatpl.domain.attachment.service.AttachmentService;
 import com.whatpl.domain.chat.service.ChatMessageService;
 import com.whatpl.domain.chat.service.ChatRoomService;
-import com.whatpl.domain.project.service.*;
-import com.whatpl.domain.whatplpople.service.WhatplpeopleService;
-import com.whatpl.global.config.SecurityConfig;
-import com.whatpl.global.common.properties.ImageProperties;
-import com.whatpl.global.common.properties.JwtProperties;
-import com.whatpl.global.jwt.service.JwtService;
-import com.whatpl.external.upload.FileUploader;
 import com.whatpl.domain.member.service.MemberLoginService;
 import com.whatpl.domain.member.service.MemberProfileService;
+import com.whatpl.domain.member.service.MemberProjectService;
+import com.whatpl.domain.project.service.*;
+import com.whatpl.domain.whatplpople.service.WhatplpeopleService;
+import com.whatpl.external.upload.FileUploader;
+import com.whatpl.global.common.properties.ImageProperties;
+import com.whatpl.global.common.properties.JwtProperties;
+import com.whatpl.global.config.SecurityConfig;
+import com.whatpl.global.jwt.service.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -85,6 +86,9 @@ public abstract class BaseSecurityWebMvcTest {
 
     @MockBean
     protected WhatplpeopleService whatplpeopleService;
+
+    @MockBean
+    protected MemberProjectService memberProjectService;
 
     @BeforeEach
     protected void init() {

@@ -1,6 +1,7 @@
 package com.whatpl.domain.project.mapper;
 
 import com.whatpl.domain.attachment.domain.Attachment;
+import com.whatpl.domain.project.dto.ParticipatedProject;
 import com.whatpl.global.common.model.Job;
 import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.project.domain.Project;
@@ -116,5 +117,26 @@ public final class ProjectMapper {
                 .nickname(projectParticipant.getParticipant().getNickname())
                 .career(projectParticipant.getParticipant().getCareer())
                 .build();
+    }
+
+    public static ParticipatedProject toParticipatedProject(Member member, Project project) {
+        return ParticipatedProject.builder()
+                .projectId(project.getId())
+                .title(project.getTitle())
+                .representImageId(project.getRepresentImage() == null ? null : project.getRepresentImage().getId())
+                .subject(project.getSubject())
+                .job(getMatchedParticipant(member, project)
+                        .map(ProjectParticipant::getJob)
+                        .orElse(null))
+                .participatedAt(getMatchedParticipant(member, project)
+                        .map(ProjectParticipant::getCreatedAt)
+                        .orElse(null))
+                .build();
+    }
+
+    private static Optional<ProjectParticipant> getMatchedParticipant(Member member, Project project) {
+        return project.getProjectParticipants().stream()
+                .filter(projectParticipant -> projectParticipant.getParticipant().getId().equals(member.getId()))
+                .findFirst();
     }
 }

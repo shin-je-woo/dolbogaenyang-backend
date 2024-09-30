@@ -1,20 +1,23 @@
 package com.whatpl.domain.project.service;
 
-import com.whatpl.global.exception.BizException;
-import com.whatpl.global.exception.ErrorCode;
-import com.whatpl.domain.project.mapper.ProjectMapper;
+import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.project.domain.Project;
+import com.whatpl.domain.project.dto.ParticipatedProject;
 import com.whatpl.domain.project.dto.ProjectInfo;
 import com.whatpl.domain.project.dto.ProjectReadResponse;
 import com.whatpl.domain.project.dto.ProjectSearchCondition;
+import com.whatpl.domain.project.mapper.ProjectMapper;
 import com.whatpl.domain.project.repository.like.ProjectLikeRepository;
 import com.whatpl.domain.project.repository.project.ProjectRepository;
+import com.whatpl.global.exception.BizException;
+import com.whatpl.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -52,5 +55,14 @@ public class ProjectReadService {
         ).join();
 
         return projectInfos;
+    }
+
+    @Transactional(readOnly = true)
+    public List<ParticipatedProject> readParticipatedProject(Member member) {
+        ArrayList<ParticipatedProject> result = new ArrayList<>();
+        projectRepository.findParticipatedProjects(member).forEach(project ->
+                result.add(ProjectMapper.toParticipatedProject(member, project))
+        );
+        return result;
     }
 }
