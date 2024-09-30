@@ -2,10 +2,7 @@ package com.whatpl.domain.project.service;
 
 import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.project.domain.Project;
-import com.whatpl.domain.project.dto.ParticipatedProject;
-import com.whatpl.domain.project.dto.ProjectInfo;
-import com.whatpl.domain.project.dto.ProjectReadResponse;
-import com.whatpl.domain.project.dto.ProjectSearchCondition;
+import com.whatpl.domain.project.dto.*;
 import com.whatpl.domain.project.mapper.ProjectMapper;
 import com.whatpl.domain.project.repository.like.ProjectLikeRepository;
 import com.whatpl.domain.project.repository.project.ProjectRepository;
@@ -13,6 +10,7 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,5 +62,21 @@ public class ProjectReadService {
                 result.add(ProjectMapper.toParticipatedProject(member, project))
         );
         return result;
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProjectInfo> readRecruitedProjects(Member member) {
+        ProjectSearchCondition searchCondition = ProjectSearchCondition.builder()
+                .memberId(member.getId())
+                .recruiterId(member.getId())
+                .build();
+        List<ProjectInfo> projectInfos = projectRepository.findProjectInfos(PageRequest.of(0, 30), searchCondition);
+        CompletableFuture.allOf(
+                projectReadAsyncService.mergeSkills(projectInfos),
+                projectReadAsyncService.mergeRemainedJobs(projectInfos),
+                projectReadAsyncService.mergeLikes(projectInfos),
+                projectReadAsyncService.mergeComments(projectInfos)
+        ).join();
+        return projectInfos;
     }
 }

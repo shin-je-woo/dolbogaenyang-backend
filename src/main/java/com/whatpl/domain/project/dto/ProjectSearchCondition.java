@@ -21,13 +21,14 @@ public class ProjectSearchCondition {
     private ProjectStatus status;
     private Boolean profitable;
     private String keyword;
-    private Long longinMemberId;
+    private Long memberId;
+    private Long recruiterId;
 
     public void assignLoginMember(MemberPrincipal principal) {
-        if (longinMemberId != null) {
+        if (memberId != null) {
             return;
         }
-        longinMemberId = principal != null ? principal.getId() : Long.MIN_VALUE;
+        memberId = principal != null ? principal.getId() : Long.MIN_VALUE;
     }
 
     public boolean isEmpty() {

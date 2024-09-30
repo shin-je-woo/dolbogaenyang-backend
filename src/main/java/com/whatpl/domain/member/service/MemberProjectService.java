@@ -3,6 +3,7 @@ package com.whatpl.domain.member.service;
 import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.member.repository.MemberRepository;
 import com.whatpl.domain.project.dto.ParticipatedProject;
+import com.whatpl.domain.project.dto.ProjectInfo;
 import com.whatpl.domain.project.service.ProjectReadService;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
@@ -22,5 +23,11 @@ public class MemberProjectService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
         return projectReadService.readParticipatedProject(member);
+    }
+
+    public List<ProjectInfo> readRecruitedProjects(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
+        return projectReadService.readRecruitedProjects(member);
     }
 }

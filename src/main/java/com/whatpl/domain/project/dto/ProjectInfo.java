@@ -26,7 +26,7 @@ public class ProjectInfo implements SliceElement {
     private int views;
     private int likes;
     private int comments;
-    private String representImageUri;
+    private Long representImageId;
 
     @Getter
     @Builder

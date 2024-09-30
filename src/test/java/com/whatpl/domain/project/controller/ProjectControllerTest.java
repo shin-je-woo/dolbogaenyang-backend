@@ -205,7 +205,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                 .views(100)
                 .likes(20)
                 .comments(5)
-                .representImageUri("/images/default?type=project")
+                .representImageId(1L)
                 .myLike(true)
                 .build();
         List<ProjectInfo> projectInfos = List.of(projectInfo);
@@ -243,7 +243,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.list[*].views").value(projectInfo.getViews()),
                         jsonPath("$.list[*].likes").value(projectInfo.getLikes()),
                         jsonPath("$.list[*].comments").value(projectInfo.getComments()),
-                        jsonPath("$.list[*].representImageUri").value(projectInfo.getRepresentImageUri()),
+                        jsonPath("$.list[*].representImageId").value(Long.valueOf(projectInfo.getRepresentImageId()).intValue()),
                         jsonPath("$.list[*].myLike").value(projectInfo.isMyLike())
                 )
                 .andDo(print())
@@ -287,7 +287,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("list[].views").type(JsonFieldType.NUMBER).description("조회수"),
                                 fieldWithPath("list[].likes").type(JsonFieldType.NUMBER).description("좋아요 갯수"),
                                 fieldWithPath("list[].comments").type(JsonFieldType.NUMBER).description("댓글 갯수"),
-                                fieldWithPath("list[].representImageUri").type(JsonFieldType.STRING).description("대표 이미지 URI"),
+                                fieldWithPath("list[].representImageId").type(JsonFieldType.NUMBER).description("대표 이미지 ID"),
                                 fieldWithPath("list[].myLike").type(JsonFieldType.BOOLEAN).description("좋아요 여부"),
                                 fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
                                 fieldWithPath("pageSize").type(JsonFieldType.NUMBER).description("페이지 사이즈"),
