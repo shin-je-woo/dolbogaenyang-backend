@@ -26,7 +26,7 @@ public class AttachmentController {
 
     @PostMapping("/attachments")
     public ResponseEntity<UploadResponse> upload(@ValidFile @RequestPart("file") MultipartFile multipartFile) {
-        long id = attachmentService.upload(multipartFile);
+        long id = attachmentService.uploadAndSave(multipartFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(new UploadResponse(id));
     }
 

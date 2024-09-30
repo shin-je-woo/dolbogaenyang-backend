@@ -50,8 +50,11 @@ public class MemberController {
     @PreAuthorize("hasPermission(#memberId, 'MEMBER', 'UPDATE')")
     @PutMapping("/{memberId}")
     public ResponseEntity<Void> updateProfile(@PathVariable Long memberId,
-                                              @Valid @RequestBody ProfileUpdateRequest request) {
-        memberProfileService.updateProfile(request, memberId);
+                                              @Valid @RequestPart ProfileUpdateRequest info,
+                                              @Size(max = 5, message = "포트폴리오는 최대 5개 첨부 가능합니다.")
+                                              @ValidFileList(message = "포트폴리오에 허용된 확장자가 아닙니다. [jpg, jpeg, png, gif, pdf]")
+                                              @RequestPart(required = false) List<MultipartFile> portfolios) {
+        memberProfileService.updateProfile(info, portfolios, memberId);
         return ResponseEntity.noContent().build();
     }
 

@@ -3,7 +3,6 @@ package com.whatpl.domain.attachment.service;
 import com.whatpl.domain.attachment.domain.Attachment;
 import com.whatpl.domain.attachment.dto.ResourceDto;
 import com.whatpl.domain.attachment.repository.AttachmentRepository;
-import com.whatpl.domain.attachment.service.AttachmentService;
 import com.whatpl.external.upload.FileUploader;
 import io.awspring.cloud.s3.S3Resource;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +44,7 @@ class AttachmentServiceTest {
                 .thenReturn(mock(Attachment.class));
 
         //when
-        attachmentService.upload(multipartFile);
+        attachmentService.uploadAndSave(multipartFile);
 
         //then
         verify(fileUploader, times(1)).upload(multipartFile);

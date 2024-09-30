@@ -11,6 +11,7 @@ import lombok.*;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -53,7 +54,7 @@ public class Member extends BaseTimeEntity {
     private Set<MemberReference> memberReferences = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberPortfolio> memberPortfolios = new LinkedList<>();
+    private Set<MemberPortfolio> memberPortfolios = new LinkedHashSet<>();
 
     @Builder
     public Member(SocialType socialType, String socialId, String nickname, MemberStatus status,
@@ -114,6 +115,7 @@ public class Member extends BaseTimeEntity {
     }
 
     //==비즈니스 로직==//
+
     /**
      * 필수 정보 입력
      */
@@ -200,5 +202,17 @@ public class Member extends BaseTimeEntity {
         modifyMemberSubject(subjects);
         modifyMemberReference(references);
         modifyMemberSkills(skills);
+    }
+
+    public List<MemberPortfolio> deletePortfolios(List<Long> deletePortfolioIds) {
+        if (CollectionUtils.isEmpty(deletePortfolioIds) || CollectionUtils.isEmpty(getMemberPortfolios())) {
+            return Collections.emptyList();
+        }
+        Set<MemberPortfolio> deleteList = getMemberPortfolios().stream()
+                .filter(memberPortfolio -> deletePortfolioIds.stream()
+                        .anyMatch(deleteId -> deleteId.equals(memberPortfolio.getId())))
+                .collect(Collectors.toSet());
+        getMemberPortfolios().removeAll(deleteList);
+        return deleteList.stream().toList();
     }
 }

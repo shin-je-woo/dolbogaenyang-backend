@@ -160,7 +160,7 @@ class MemberControllerTest extends BaseSecurityWebMvcTest {
 
     @Test
     @WithMockWhatplMember
-    @DisplayName("프로필 기본 정보 입력 API Docs")
+    @DisplayName("프로필 선택 정보 입력 API Docs")
     void optional() throws Exception {
         // given
         ProfileOptionalRequest info = ProfileOptionalRequestFixture.create();
