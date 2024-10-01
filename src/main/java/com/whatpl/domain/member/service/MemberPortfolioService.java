@@ -1,16 +1,19 @@
 package com.whatpl.domain.member.service;
 
 import com.whatpl.domain.attachment.domain.Attachment;
+import com.whatpl.domain.attachment.dto.ResourceDto;
 import com.whatpl.domain.attachment.service.AttachmentService;
+import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.member.domain.MemberPortfolio;
+import com.whatpl.domain.member.repository.MemberPortfolioRepository;
+import com.whatpl.global.exception.BizException;
+import com.whatpl.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -18,22 +21,26 @@ import java.util.List;
 public class MemberPortfolioService {
 
     private final AttachmentService attachmentService;
+    private final MemberPortfolioRepository memberPortfolioRepository;
 
     @Transactional
-    public List<MemberPortfolio> uploadPortfolio(List<MultipartFile> portfolios) {
+    public void uploadPortfolio(Member member, List<MultipartFile> portfolios) {
         if (CollectionUtils.isEmpty(portfolios)) {
-            return Collections.emptyList();
+            return;
         }
-
-        List<MemberPortfolio> memberPortfolios = new ArrayList<>();
         portfolios.parallelStream()
                 .forEach(portfolio -> {
-                    Long attachmentId = attachmentService.upload(portfolio);
-                    // 1차 캐시에 있는 데이터 조회 (쿼리X)
-                    Attachment attachment = attachmentService.findById(attachmentId);
+                    Attachment attachment = attachmentService.upload(portfolio);
                     MemberPortfolio memberPortfolio = new MemberPortfolio(attachment);
-                    memberPortfolios.add(memberPortfolio);
+                    member.addMemberPortfolio(memberPortfolio);
                 });
-        return memberPortfolios;
+    }
+
+    @Transactional(readOnly = true)
+    public ResourceDto readPortfolio(Long portfolioId) {
+        MemberPortfolio memberPortfolio = memberPortfolioRepository.findByIdWithAttachment(portfolioId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_DATA));
+        Attachment attachment = memberPortfolio.getAttachment();
+        return attachmentService.download(attachment.getId());
     }
 }

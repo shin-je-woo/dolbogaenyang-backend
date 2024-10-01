@@ -2,14 +2,12 @@ package com.whatpl.domain.project.repository.project;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.whatpl.domain.member.domain.QMember;
 import com.whatpl.domain.project.domain.*;
-import com.whatpl.domain.project.model.ProjectStatus;
 import com.whatpl.domain.project.dto.ProjectInfo;
 import com.whatpl.domain.project.dto.ProjectSearchCondition;
+import com.whatpl.domain.project.model.ProjectStatus;
 import com.whatpl.domain.project.repository.project.dto.ProjectOrderType;
 import com.whatpl.global.common.model.Job;
 import com.whatpl.global.common.model.Skill;
@@ -60,7 +58,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                         project.subject.as("subject"),
                         project.profitable.as("profitable"),
                         project.views.as("vies"),
-                        buildRepresentImageUri().as("representImageUri"),
+                        project.representImage.id.as("representImageId"),
                         myLikeExists(searchCondition).as("myLike")
                 ))
                 .from(project)
@@ -69,7 +67,8 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                         skillEq(searchCondition.getSkill()),
                         statusEq(searchCondition.getStatus()),
                         profitableEq(searchCondition.getProfitable()),
-                        titleLike(searchCondition.getKeyword())
+                        titleLike(searchCondition.getKeyword()),
+                        recruiterEq(searchCondition.getRecruiterId())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
@@ -132,13 +131,6 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 .collect(groupingBy(projectComment -> projectComment.getProject().getId()));
     }
 
-    private StringExpression buildRepresentImageUri() {
-        return new CaseBuilder()
-                .when(project.representImage.isNull())
-                .then("/images/default?type=project")
-                .otherwise(project.representImage.id.stringValue().prepend("/attachments/").concat("/images"));
-    }
-
     private BooleanExpression subjectEq(Subject subject) {
         return subject != null ? project.subject.eq(subject) : null;
     }
@@ -180,7 +172,11 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
     private BooleanExpression myLikeExists(ProjectSearchCondition searchCondition) {
         return selectFrom(projectLike)
                 .where(projectLike.project.eq(project),
-                        projectLike.member.id.eq(Objects.requireNonNullElse(searchCondition.getLonginMemberId(), Long.MIN_VALUE)))
+                        projectLike.member.id.eq(Objects.requireNonNullElse(searchCondition.getMemberId(), Long.MIN_VALUE)))
                 .exists();
+    }
+
+    private BooleanExpression recruiterEq(Long recruiterId) {
+        return recruiterId != null ? project.writer.id.eq(recruiterId) : null;
     }
 }

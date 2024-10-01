@@ -25,6 +25,7 @@ public class ProjectWriteService {
     private final MemberRepository memberRepository;
     private final AttachmentRepository attachmentRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectMapper projectMapper;
 
     @Transactional
     @CacheEvict(value = "projectList", allEntries = true)
@@ -33,7 +34,7 @@ public class ProjectWriteService {
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
 
         Attachment representImage = getRepresentImage(request.getRepresentImageId());
-        Project project = ProjectMapper.toProject(request, writer, representImage);
+        Project project = projectMapper.toProject(request, writer, representImage);
 
         Project savedProject = projectRepository.save(project);
         return savedProject.getId();
@@ -55,7 +56,6 @@ public class ProjectWriteService {
         }
         Attachment representImage = attachmentRepository.findById(representImageId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_FILE));
-        // 프로젝트 대표이미지는 이미지 파일만 가능 (web validation 단계에서 image, pdf 가 넘어오기 때문에 한번 더 체크)
         FileUtils.validateImageFile(representImage.getMimeType());
         return representImage;
     }

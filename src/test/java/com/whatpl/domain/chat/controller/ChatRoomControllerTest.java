@@ -52,7 +52,8 @@ class ChatRoomControllerTest extends BaseSecurityWebMvcTest {
                 .projectTitle("프로젝트 제목")
                 .opponentId(1L)
                 .opponentNickname("상대방 닉네임")
-                .opponentProfileImgUri("상대방 프로필 URI")
+                .opponentPictureId(1L)
+                .opponentPictureUrl("https://jewoos.site/attachments/pictures/1")
                 .lastMessageContent("마지막 메시지")
                 .lastMessageTime(LocalDateTime.now(Clock.fixed(
                         Instant.parse("2024-07-17T23:55:01.00Z"),
@@ -76,7 +77,8 @@ class ChatRoomControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.list[*].projectTitle").value(chatRoomResponse.getProjectTitle()),
                         jsonPath("$.list[*].opponentId").value(Long.valueOf(chatRoomResponse.getOpponentId()).intValue()),
                         jsonPath("$.list[*].opponentNickname").value(chatRoomResponse.getOpponentNickname()),
-                        jsonPath("$.list[*].opponentProfileImgUri").value(chatRoomResponse.getOpponentProfileImgUri()),
+                        jsonPath("$.list[*].opponentPictureId").value(Long.valueOf(chatRoomResponse.getOpponentPictureId()).intValue()),
+                        jsonPath("$.list[*].opponentPictureUrl").value(chatRoomResponse.getOpponentPictureUrl()),
                         jsonPath("$.list[*].lastMessageContent").value(chatRoomResponse.getLastMessageContent()),
                         jsonPath("$.list[*].lastMessageTime").value(chatRoomResponse.getLastMessageTime().toString()),
                         jsonPath("$.list[*].lastMessageRead").value(chatRoomResponse.isLastMessageRead())
@@ -104,7 +106,8 @@ class ChatRoomControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("list[].projectTitle").type(JsonFieldType.STRING).description("프로젝트 제목"),
                                 fieldWithPath("list[].opponentId").type(JsonFieldType.NUMBER).description("상대방 멤버 ID"),
                                 fieldWithPath("list[].opponentNickname").type(JsonFieldType.STRING).description("상대방 멤버 닉네임"),
-                                fieldWithPath("list[].opponentProfileImgUri").type(JsonFieldType.STRING).description("상대방 멤버 프로필 이미지 URI"),
+                                fieldWithPath("list[].opponentPictureId").type(JsonFieldType.NUMBER).description("상대방 멤버 프로필 이미지 ID"),
+                                fieldWithPath("list[].opponentPictureUrl").type(JsonFieldType.STRING).description("상대방 멤버 프로필 이미지 URL"),
                                 fieldWithPath("list[].lastMessageContent").type(JsonFieldType.STRING).description("마지막 메시지 내용"),
                                 fieldWithPath("list[].lastMessageTime").type(JsonFieldType.STRING).description("마지막 메시지 발송 일시"),
                                 fieldWithPath("list[].lastMessageRead").type(JsonFieldType.BOOLEAN).description("마지막 메시지 읽음 여부"),

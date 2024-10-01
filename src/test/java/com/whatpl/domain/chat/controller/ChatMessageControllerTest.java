@@ -93,7 +93,8 @@ class ChatMessageControllerTest extends BaseSecurityWebMvcTest {
                 .content("메시지입니다~")
                 .senderId(1L)
                 .senderNickname("왓플테스트멤버1")
-                .senderProfileImgUri(null) // TODO 보낸 사람 프로필 이미지 URI
+                .senderPictureId(1L)
+                .senderPictureUrl("https://jewoos.site/attachments/pictures/1")
                 .sendAt(LocalDateTime.now(Clock.fixed(
                         Instant.parse("2024-05-06T23:24:43.00Z"),
                         ZoneId.of("Asia/Seoul"))))
@@ -117,7 +118,8 @@ class ChatMessageControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.list[*].content").value(chatMessageDto.getContent()),
                         jsonPath("$.list[*].senderId").value(Long.valueOf(chatMessageDto.getSenderId()).intValue()),
                         jsonPath("$.list[*].senderNickname").value(chatMessageDto.getSenderNickname()),
-                        jsonPath("$.list[*].senderProfileImgUri").value(chatMessageDto.getSenderProfileImgUri()),
+                        jsonPath("$.list[*].senderPictureId").value(Long.valueOf(chatMessageDto.getSenderPictureId()).intValue()),
+                        jsonPath("$.list[*].senderPictureUrl").value(chatMessageDto.getSenderPictureUrl()),
                         jsonPath("$.list[*].sendAt").value(chatMessageDto.getSendAt().toString()),
                         jsonPath("$.list[*].readAt").value(chatMessageDto.getReadAt().toString()),
                         jsonPath("$.currentPage").value(page),
@@ -155,7 +157,8 @@ class ChatMessageControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("list[].content").type(JsonFieldType.STRING).description("메시지 내용"),
                                 fieldWithPath("list[].senderId").type(JsonFieldType.NUMBER).description("발송자 ID"),
                                 fieldWithPath("list[].senderNickname").type(JsonFieldType.STRING).description("발송자 닉네임"),
-                                fieldWithPath("list[].senderProfileImgUri").type(JsonFieldType.NULL).description("발송자 프로필 이미지 URI"), // TODO 보낸 사람 프로필 이미지 URI
+                                fieldWithPath("list[].senderPictureId").type(JsonFieldType.NUMBER).description("발송자 프로필 이미지 ID"),
+                                fieldWithPath("list[].senderPictureUrl").type(JsonFieldType.STRING).description("발송자 프로필 이미지 URL"),
                                 fieldWithPath("list[].sendAt").type(JsonFieldType.STRING).description("발송 일시"),
                                 fieldWithPath("list[].readAt").type(JsonFieldType.STRING).description("수신 일시"),
                                 fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),

@@ -6,6 +6,7 @@ import com.whatpl.global.pagination.SliceElement;
 import com.whatpl.domain.project.model.ProjectStatus;
 import lombok.*;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -26,7 +27,8 @@ public class ProjectInfo implements SliceElement {
     private int views;
     private int likes;
     private int comments;
-    private String representImageUri;
+    private Long representImageId;
+    private String representImageUrl;
 
     @Getter
     @Builder
@@ -36,6 +38,7 @@ public class ProjectInfo implements SliceElement {
         private List<RemainedJobDto> remainedJobs;
         private int likes;
         private int comments;
+        private String representImageUrl;
 
         public static Editor fromSkills(List<Skill> skills) {
             return Editor.builder().skills(skills).build();
@@ -53,6 +56,8 @@ public class ProjectInfo implements SliceElement {
             return Editor.builder().comments(comments).build();
         }
 
+        public static Editor fromRepresentImageUrl(String representImageUrl) {return Editor.builder().representImageUrl(representImageUrl).build();}
+
         public void merge(ProjectInfo original) {
             if (!CollectionUtils.isEmpty(skills)) {
                 original.skills = skills;
@@ -65,6 +70,9 @@ public class ProjectInfo implements SliceElement {
             }
             if (comments > 0) {
                 original.comments = comments;
+            }
+            if (StringUtils.hasText(representImageUrl)) {
+                original.representImageUrl = representImageUrl;
             }
         }
     }

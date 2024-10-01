@@ -36,6 +36,5 @@ class MemberQueryRepositoryImplTest extends BaseRepositoryTest {
         assertEquals(member.getMemberReferences().size(), findMember.getMemberReferences().size());
         assertEquals(member.getMemberPortfolios().size(), findMember.getMemberPortfolios().size());
         assertNotNull(member.getMemberPortfolios());
-        assertEquals(member, member.getMemberPortfolios().get(0).getMember());
     }
 }

@@ -1,5 +1,6 @@
 package com.whatpl.domain.member.domain;
 
+import com.whatpl.domain.attachment.domain.Attachment;
 import com.whatpl.global.common.model.BaseTimeEntity;
 import com.whatpl.global.common.model.*;
 import com.whatpl.global.exception.BizException;
@@ -11,6 +12,7 @@ import lombok.*;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -43,17 +45,25 @@ public class Member extends BaseTimeEntity {
 
     private Boolean profileOpen;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "picture_id")
+    private Attachment picture;
+
+    @OrderBy("id")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MemberSkill> memberSkills = new LinkedHashSet<>();
 
+    @OrderBy("id")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MemberSubject> memberSubjects = new LinkedHashSet<>();
 
+    @OrderBy("id")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MemberReference> memberReferences = new LinkedHashSet<>();
 
+    @OrderBy("id")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberPortfolio> memberPortfolios = new LinkedList<>();
+    private Set<MemberPortfolio> memberPortfolios = new LinkedHashSet<>();
 
     @Builder
     public Member(SocialType socialType, String socialId, String nickname, MemberStatus status,
@@ -113,7 +123,12 @@ public class Member extends BaseTimeEntity {
         memberPortfolio.addRelation(this);
     }
 
+    public void modifyPicture(Attachment picture) {
+        this.picture = picture;
+    }
+
     //==비즈니스 로직==//
+
     /**
      * 필수 정보 입력
      */
@@ -175,5 +190,42 @@ public class Member extends BaseTimeEntity {
 
     public void modifyWorkTime(@NonNull WorkTime workTime) {
         this.workTime = workTime;
+    }
+
+    public MemberEditor.MemberEditorBuilder toEditor() {
+        return MemberEditor.builder()
+                .nickname(nickname)
+                .job(job)
+                .career(career)
+                .profileOpen(profileOpen)
+                .workTime(workTime);
+    }
+
+    public void updateProfile(
+            MemberEditor editor,
+            Set<Subject> subjects,
+            Set<String> references,
+            Set<Skill> skills
+    ) {
+        this.nickname = editor.getNickname();
+        this.job = editor.getJob();
+        this.career = editor.getCareer();
+        this.workTime = editor.getWorkTime();
+        this.profileOpen = editor.isProfileOpen();
+        modifyMemberSubject(subjects);
+        modifyMemberReference(references);
+        modifyMemberSkills(skills);
+    }
+
+    public List<MemberPortfolio> deletePortfolios(List<Long> deletePortfolioIds) {
+        if (CollectionUtils.isEmpty(deletePortfolioIds) || CollectionUtils.isEmpty(getMemberPortfolios())) {
+            return Collections.emptyList();
+        }
+        Set<MemberPortfolio> deleteList = getMemberPortfolios().stream()
+                .filter(memberPortfolio -> deletePortfolioIds.stream()
+                        .anyMatch(deleteId -> deleteId.equals(memberPortfolio.getId())))
+                .collect(Collectors.toSet());
+        getMemberPortfolios().removeAll(deleteList);
+        return deleteList.stream().toList();
     }
 }

@@ -1,16 +1,15 @@
 package com.whatpl.domain.member.controller;
 
+import com.whatpl.domain.member.dto.*;
+import com.whatpl.domain.member.service.MemberProfileService;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.global.web.validator.ValidFileList;
-import com.whatpl.domain.member.dto.NicknameDuplRequest;
-import com.whatpl.domain.member.dto.NicknameDuplResponse;
-import com.whatpl.domain.member.dto.ProfileOptionalRequest;
-import com.whatpl.domain.member.dto.ProfileRequiredRequest;
-import com.whatpl.domain.member.service.MemberProfileService;
+import com.whatpl.global.web.validator.ValidPicture;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +45,31 @@ public class MemberController {
                                          @RequestPart(required = false) List<MultipartFile> portfolios,
                                          @AuthenticationPrincipal MemberPrincipal principal) {
         memberProfileService.updateOptionalProfile(info, portfolios, principal.getId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasPermission(#memberId, 'MEMBER', 'UPDATE')")
+    @PutMapping("/{memberId}")
+    public ResponseEntity<Void> updateProfile(@PathVariable Long memberId,
+                                              @Valid @RequestPart ProfileUpdateRequest info,
+                                              @Size(max = 5, message = "포트폴리오는 최대 5개 첨부 가능합니다.")
+                                              @ValidFileList(message = "포트폴리오에 허용된 확장자가 아닙니다. [jpg, jpeg, png, gif, pdf]")
+                                              @RequestPart(required = false) List<MultipartFile> portfolios) {
+        memberProfileService.updateProfile(info, portfolios, memberId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{memberId}")
+    public ResponseEntity<MemberProfileResponse> readProfile(@PathVariable Long memberId) {
+        MemberProfileResponse memberProfileResponse = memberProfileService.readProfile(memberId);
+        return ResponseEntity.ok(memberProfileResponse);
+    }
+
+    @PreAuthorize("hasPermission(#memberId, 'MEMBER', 'UPDATE')")
+    @PutMapping("/{memberId}/picture")
+    public ResponseEntity<Void> updatePicture(@PathVariable Long memberId,
+                                              @ValidPicture @RequestPart("picture") MultipartFile multipartFile) {
+        memberProfileService.updatePicture(memberId, multipartFile);
         return ResponseEntity.noContent().build();
     }
 }

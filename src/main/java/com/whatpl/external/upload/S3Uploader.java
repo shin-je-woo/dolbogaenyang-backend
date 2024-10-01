@@ -22,6 +22,7 @@ public class S3Uploader implements FileUploader {
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
 
+    @Override
     public String upload(MultipartFile multipartFile) {
         String storedName = UUID.randomUUID().toString();
         try (InputStream is = multipartFile.getInputStream()) {
@@ -33,11 +34,17 @@ public class S3Uploader implements FileUploader {
         return storedName;
     }
 
+    @Override
     public Resource download(String key) {
         S3Resource resource = s3Template.download(bucket, key);
         if (!resource.exists()) {
             throw new BizException(ErrorCode.NOT_FOUND_FILE);
         }
         return resource;
+    }
+
+    @Override
+    public void delete(String key) {
+        s3Template.deleteObject(bucket, key);
     }
 }

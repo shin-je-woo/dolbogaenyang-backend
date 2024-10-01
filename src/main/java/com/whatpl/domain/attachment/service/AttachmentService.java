@@ -21,14 +21,19 @@ public class AttachmentService {
     private final FileUploader fileUploader;
 
     @Transactional
-    public Long upload(MultipartFile multipartFile) {
+    public Attachment upload(MultipartFile multipartFile) {
         String storedName = fileUploader.upload(multipartFile);
         String mimeType = FileUtils.extractMimeType(multipartFile);
-        Attachment attachment = Attachment.builder()
+        return Attachment.builder()
                 .fileName(multipartFile.getOriginalFilename())
                 .storedName(storedName)
                 .mimeType(mimeType)
                 .build();
+    }
+
+    @Transactional
+    public Long uploadAndSave(MultipartFile multipartFile) {
+        Attachment attachment = upload(multipartFile);
         Attachment savedAttachment = attachmentRepository.save(attachment);
         return savedAttachment.getId();
     }

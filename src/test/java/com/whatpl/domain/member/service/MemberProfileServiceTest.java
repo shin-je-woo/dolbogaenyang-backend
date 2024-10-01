@@ -1,18 +1,16 @@
 package com.whatpl.domain.member.service;
 
-import com.whatpl.domain.attachment.domain.Attachment;
 import com.whatpl.domain.member.domain.Member;
-import com.whatpl.domain.member.domain.MemberPortfolio;
 import com.whatpl.domain.member.domain.MemberSkill;
-import com.whatpl.global.common.model.Career;
-import com.whatpl.global.common.model.Job;
-import com.whatpl.global.common.model.Skill;
 import com.whatpl.domain.member.dto.NicknameDuplResponse;
 import com.whatpl.domain.member.dto.ProfileOptionalRequest;
 import com.whatpl.domain.member.dto.ProfileRequiredRequest;
 import com.whatpl.domain.member.model.MemberFixture;
 import com.whatpl.domain.member.model.ProfileOptionalRequestFixture;
 import com.whatpl.domain.member.repository.MemberRepository;
+import com.whatpl.global.common.model.Career;
+import com.whatpl.global.common.model.Job;
+import com.whatpl.global.common.model.Skill;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,11 +23,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -114,11 +112,7 @@ class MemberProfileServiceTest {
         List<MultipartFile> portfolios = List.of(
                 new MockMultipartFile("testFile1", "testFile1".getBytes()),
                 new MockMultipartFile("testFile2", "testFile2".getBytes()));
-        when(memberPortfolioService.uploadPortfolio(portfolios))
-                .thenReturn(List.of(
-                        new MemberPortfolio(new Attachment("testFile1", UUID.randomUUID().toString(), "image/jpeg")),
-                        new MemberPortfolio(new Attachment("testFile2", UUID.randomUUID().toString(), "image/png")))
-                );
+        doNothing().when(memberPortfolioService).uploadPortfolio(member, portfolios);
 
         // when
         memberProfileService.updateOptionalProfile(request, portfolios, 0L);
@@ -127,6 +121,5 @@ class MemberProfileServiceTest {
         assertEquals(request.getReferences().size(), member.getMemberReferences().size());
         assertEquals(request.getSubjects().size(), member.getMemberSubjects().size());
         assertEquals(request.getWorkTime(), member.getWorkTime());
-        assertEquals(portfolios.size(), member.getMemberPortfolios().size());
     }
 }

@@ -1,5 +1,7 @@
 package com.whatpl.domain.chat.service;
 
+import com.whatpl.domain.attachment.domain.AttachmentUrlParseDelegator;
+import com.whatpl.domain.attachment.domain.AttachmentUrlParseType;
 import com.whatpl.domain.chat.domain.ChatRoom;
 import com.whatpl.domain.chat.dto.ChatRoomResponse;
 import com.whatpl.domain.chat.repository.room.ChatRoomRepository;
@@ -21,6 +23,7 @@ public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageService chatMessageService;
+    private final AttachmentUrlParseDelegator attachmentUrlParseDelegator;
 
     @Transactional
     public long createChatRoom(final Apply apply, final String content) {
@@ -37,6 +40,13 @@ public class ChatRoomService {
     @Transactional(readOnly = true)
     public Slice<ChatRoomResponse> readChatRooms(final Pageable pageable, final Long memberId) {
         List<ChatRoomResponse> chatRooms = chatRoomRepository.findChatRooms(pageable, memberId);
+        chatRooms.forEach(chatRoom -> {
+            String opponentPictureId = attachmentUrlParseDelegator.parseUrl(
+                    AttachmentUrlParseType.MEMBER_PICTURE,
+                    chatRoom.getOpponentPictureId()
+            );
+            chatRoom.assignOpponentPictureUrl(opponentPictureId);
+        });
         return new SliceImpl<>(chatRooms, pageable, PaginationUtils.hasNext(chatRooms, pageable.getPageSize()));
     }
 }

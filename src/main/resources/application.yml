@@ -107,6 +107,8 @@ default-image:
     project: DEFAULT_IMAGE_PROJECT
     skill: DEFAULT_IMAGE_SKILL
 
+server-url: http://localhost:8080
+
 # 운영 prod
 ---
 spring:
@@ -129,3 +131,4 @@ spring:
           kakao:
             redirect-uri: https://whatpl.com/oauth2/callback/kakao
 
+server-url: https://jewoos.site
