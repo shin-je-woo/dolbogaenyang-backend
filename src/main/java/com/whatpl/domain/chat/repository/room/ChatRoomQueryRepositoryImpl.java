@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.whatpl.domain.attachment.domain.QAttachment;
 import com.whatpl.domain.chat.domain.ChatRoom;
 import com.whatpl.domain.chat.domain.QChatMessage;
 import com.whatpl.domain.chat.domain.QChatRoom;
@@ -48,6 +49,8 @@ public class ChatRoomQueryRepositoryImpl implements ChatRoomQueryRepository {
     public List<ChatRoomResponse> findChatRooms(Pageable pageable, Long memberId) {
         QMember writer = new QMember("writer");
         QMember applicant = new QMember("applicant");
+        QAttachment writerPicture = new QAttachment("writerPicture");
+        QAttachment applicantPicture = new QAttachment("applicantPicture");
 
         return queryFactory.select(fields(ChatRoomResponse.class,
                         chatRoom.id.as("chatRoomId"),
@@ -56,6 +59,7 @@ public class ChatRoomQueryRepositoryImpl implements ChatRoomQueryRepository {
                         project.title.as("projectTitle"),
                         getOpponentId(memberId).as("opponentId"),
                         getOpponentNickname(memberId).as("opponentNickname"),
+                        getOpponentPictureId(memberId).as("opponentPictureId"),
                         chatMessage.createdAt.max().as("lastMessageTime"),
                         ExpressionUtils.as(getLastMessageContent(), "lastMessageContent"),
                         getLastMessageRead(memberId).as("lastMessageRead")
@@ -64,7 +68,9 @@ public class ChatRoomQueryRepositoryImpl implements ChatRoomQueryRepository {
                 .leftJoin(chatRoom.apply, apply)
                 .leftJoin(apply.project, project)
                 .leftJoin(project.writer, writer)
+                .leftJoin(project.writer.picture, writerPicture)
                 .leftJoin(apply.applicant, applicant)
+                .leftJoin(apply.applicant.picture, applicantPicture)
                 .leftJoin(chatRoom.messages, chatMessage)
                 .where(apply.applicant.id.eq(memberId)
                         .or(project.writer.id.eq(memberId)))
@@ -87,6 +93,13 @@ public class ChatRoomQueryRepositoryImpl implements ChatRoomQueryRepository {
                 .when(apply.applicant.id.eq(memberId))
                 .then(project.writer.nickname)
                 .otherwise(apply.applicant.nickname);
+    }
+
+    private NumberExpression<Long> getOpponentPictureId(Long memberId) {
+        return new CaseBuilder()
+                .when(apply.applicant.id.eq(memberId))
+                .then(project.writer.picture.id)
+                .otherwise(apply.applicant.picture.id);
     }
 
     private JPQLQuery<String> getLastMessageContent() {

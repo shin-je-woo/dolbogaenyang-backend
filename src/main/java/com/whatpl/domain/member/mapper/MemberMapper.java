@@ -38,6 +38,7 @@ public class MemberMapper {
     }
 
     private String getBuildPictureUrl(Member member) {
-        return attachmentUrlParseDelegator.parseUrl(AttachmentUrlParseType.MEMBER_PICTURE, member.getPicture().getId());
+        Long pictureId = member.getPicture() == null ? null : member.getPicture().getId();
+        return attachmentUrlParseDelegator.parseUrl(AttachmentUrlParseType.MEMBER_PICTURE, pictureId);
     }
 }

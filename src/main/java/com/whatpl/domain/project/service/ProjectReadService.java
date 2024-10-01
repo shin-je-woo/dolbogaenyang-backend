@@ -1,8 +1,14 @@
 package com.whatpl.domain.project.service;
 
+import com.whatpl.domain.attachment.domain.Attachment;
+import com.whatpl.domain.attachment.dto.ResourceDto;
+import com.whatpl.domain.attachment.service.AttachmentService;
 import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.project.domain.Project;
-import com.whatpl.domain.project.dto.*;
+import com.whatpl.domain.project.dto.ParticipatedProject;
+import com.whatpl.domain.project.dto.ProjectInfo;
+import com.whatpl.domain.project.dto.ProjectReadResponse;
+import com.whatpl.domain.project.dto.ProjectSearchCondition;
 import com.whatpl.domain.project.mapper.ProjectMapper;
 import com.whatpl.domain.project.repository.like.ProjectLikeRepository;
 import com.whatpl.domain.project.repository.project.ProjectRepository;
@@ -15,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -26,6 +31,8 @@ public class ProjectReadService {
     private final ProjectRepository projectRepository;
     private final ProjectReadAsyncService projectReadAsyncService;
     private final ProjectLikeRepository projectLikeRepository;
+    private final ProjectMapper projectMapper;
+    private final AttachmentService attachmentService;
 
     @Transactional
     public ProjectReadResponse readProject(final long projectId, final long memberId) {
@@ -36,7 +43,7 @@ public class ProjectReadService {
         long likes = projectLikeRepository.countByProject(project);
         project.increaseViews();
 
-        return ProjectMapper.toProjectReadResponse(project, likes, myLike);
+        return projectMapper.toProjectReadResponse(project, likes, myLike);
     }
 
     @Transactional(readOnly = true)
@@ -49,7 +56,8 @@ public class ProjectReadService {
                 projectReadAsyncService.mergeSkills(projectInfos),
                 projectReadAsyncService.mergeRemainedJobs(projectInfos),
                 projectReadAsyncService.mergeLikes(projectInfos),
-                projectReadAsyncService.mergeComments(projectInfos)
+                projectReadAsyncService.mergeComments(projectInfos),
+                projectReadAsyncService.mergeRepresentImageUrl(projectInfos)
         ).join();
 
         return projectInfos;
@@ -57,11 +65,10 @@ public class ProjectReadService {
 
     @Transactional(readOnly = true)
     public List<ParticipatedProject> readParticipatedProject(Member member) {
-        ArrayList<ParticipatedProject> result = new ArrayList<>();
-        projectRepository.findParticipatedProjects(member).forEach(project ->
-                result.add(ProjectMapper.toParticipatedProject(member, project))
-        );
-        return result;
+        List<Project> participatedProjects = projectRepository.findParticipatedProjects(member);
+        return participatedProjects.stream()
+                .map(project -> projectMapper.toParticipatedProject(member, project))
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -75,8 +82,17 @@ public class ProjectReadService {
                 projectReadAsyncService.mergeSkills(projectInfos),
                 projectReadAsyncService.mergeRemainedJobs(projectInfos),
                 projectReadAsyncService.mergeLikes(projectInfos),
-                projectReadAsyncService.mergeComments(projectInfos)
+                projectReadAsyncService.mergeComments(projectInfos),
+                projectReadAsyncService.mergeRepresentImageUrl(projectInfos)
         ).join();
         return projectInfos;
+    }
+
+    @Transactional(readOnly = true)
+    public ResourceDto readRepresentImage(Long representImageId) {
+        Project project = projectRepository.findByRepresentImageId(representImageId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_DATA));
+        Attachment attachment = project.getRepresentImage();
+        return attachmentService.download(attachment.getId());
     }
 }

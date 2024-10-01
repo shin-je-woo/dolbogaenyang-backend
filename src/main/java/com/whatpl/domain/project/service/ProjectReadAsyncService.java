@@ -1,5 +1,7 @@
 package com.whatpl.domain.project.service;
 
+import com.whatpl.domain.attachment.domain.AttachmentUrlParseDelegator;
+import com.whatpl.domain.attachment.domain.AttachmentUrlParseType;
 import com.whatpl.domain.project.domain.ProjectParticipant;
 import com.whatpl.domain.project.domain.ProjectSkill;
 import com.whatpl.domain.project.domain.RecruitJob;
@@ -23,6 +25,7 @@ import java.util.concurrent.Executors;
 public class ProjectReadAsyncService {
 
     private final ProjectRepository projectRepository;
+    private final AttachmentUrlParseDelegator attachmentUrlParseDelegator;
     private static final ExecutorService executor = Executors.newWorkStealingPool();
 
     /**
@@ -80,6 +83,19 @@ public class ProjectReadAsyncService {
                     long projectId = projectInfo.getProjectId();
                     int comments = Optional.ofNullable(commentMap.get(projectId)).orElseGet(Collections::emptyList).size();
                     ProjectInfo.Editor.fromComments(comments).merge(projectInfo);
+                }));
+    }
+
+    /**
+     * projectInfos 를 순회하면서 representImageId 필드를 merge 합니다.
+     */
+    public CompletableFuture<Void> mergeRepresentImageUrl(List<ProjectInfo> projectInfos) {
+        return CompletableFuture.runAsync(() ->
+                projectInfos.forEach(projectInfo -> {
+                    String representImageUrl = attachmentUrlParseDelegator.parseUrl(
+                            AttachmentUrlParseType.PROJECT_REPRESENT_IMAGE,
+                            projectInfo.getRepresentImageId());
+                    ProjectInfo.Editor.fromRepresentImageUrl(representImageUrl).merge(projectInfo);
                 }));
     }
 

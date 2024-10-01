@@ -21,8 +21,13 @@ public class ChatRoomResponse implements SliceElement {
     private String projectTitle;
     private long opponentId;
     private String opponentNickname;
-    private String opponentProfileImgUri; // TODO 상대방 프로필 이미지 URI
+    private Long opponentPictureId;
+    private String opponentPictureUrl;
     private String lastMessageContent;
     private LocalDateTime lastMessageTime;
     private boolean lastMessageRead;
+
+    public void assignOpponentPictureUrl(String opponentPictureUrl) {
+        this.opponentPictureUrl = opponentPictureUrl;
+    }
 }

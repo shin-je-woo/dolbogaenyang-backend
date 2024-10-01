@@ -1,5 +1,7 @@
 package com.whatpl.domain.chat.service;
 
+import com.whatpl.domain.attachment.domain.AttachmentUrlParseDelegator;
+import com.whatpl.domain.attachment.domain.AttachmentUrlParseType;
 import com.whatpl.domain.chat.domain.ChatMessage;
 import com.whatpl.domain.chat.domain.ChatRoom;
 import com.whatpl.domain.chat.dto.ChatMessageDto;
@@ -24,6 +26,7 @@ public class ChatMessageService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final MemberRepository memberRepository;
+    private final AttachmentUrlParseDelegator attachmentUrlParseDelegator;
 
     @Transactional
     public void sendMessage(final Long chatRoomId, final Long senderId, final String content) {
@@ -42,6 +45,13 @@ public class ChatMessageService {
     @Transactional
     public Slice<ChatMessageDto> readMessages(final long chatRoomId, final Pageable pageable, long receiverId) {
         Slice<ChatMessageDto> chatMessages = chatMessageRepository.findMessagesByChatRoomId(chatRoomId, pageable);
+        chatMessages.getContent().forEach(chatMessage -> {
+            String senderPictureUrl = attachmentUrlParseDelegator.parseUrl(
+                    AttachmentUrlParseType.MEMBER_PICTURE,
+                    chatMessage.getSenderPictureId()
+            );
+            chatMessage.assignSenderPictureUrl(senderPictureUrl);
+        });
         // 수신자 읽은 시간 update (리스트에 포함되어 있지 않아도 한번 읽으면 일괄적으로 읽음 처리)
         chatMessageRepository.updateReadAtByReceiverId(receiverId, LocalDateTime.now().withNano(0));
         return chatMessages;

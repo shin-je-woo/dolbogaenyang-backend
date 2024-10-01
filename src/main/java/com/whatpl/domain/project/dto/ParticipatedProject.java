@@ -15,7 +15,7 @@ public class ParticipatedProject {
 
     private final Long projectId;
     private final String title;
-    private final Long representImageId;
+    private final String representImageUrl;
     private final Subject subject;
     private final Job job;
     private final LocalDateTime participatedAt;

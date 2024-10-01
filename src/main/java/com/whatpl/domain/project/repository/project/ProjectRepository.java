@@ -19,4 +19,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
 
     @Query("select p from Project p left join fetch p.projectParticipants pp where pp.participant = :member")
     List<Project> findParticipatedProjects(Member member);
+
+    @Query("select p from Project p left join fetch p.representImage where p.representImage.id = :representImageId")
+    Optional<Project> findByRepresentImageId(Long representImageId);
 }

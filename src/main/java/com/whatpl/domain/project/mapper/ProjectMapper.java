@@ -1,29 +1,34 @@
 package com.whatpl.domain.project.mapper;
 
 import com.whatpl.domain.attachment.domain.Attachment;
-import com.whatpl.domain.project.dto.ParticipatedProject;
-import com.whatpl.global.common.model.Job;
+import com.whatpl.domain.attachment.domain.AttachmentUrlParseDelegator;
+import com.whatpl.domain.attachment.domain.AttachmentUrlParseType;
 import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.project.domain.Project;
 import com.whatpl.domain.project.domain.ProjectParticipant;
 import com.whatpl.domain.project.domain.ProjectSkill;
 import com.whatpl.domain.project.domain.RecruitJob;
-import com.whatpl.domain.project.model.ProjectStatus;
+import com.whatpl.domain.project.dto.ParticipatedProject;
 import com.whatpl.domain.project.dto.ProjectCreateRequest;
 import com.whatpl.domain.project.dto.ProjectJobParticipantDto;
 import com.whatpl.domain.project.dto.ProjectReadResponse;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import com.whatpl.domain.project.model.ProjectStatus;
+import com.whatpl.global.common.model.Job;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Component
+@RequiredArgsConstructor
 public final class ProjectMapper {
 
-    public static Project toProject(final ProjectCreateRequest request, final Member writer, final Attachment representImage) {
+    private final AttachmentUrlParseDelegator attachmentUrlParseDelegator;
+
+    public Project toProject(final ProjectCreateRequest request, final Member writer, final Attachment representImage) {
         if (request == null || writer == null) {
             throw new IllegalStateException("convert failed!");
         }
@@ -58,10 +63,10 @@ public final class ProjectMapper {
         return project;
     }
 
-    public static ProjectReadResponse toProjectReadResponse(Project project, long likes, boolean myLike) {
+    public ProjectReadResponse toProjectReadResponse(Project project, long likes, boolean myLike) {
         return ProjectReadResponse.builder()
                 .projectId(project.getId())
-                .representImageId(project.getRepresentImage() != null ? project.getRepresentImage().getId() : null)
+                .representImageUrl(buildRepresentImageUrl(project))
                 .title(project.getTitle())
                 .projectStatus(project.getStatus())
                 .subject(project.getSubject())
@@ -84,23 +89,23 @@ public final class ProjectMapper {
                 .build();
     }
 
-    private static int countParticipants(List<ProjectParticipant> projectParticipants, RecruitJob recruitJob) {
+    private int countParticipants(List<ProjectParticipant> projectParticipants, RecruitJob recruitJob) {
         return Long.valueOf(projectParticipants.stream()
                 .filter(participant -> recruitJob.getJob().equals(participant.getJob()))
                 .count()).intValue();
     }
 
-    private static List<ProjectJobParticipantDto.ParticipantDto> getJobMatchedParticipants(Job job, List<ProjectParticipant> projectParticipants) {
+    private List<ProjectJobParticipantDto.ParticipantDto> getJobMatchedParticipants(Job job, List<ProjectParticipant> projectParticipants) {
         if (job == null || projectParticipants == null || projectParticipants.isEmpty()) {
             return Collections.emptyList();
         }
         return projectParticipants.stream()
                 .filter(projectParticipant -> projectParticipant.getJob().equals(job))
-                .map(ProjectMapper::buildParticipant)
+                .map(this::buildParticipant)
                 .toList();
     }
 
-    private static ProjectJobParticipantDto buildJobParticipant(RecruitJob recruitJob, List<ProjectParticipant> projectParticipants) {
+    private ProjectJobParticipantDto buildJobParticipant(RecruitJob recruitJob, List<ProjectParticipant> projectParticipants) {
         return ProjectJobParticipantDto.builder()
                 .job(recruitJob.getJob())
                 .recruitAmount(recruitJob.getRecruitAmount())
@@ -109,7 +114,7 @@ public final class ProjectMapper {
                 .build();
     }
 
-    private static ProjectJobParticipantDto.ParticipantDto buildParticipant(ProjectParticipant projectParticipant) {
+    private ProjectJobParticipantDto.ParticipantDto buildParticipant(ProjectParticipant projectParticipant) {
         return ProjectJobParticipantDto.ParticipantDto.builder()
                 .participantId(projectParticipant.getId())
                 .memberId(projectParticipant.getParticipant().getId())
@@ -119,11 +124,11 @@ public final class ProjectMapper {
                 .build();
     }
 
-    public static ParticipatedProject toParticipatedProject(Member member, Project project) {
+    public ParticipatedProject toParticipatedProject(Member member, Project project) {
         return ParticipatedProject.builder()
                 .projectId(project.getId())
                 .title(project.getTitle())
-                .representImageId(project.getRepresentImage() == null ? null : project.getRepresentImage().getId())
+                .representImageUrl(buildRepresentImageUrl(project))
                 .subject(project.getSubject())
                 .job(getMatchedParticipant(member, project)
                         .map(ProjectParticipant::getJob)
@@ -134,9 +139,14 @@ public final class ProjectMapper {
                 .build();
     }
 
-    private static Optional<ProjectParticipant> getMatchedParticipant(Member member, Project project) {
+    private Optional<ProjectParticipant> getMatchedParticipant(Member member, Project project) {
         return project.getProjectParticipants().stream()
                 .filter(projectParticipant -> projectParticipant.getParticipant().getId().equals(member.getId()))
                 .findFirst();
+    }
+
+    private String buildRepresentImageUrl(Project project) {
+        Long representImageId = project.getRepresentImage() == null ? null : project.getRepresentImage().getId();
+        return attachmentUrlParseDelegator.parseUrl(AttachmentUrlParseType.PROJECT_REPRESENT_IMAGE, representImageId);
     }
 }

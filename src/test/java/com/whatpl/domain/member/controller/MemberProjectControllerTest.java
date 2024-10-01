@@ -48,7 +48,7 @@ class MemberProjectControllerTest extends BaseSecurityWebMvcTest {
         ParticipatedProject result = ParticipatedProject.builder()
                 .projectId(1L)
                 .title("프로젝트1")
-                .representImageId(1L)
+                .representImageUrl("https://jewoos.site/images/project")
                 .subject(Subject.ART)
                 .job(Job.BACKEND_DEVELOPER)
                 .participatedAt(LocalDateTime.now(Clock.fixed(
@@ -76,7 +76,7 @@ class MemberProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("participatedProjects").type(JsonFieldType.ARRAY).description("프로젝트 리스트"),
                                 fieldWithPath("participatedProjects[].projectId").type(JsonFieldType.NUMBER).description("프로젝트 ID"),
                                 fieldWithPath("participatedProjects[].title").type(JsonFieldType.STRING).description("프로젝트 제목"),
-                                fieldWithPath("participatedProjects[].representImageId").type(JsonFieldType.NUMBER).description("프로젝트 대표 이미지 ID"),
+                                fieldWithPath("participatedProjects[].representImageUrl").type(JsonFieldType.STRING).description("프로젝트 대표 이미지 URL"),
                                 fieldWithPath("participatedProjects[].subject").type(JsonFieldType.STRING).description("프로젝트 주제"),
                                 fieldWithPath("participatedProjects[].job").type(JsonFieldType.STRING).description("참여한 직무"),
                                 fieldWithPath("participatedProjects[].participatedAt").type(JsonFieldType.STRING).description("참여 일시")
@@ -105,6 +105,7 @@ class MemberProjectControllerTest extends BaseSecurityWebMvcTest {
                 .likes(20)
                 .comments(5)
                 .representImageId(1L)
+                .representImageUrl("https://jewoos.site/attachments/projects/represent-images/1")
                 .myLike(true)
                 .build();
         List<ProjectInfo> projectInfos = List.of(projectInfo);
@@ -143,6 +144,7 @@ class MemberProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("recruitedProjects[].likes").type(JsonFieldType.NUMBER).description("좋아요 갯수"),
                                 fieldWithPath("recruitedProjects[].comments").type(JsonFieldType.NUMBER).description("댓글 갯수"),
                                 fieldWithPath("recruitedProjects[].representImageId").type(JsonFieldType.NUMBER).description("대표 이미지 ID"),
+                                fieldWithPath("recruitedProjects[].representImageUrl").type(JsonFieldType.STRING).description("대표 이미지 URL"),
                                 fieldWithPath("recruitedProjects[].myLike").type(JsonFieldType.BOOLEAN).description("좋아요 여부")
                         )
                 ));

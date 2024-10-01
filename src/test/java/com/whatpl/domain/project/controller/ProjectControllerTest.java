@@ -101,7 +101,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.projectId").value(response.getProjectId()),
-                        jsonPath("$.representImageId").value(response.getRepresentImageId()),
+                        jsonPath("$.representImageUrl").value(response.getRepresentImageUrl()),
                         jsonPath("$.title").value(response.getTitle()),
                         jsonPath("$.projectStatus").value(response.getProjectStatus().getValue()),
                         jsonPath("$.meetingType").value(response.getMeetingType().getValue()),
@@ -154,7 +154,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         ),
                         responseFields(
                                 fieldWithPath("projectId").type(JsonFieldType.NUMBER).description("프로젝트 ID"),
-                                fieldWithPath("representImageId").type(JsonFieldType.NUMBER).description("대표이미지 ID"),
+                                fieldWithPath("representImageUrl").type(JsonFieldType.STRING).description("대표이미지 URL"),
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("프로젝트 제목"),
                                 fieldWithPath("projectStatus").type(JsonFieldType.STRING).description("프로젝트 상태"),
                                 fieldWithPath("meetingType").type(JsonFieldType.STRING).description("모임 방식"),
@@ -206,6 +206,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                 .likes(20)
                 .comments(5)
                 .representImageId(1L)
+                .representImageUrl("https://jewoos.site/attachments/projects/represent-images/1")
                 .myLike(true)
                 .build();
         List<ProjectInfo> projectInfos = List.of(projectInfo);
@@ -244,6 +245,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                         jsonPath("$.list[*].likes").value(projectInfo.getLikes()),
                         jsonPath("$.list[*].comments").value(projectInfo.getComments()),
                         jsonPath("$.list[*].representImageId").value(Long.valueOf(projectInfo.getRepresentImageId()).intValue()),
+                        jsonPath("$.list[*].representImageUrl").value(projectInfo.getRepresentImageUrl()),
                         jsonPath("$.list[*].myLike").value(projectInfo.isMyLike())
                 )
                 .andDo(print())
@@ -288,6 +290,7 @@ class ProjectControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("list[].likes").type(JsonFieldType.NUMBER).description("좋아요 갯수"),
                                 fieldWithPath("list[].comments").type(JsonFieldType.NUMBER).description("댓글 갯수"),
                                 fieldWithPath("list[].representImageId").type(JsonFieldType.NUMBER).description("대표 이미지 ID"),
+                                fieldWithPath("list[].representImageUrl").type(JsonFieldType.STRING).description("대표 이미지 URL"),
                                 fieldWithPath("list[].myLike").type(JsonFieldType.BOOLEAN).description("좋아요 여부"),
                                 fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
                                 fieldWithPath("pageSize").type(JsonFieldType.NUMBER).description("페이지 사이즈"),

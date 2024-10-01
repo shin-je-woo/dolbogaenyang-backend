@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long>, MemberQueryRepository{
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberQueryRepository {
+
     Optional<Member> findByNickname(String nickname);
+
     @Query("select m from Member m left join fetch m.picture where m.picture.id = :pictureId")
     Optional<Member> findByPictureId(Long pictureId);
 }
