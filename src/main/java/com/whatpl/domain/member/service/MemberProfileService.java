@@ -26,7 +26,9 @@ public class MemberProfileService {
 
     private final MemberRepository memberRepository;
     private final MemberPortfolioService memberPortfolioService;
+    private final MemberPictureService memberPictureService;
     private final ApplicationEventPublisher publisher;
+    private final MemberMapper memberMapper;
 
     @Transactional(readOnly = true)
     public NicknameDuplResponse nicknameDuplCheck(final String nickname) {
@@ -73,7 +75,14 @@ public class MemberProfileService {
     public MemberProfileResponse readProfile(final long memberId) {
         Member member = memberRepository.findMemberWithAllById(memberId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
-        return MemberMapper.toMemberProfileResponse(member);
+        return memberMapper.toMemberProfileResponse(member);
+    }
+
+    @Transactional
+    public void updatePicture(long memberId, MultipartFile picture) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_MEMBER));
+        memberPictureService.modifyPicture(member, picture);
     }
 
     private MemberEditor getMemberEditor(ProfileUpdateRequest request, Member member) {

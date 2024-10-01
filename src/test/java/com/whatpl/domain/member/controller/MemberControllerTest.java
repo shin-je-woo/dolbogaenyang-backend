@@ -26,6 +26,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
@@ -253,7 +254,8 @@ class MemberControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("skills").type(JsonFieldType.ARRAY).description("스킬"),
                                 fieldWithPath("subjects").type(JsonFieldType.ARRAY).description("관심 주제"),
                                 fieldWithPath("references").type(JsonFieldType.ARRAY).description("참고 링크"),
-                                fieldWithPath("portfolioIds").type(JsonFieldType.ARRAY).description("포트폴리오 ID")
+                                fieldWithPath("portfolioUrls").type(JsonFieldType.ARRAY).description("포트폴리오 urls"),
+                                fieldWithPath("pictureUrl").type(JsonFieldType.STRING).description("프로필사진 urls")
                         )
                 ));
     }
@@ -340,6 +342,56 @@ class MemberControllerTest extends BaseSecurityWebMvcTest {
                                 fieldWithPath("references").type(JsonFieldType.ARRAY).description("참고링크"),
                                 fieldWithPath("workTime").type(JsonFieldType.STRING).description("작업시간"),
                                 fieldWithPath("deletePortfolioIds").type(JsonFieldType.ARRAY).description("삭제할 포트폴리오 ID"))
+                ));
+    }
+
+    @Test
+    @WithMockWhatplMember
+    @DisplayName("프로필 사진 수정 API Docs")
+    void updatePicture() throws Exception {
+        // given
+        MockMultipartFile mockMultipartFile = createMockMultipartFile("picture", "cat.jpg", MediaType.IMAGE_JPEG_VALUE);
+        doNothing().when(memberProfileService).updatePicture(anyLong(), any(MultipartFile.class));
+
+        MockMultipartHttpServletRequestBuilder customRestDocumentationRequestBuilder =
+                RestDocumentationRequestBuilders.multipart("/members/{memberId}/picture", 1L);
+
+        customRestDocumentationRequestBuilder.with(request -> {
+            request.setMethod("PUT");
+            return request;
+        });
+        // expected
+        mockMvc.perform(customRestDocumentationRequestBuilder
+                        .file(mockMultipartFile)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer {AccessToken}"))
+                .andExpect(status().isNoContent())
+                .andDo(print())
+                .andDo(document("update-picture",
+                        resourceDetails()
+                                .tag(ApiDocTag.MEMBER.getTag())
+                                .summary("프로필 사진 수정")
+                                .description("""
+                                        프로필 사진 수정
+                                        
+                                        현재 사용 플러그인(ePages/restdocs-api-spec)이 multipart/form-data 문서화가 지원되지 않습니다. (try it out 불가능)
+                                        
+                                        아래 형식을 참고하여 요청하면 됩니다.
+                                        
+                                        <h2> File Part </h2>
+                                        | name         | filename  |Content-Type                 | Description            |
+                                        |--------------|-----------|-----------------------------| -----------------------|
+                                        | picture      | 파일명     | multipart/form-data         | 멤버 프로필 사진          |
+                                        """),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("AccessToken"),
+                                headerWithName(CONTENT_TYPE).description(MULTIPART_FORM_DATA_VALUE)
+                        ),
+                        pathParameters(
+                                parameterWithName("memberId").description("수정할 멤버 ID")
+                        ),
+                        requestParts(
+                                partWithName("picture").description("프로필 사진")
+                        )
                 ));
     }
 }

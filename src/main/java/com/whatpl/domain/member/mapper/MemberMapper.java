@@ -1,26 +1,43 @@
 package com.whatpl.domain.member.mapper;
 
+import com.whatpl.domain.attachment.domain.AttachmentUrlParseDelegator;
+import com.whatpl.domain.attachment.domain.AttachmentUrlParseType;
 import com.whatpl.domain.member.domain.*;
 import com.whatpl.domain.member.dto.MemberProfileResponse;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
+import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Component
+@RequiredArgsConstructor
 public class MemberMapper {
 
-    public static MemberProfileResponse toMemberProfileResponse(Member member) {
+    private final AttachmentUrlParseDelegator attachmentUrlParseDelegator;
+
+    public MemberProfileResponse toMemberProfileResponse(Member member) {
         return MemberProfileResponse.builder()
                 .nickname(member.getNickname())
                 .job(member.getJob())
                 .career(member.getCareer())
                 .profileOpen(member.getProfileOpen())
                 .workTime(member.getWorkTime())
-                .skills(member.getMemberSkills().stream().map(MemberSkill::getSkill).collect(Collectors.toSet()))
-                .subjects(member.getMemberSubjects().stream().map(MemberSubject::getSubject).collect(Collectors.toSet()))
-                .references(member.getMemberReferences().stream().map(MemberReference::getReference).collect(Collectors.toSet()))
-                .portfolioIds(member.getMemberPortfolios().stream().map(MemberPortfolio::getId).collect(Collectors.toSet()))
+                .skills(member.getMemberSkills().stream().map(MemberSkill::getSkill).toList())
+                .subjects(member.getMemberSubjects().stream().map(MemberSubject::getSubject).toList())
+                .references(member.getMemberReferences().stream().map(MemberReference::getReference).toList())
+                .portfolioUrls(buildPortfolioUrl(member))
+                .pictureUrl(getBuildPictureUrl(member))
                 .build();
+    }
+
+    private List<String> buildPortfolioUrl(Member member) {
+        return member.getMemberPortfolios().stream()
+                .map(MemberPortfolio::getId)
+                .map(portfolioId -> attachmentUrlParseDelegator.parseUrl(AttachmentUrlParseType.MEMBER_PORTFOLIO, portfolioId))
+                .toList();
+    }
+
+    private String getBuildPictureUrl(Member member) {
+        return attachmentUrlParseDelegator.parseUrl(AttachmentUrlParseType.MEMBER_PICTURE, member.getPicture().getId());
     }
 }

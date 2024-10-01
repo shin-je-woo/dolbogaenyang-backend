@@ -3,7 +3,7 @@ package com.whatpl.domain.member.model;
 import com.whatpl.domain.member.dto.MemberProfileResponse;
 import com.whatpl.global.common.model.*;
 
-import java.util.Set;
+import java.util.List;
 
 public class MemberProfileResponseFixture {
 
@@ -14,10 +14,14 @@ public class MemberProfileResponseFixture {
                 .career(Career.SIX)
                 .workTime(WorkTime.THIRTY_TO_FORTY)
                 .profileOpen(true)
-                .skills(Set.of(Skill.NODE, Skill.JAVA))
-                .subjects(Set.of(Subject.FINANCE, Subject.HEALTH))
-                .references(Set.of("https://google.com", "https://github.com"))
-                .portfolioIds(Set.of(1L, 2L, 3L))
+                .skills(List.of(Skill.NODE, Skill.JAVA))
+                .subjects(List.of(Subject.FINANCE, Subject.HEALTH))
+                .references(List.of("https://google.com", "https://github.com"))
+                .portfolioUrls(List.of(
+                        "https://jewoos.site/attachments/portfolios/1",
+                        "https://jewoos.site/attachments/portfolios/2"
+                ))
+                .pictureUrl("https://jewoos.site/attachments/picture/1")
                 .build();
     }
 }

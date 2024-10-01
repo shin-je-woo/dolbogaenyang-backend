@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Builder
@@ -17,8 +17,9 @@ public class MemberProfileResponse {
     private final Career career;
     private final WorkTime workTime;
     private final Boolean profileOpen;
-    private final Set<Skill> skills;
-    private final Set<Subject> subjects;
-    private final Set<String> references;
-    private final Set<Long> portfolioIds;
+    private final List<Skill> skills;
+    private final List<Subject> subjects;
+    private final List<String> references;
+    private final List<String> portfolioUrls;
+    private final String pictureUrl;
 }

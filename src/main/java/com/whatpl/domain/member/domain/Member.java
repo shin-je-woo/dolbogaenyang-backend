@@ -1,5 +1,6 @@
 package com.whatpl.domain.member.domain;
 
+import com.whatpl.domain.attachment.domain.Attachment;
 import com.whatpl.global.common.model.BaseTimeEntity;
 import com.whatpl.global.common.model.*;
 import com.whatpl.global.exception.BizException;
@@ -44,15 +45,23 @@ public class Member extends BaseTimeEntity {
 
     private Boolean profileOpen;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "picture_id")
+    private Attachment picture;
+
+    @OrderBy("id")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MemberSkill> memberSkills = new LinkedHashSet<>();
 
+    @OrderBy("id")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MemberSubject> memberSubjects = new LinkedHashSet<>();
 
+    @OrderBy("id")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MemberReference> memberReferences = new LinkedHashSet<>();
 
+    @OrderBy("id")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MemberPortfolio> memberPortfolios = new LinkedHashSet<>();
 
@@ -112,6 +121,10 @@ public class Member extends BaseTimeEntity {
         }
         this.memberPortfolios.add(memberPortfolio);
         memberPortfolio.addRelation(this);
+    }
+
+    public void modifyPicture(Attachment picture) {
+        this.picture = picture;
     }
 
     //==비즈니스 로직==//

@@ -4,6 +4,7 @@ import com.whatpl.domain.member.dto.*;
 import com.whatpl.domain.member.service.MemberProfileService;
 import com.whatpl.global.security.domain.MemberPrincipal;
 import com.whatpl.global.web.validator.ValidFileList;
+import com.whatpl.global.web.validator.ValidPicture;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
@@ -62,5 +63,13 @@ public class MemberController {
     public ResponseEntity<MemberProfileResponse> readProfile(@PathVariable Long memberId) {
         MemberProfileResponse memberProfileResponse = memberProfileService.readProfile(memberId);
         return ResponseEntity.ok(memberProfileResponse);
+    }
+
+    @PreAuthorize("hasPermission(#memberId, 'MEMBER', 'UPDATE')")
+    @PutMapping("/{memberId}/picture")
+    public ResponseEntity<Void> updatePicture(@PathVariable Long memberId,
+                                              @ValidPicture @RequestPart("picture") MultipartFile multipartFile) {
+        memberProfileService.updatePicture(memberId, multipartFile);
+        return ResponseEntity.noContent().build();
     }
 }

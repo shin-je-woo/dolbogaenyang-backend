@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatpl.domain.attachment.service.AttachmentService;
 import com.whatpl.domain.chat.service.ChatMessageService;
 import com.whatpl.domain.chat.service.ChatRoomService;
-import com.whatpl.domain.member.service.MemberLoginService;
-import com.whatpl.domain.member.service.MemberProfileService;
-import com.whatpl.domain.member.service.MemberProjectService;
+import com.whatpl.domain.member.service.*;
 import com.whatpl.domain.project.service.*;
 import com.whatpl.domain.whatplpople.service.WhatplpeopleService;
 import com.whatpl.external.upload.FileUploader;
@@ -89,6 +87,12 @@ public abstract class BaseSecurityWebMvcTest {
 
     @MockBean
     protected MemberProjectService memberProjectService;
+
+    @MockBean
+    protected MemberPortfolioService memberPortfolioService;
+
+    @MockBean
+    protected MemberPictureService memberPictureService;
 
     @BeforeEach
     protected void init() {
