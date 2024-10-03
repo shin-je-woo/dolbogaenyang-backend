@@ -63,7 +63,7 @@ public final class ProjectMapper {
         return project;
     }
 
-    public ProjectReadResponse toProjectReadResponse(Project project, long likes, boolean myLike) {
+    public ProjectReadResponse toProjectReadResponse(Project project, Long memberId) {
         return ProjectReadResponse.builder()
                 .projectId(project.getId())
                 .representImageUrl(buildRepresentImageUrl(project))
@@ -72,7 +72,7 @@ public final class ProjectMapper {
                 .subject(project.getSubject())
                 .meetingType(project.getMeetingType())
                 .views(project.getViews())
-                .likes(likes)
+                .likes(project.getProjectLikes().size())
                 .profitable(project.getProfitable())
                 .writerNickname(project.getWriter().getNickname())
                 .createdAt(project.getCreatedAt())
@@ -85,7 +85,8 @@ public final class ProjectMapper {
                         .map(recruitJob -> buildJobParticipant(recruitJob, project.getProjectParticipants()))
                         .sorted(Comparator.comparingInt(recruitJob -> recruitJob.getJob().ordinal()))
                         .toList())
-                .myLike(myLike)
+                .myLike(project.getProjectLikes().stream()
+                        .anyMatch(projectLike -> projectLike.getMember().getId().equals(memberId)))
                 .build();
     }
 

@@ -1,6 +1,5 @@
-package com.whatpl.domain.attachment.event.handler;
+package com.whatpl.domain.attachment.event;
 
-import com.whatpl.domain.attachment.event.AttachmentDeleteEvent;
 import com.whatpl.external.upload.FileUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -4,6 +4,7 @@ import com.whatpl.domain.member.domain.Member;
 import com.whatpl.domain.project.domain.Project;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -22,4 +23,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
 
     @Query("select p from Project p left join fetch p.representImage where p.representImage.id = :representImageId")
     Optional<Project> findByRepresentImageId(Long representImageId);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("update Project p set p.views = p.views + 1 where p.id = :id")
+    void increaseViews(Long id);
 }

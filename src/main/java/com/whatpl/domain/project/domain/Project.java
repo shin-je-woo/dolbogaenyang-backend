@@ -1,17 +1,18 @@
 package com.whatpl.domain.project.domain;
 
 import com.whatpl.domain.attachment.domain.Attachment;
+import com.whatpl.domain.member.domain.Member;
+import com.whatpl.domain.project.dto.ProjectUpdateRequest;
+import com.whatpl.domain.project.dto.RecruitJobField;
+import com.whatpl.domain.project.model.ApplyType;
+import com.whatpl.domain.project.model.MeetingType;
+import com.whatpl.domain.project.model.ProjectStatus;
 import com.whatpl.global.common.model.BaseTimeEntity;
 import com.whatpl.global.common.model.Job;
 import com.whatpl.global.common.model.Skill;
 import com.whatpl.global.common.model.Subject;
 import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
-import com.whatpl.domain.member.domain.Member;
-import com.whatpl.domain.project.model.MeetingType;
-import com.whatpl.domain.project.model.ProjectStatus;
-import com.whatpl.domain.project.dto.ProjectUpdateRequest;
-import com.whatpl.domain.project.dto.RecruitJobField;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -132,13 +133,6 @@ public class Project extends BaseTimeEntity {
     }
 
     //==비즈니스 로직==//
-    public void increaseViews() {
-        if (this.views == null) {
-            this.views = 0L;
-        }
-        this.views++;
-    }
-
     /**
      * 프로젝트를 수정합니다.
      */
@@ -243,9 +237,17 @@ public class Project extends BaseTimeEntity {
     }
 
     /**
+     * 프로젝트에 지원하거나 합류요청합니다.
+     */
+    public Apply applyOrOffer(ApplyType applyType, Job applyJob, Member applicant) {
+        validateCanApply(applicant, applyJob);
+        return Apply.create(applyJob, applyType, applicant, this);
+    }
+
+    /**
      * 프로젝트가 지원 가능한 상태인지 검증합니다.
      */
-    public void validateCanApply(final Member applicant, final Job applyJob) {
+    private void validateCanApply(final Member applicant, final Job applyJob) {
         validateDeletedProject();
         validateCompletedRecruitment();
         validateWriter(applicant);

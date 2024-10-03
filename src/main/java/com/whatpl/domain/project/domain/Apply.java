@@ -1,5 +1,6 @@
 package com.whatpl.domain.project.domain;
 
+import com.whatpl.domain.chat.domain.ChatRoom;
 import com.whatpl.global.common.model.BaseTimeEntity;
 import com.whatpl.global.common.model.Job;
 import com.whatpl.global.exception.BizException;
@@ -37,27 +38,37 @@ public class Apply extends BaseTimeEntity {
     @JoinColumn(name = "project_id")
     private Project project;
 
+    @OneToOne(mappedBy = "apply", cascade = CascadeType.PERSIST)
+    private ChatRoom chatRoom;
+
     @Builder
-    public Apply(Job job, ApplyStatus status, ApplyType type, Member applicant, Project project) {
+    public Apply(Job job, ApplyStatus status, ApplyType type, Member applicant, Project project, ChatRoom chatRoom) {
         this.job = job;
         this.status = status;
         this.type = type;
         this.applicant = applicant;
         this.project = project;
+        this.chatRoom = chatRoom;
     }
 
     public void addRelation(@NonNull Project project) {
         this.project = project;
     }
 
-    public static Apply of(Job job, ApplyType type, Member applicant, Project project) {
-        return Apply.builder()
+    public void addRelation(@NonNull ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
+    }
+
+    public static Apply create(Job job, ApplyType type, Member applicant, Project project) {
+        Apply apply = Apply.builder()
                 .job(job)
                 .status(ApplyStatus.WAITING)
                 .type(type)
                 .applicant(applicant)
                 .project(project)
                 .build();
+        apply.addRelation(ChatRoom.from(apply));
+        return apply;
     }
 
     //==비즈니스 로직==//
