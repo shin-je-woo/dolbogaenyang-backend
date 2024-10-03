@@ -1,5 +1,6 @@
 package com.whatpl.domain.chat.domain;
 
+import com.whatpl.domain.project.model.ApplyType;
 import com.whatpl.global.common.model.BaseTimeEntity;
 import com.whatpl.domain.project.domain.Apply;
 import jakarta.persistence.*;
@@ -32,5 +33,10 @@ public class ChatRoom extends BaseTimeEntity {
 
     public static ChatRoom from(final Apply apply) {
         return new ChatRoom(apply);
+    }
+
+    public Long getRoomMaker() {
+        return apply.getType() == ApplyType.APPLY ?
+                apply.getApplicant().getId() : apply.getProject().getWriter().getId();
     }
 }

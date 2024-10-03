@@ -9,6 +9,7 @@ import com.whatpl.domain.project.dto.ParticipatedProject;
 import com.whatpl.domain.project.dto.ProjectInfo;
 import com.whatpl.domain.project.dto.ProjectReadResponse;
 import com.whatpl.domain.project.dto.ProjectSearchCondition;
+import com.whatpl.domain.project.event.ProjectReadEvent;
 import com.whatpl.domain.project.mapper.ProjectMapper;
 import com.whatpl.domain.project.repository.like.ProjectLikeRepository;
 import com.whatpl.domain.project.repository.project.ProjectRepository;
@@ -16,6 +17,7 @@ import com.whatpl.global.exception.BizException;
 import com.whatpl.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,17 +35,14 @@ public class ProjectReadService {
     private final ProjectLikeRepository projectLikeRepository;
     private final ProjectMapper projectMapper;
     private final AttachmentService attachmentService;
+    private final ApplicationEventPublisher eventPublisher;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ProjectReadResponse readProject(final long projectId, final long memberId) {
         Project project = projectRepository.findProjectWithParticipantsById(projectId)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND_PROJECT));
-        boolean myLike = projectLikeRepository.existsByProjectIdAndMemberId(projectId, memberId);
-
-        long likes = projectLikeRepository.countByProject(project);
-        project.increaseViews();
-
-        return projectMapper.toProjectReadResponse(project, likes, myLike);
+        eventPublisher.publishEvent(ProjectReadEvent.from(project.getId()));
+        return projectMapper.toProjectReadResponse(project, memberId);
     }
 
     @Transactional(readOnly = true)
